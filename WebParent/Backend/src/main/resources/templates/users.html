@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- CSS Implementing Plugins -->
+    <link rel="stylesheet" th:href="@{/css/vendor.min.css}">
+    <link rel="stylesheet" th:href="@{/vendor/icon-set/style.css}">
+
+    <!-- CSS Front Template -->
+    <link rel="stylesheet" th:href="@{/css/theme.min.css?v=1.0}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <title>Admin - Quản lý nhân viên</title>
+</head>
+
+<body class="footer-offset">
+
+<div th:replace="header :: header"></div>
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <h1 class="page-header-title">Quản lý nhân viên</h1>
+                </div>
+
+                <div class="col-sm-auto">
+                    <a class="btn btn-primary" th:href="@{/users/new}">
+                        <i class="tio-user-add mr-1"></i> Thêm nhân viên
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${message != null}" class="alert alert-success text-center" id="hideMessage">
+            [[${message}]]
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row justify-content-between align-items-center flex-grow-1">
+                    <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+                        <form action="list_users" method="get">
+                            <div class="input-group input-group-merge input-group-flush">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="tio-search"></i>
+                                    </div>
+                                </div>
+                                <input type="search" class="form-control" placeholder="Tìm kiếm nhân viên"
+                                       name="keyword">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="d-sm-flex justify-content-sm-end align-items-sm-center">
+                            <div class="hs-unfold mr-2">
+                                <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle" href="#"
+                                   data-hs-unfold-options='{"target": "#usersExportDropdown","type": "css-animation"}'>
+                                    <i class="tio-download-to mr-1"></i> Xuất
+                                </a>
+
+                                <div id="usersExportDropdown"
+                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
+                                    <span class="dropdown-header">Tuỳ chọn</span>
+                                    <a id="export-copy" class="dropdown-item" href="#">
+                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                             src="../images/svg/illustrations/copy.svg" alt="Image Description">
+                                        Sao chép
+                                    </a>
+                                    <a id="export-print" class="dropdown-item" href="#">
+                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                             src="../images/svg/illustrations/print.svg" alt="Image Description">
+                                        In
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <span class="dropdown-header">Tuỳ chọn tải xuống</span>
+                                    <a id="export-excel" class="dropdown-item" href="#">
+                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                             src="../images/svg/brands/excel.svg" alt="Image Description">
+                                        Excel
+                                    </a>
+                                    <a id="export-csv" class="dropdown-item" href="#">
+                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                             src="../images/svg/components/placeholder-csv-format.svg"
+                                             alt="Image Description">
+                                        CSV
+                                    </a>
+                                    <a id="export-pdf" class="dropdown-item" href="#">
+                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                             src="../images/svg/brands/pdf.svg"
+                                             alt="Image Description">
+                                        PDF
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive datatable-custom">
+                <table id="datatable"
+                       class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                       data-hs-datatables-options='{
+                     "columnDefs": [{
+                        "targets": [0, 5],
+                        "orderable": false
+                      }],
+                     "order": [],
+                     "info": {
+                       "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     },
+                     "search": "#datatableSearch",
+                     "entries": "#datatableEntries",
+                     "pageLength": 5,
+                     "isResponsive": false,
+                     "isShowPaging": false,
+                     "pagination": "datatablePagination"
+                   }'>
+                    <thead class="thead-light">
+                    <tr>
+                        <th class="table-column-pl-1">Tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Địa chỉ</th>
+                        <th>Vai trò</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="user : ${listUsers}">
+                        <td class="table-column-pl-1">
+                            [[${user.lastName}]] [[${user.firstName}]]
+                        </td>
+                        <td>[[${user.phoneNumber}]]</td>
+                        <td></td>
+                        <td>[[${user.roles}]]</td>
+                        <td>[[${user.enabled}]]</td>
+                        <!--                        <td class="table-column-pl-1">-->
+                        <!--                            <c:if test="${user.id == 1}">-->
+                        <!--                                <a class="d-flex align-items-center">-->
+                        <!--                            </c:if>-->
+                        <!--                            <c:if test="${user.id != 1}">-->
+                        <!--                                <a class="d-flex align-items-center" href="edit_user?id=${user.id}">-->
+                        <!--                            </c:if>-->
+                        <!--  Admin -->
+                        <!--                            <c:if test="${user.id == 1}">-->
+                        <!--                                <div class="avatar avatar-soft-primary avatar-circle">-->
+                        <!--                                    <span class="avatar-initials">A</span>-->
+                        <!--                                </div>-->
+                        <!--                                <div class="ml-3">-->
+                        <!--                                            <span class="d-block h5 text-hover-primary mb-0">-->
+                        <!--                                                Admin-->
+                        <!--                                                <i class="tio-verified text-primary" data-toggle="tooltip"-->
+                        <!--                                                   data-placement="top"></i>-->
+                        <!--                                            </span>-->
+                        <!--                                    <span class="d-block font-size-sm text-body">${user.email}</span>-->
+                        <!--                                </div>-->
+                        <!--                            </c:if>-->
+
+                        <!--  Normal -->
+                        <!--                            <c:if test="${user.id != 1}">-->
+                        <!--                                <c:if test="${not empty user.imagePath}">-->
+                        <!--                        <div class="avatar avatar-circle">-->
+                        <!--                            <img class="avatar-img"-->
+                        <!--                                 src="../images/user/${user.id}/${user.imagePath}"-->
+                        <!--                                 alt="Image Description">-->
+                        <!--                        </div>-->
+                        <!--                        <div class="ml-3">-->
+                        <!--                                                <span class="d-block h5 text-hover-primary mb-0">-->
+                        <!--                                                        [[${user.lastName}]] [[${user.firstName}]]-->
+                        <!--                                                </span>-->
+                        <!--                            <span class="d-block font-size-sm text-body">[[${user.email}]]</span>-->
+                        <!--                        </div>-->
+                        <!--                                </c:if>-->
+                        <!--                                <c:if test="${empty user.imagePath}">-->
+                        <!--                                    <div class="avatar avatar-soft-primary avatar-circle">-->
+                        <!--                                        <span class="avatar-initials">${fn:substring(user.firstName, 0, 1)}</span>-->
+                        <!--                                    </div>-->
+                        <!--                                    <div class="ml-3">-->
+                        <!--                                                <span class="d-block h5 text-hover-primary mb-0">-->
+                        <!--                                                        ${user.lastName} ${user.firstName}-->
+                        <!--                                                </span>-->
+                        <!--                                        <span class="d-block font-size-sm text-body">${user.email}</span>-->
+                        <!--                                    </div>-->
+                        <!--                                </c:if>-->
+                        <!--                            </c:if>-->
+                        <!--                            </a>-->
+                        <!--                        </td>-->
+
+
+                        <!--                        <td>-->
+                        <!--                            <c:if test="${user.id == 1}"></c:if>-->
+                        <!--                            <c:if test="${user.id != 1}">-->
+                        <!--                                <c:if test="${user.enabled}">-->
+                        <!--                                    <a class="fas fa-check-circle fa-2x icon-green"-->
+                        <!--                                       href="status_user?enabled=false&id=${user.id}" title="Vô hiệu hoá">-->
+                        <!--                                    </a>-->
+                        <!--                                </c:if>-->
+                        <!--                                <c:if test="${!user.enabled}">-->
+                        <!--                                    <a class="fas fa-check-circle fa-2x icon-gray"-->
+                        <!--                                       href="status_user?enabled=true&id=${user.id}" title="Kích hoạt">-->
+                        <!--                                    </a>-->
+                        <!--                                </c:if>-->
+                        <!--                            </c:if>-->
+                        <!--                        </td>-->
+                        <!--                        <td>-->
+                        <!--                            <c:if test="${user.id == 1}">-->
+                        <!--                                <div></div>-->
+                        <!--                            </c:if>-->
+                        <!--                            <c:if test="${user.id != 1}">-->
+                        <!--                                <div>-->
+                        <!--                                    <a class="btn btn-sm btn-white" href="edit_user?id=${user.id}">-->
+                        <!--                                        <i class="tio-edit"></i> Chỉnh sửa-->
+                        <!--                                    </a>-->
+                        <!--                                    <a class="btn btn-sm btn-white link-delete"-->
+                        <!--                                       href="delete_user?id=${user.id}" entityId="${user.id}">-->
+                        <!--                                        <i class="tio-delete"></i> Xóa-->
+                        <!--                                    </a>-->
+                        <!--                                </div>-->
+                        <!--                            </c:if>-->
+                        <!--                        </td>-->
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--            <c:if test="${totalPages > 0}">-->
+            <!--                <div class="card-footer">-->
+            <!--                    <nav aria-label="Page navigation example">-->
+            <!--                        <ul class="pagination float-right">-->
+            <!--                            <li class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">-->
+            <!--                                <a class="page-link"-->
+            <!--                                   href="list_users?pageNumber=${currentPage - 1}&keyword=${keyword}">Trước</a>-->
+            <!--                            </li>-->
+            <!--                            <c:forEach var="i" begin="1" end="${totalPages}">-->
+            <!--                                <li class="${currentPage != i ? 'page-item' : 'page-item active'}">-->
+            <!--                                    <a class="page-link"-->
+            <!--                                       href="list_users?pageNumber=${i}&keyword=${keyword}">${i}</a>-->
+            <!--                                </li>-->
+            <!--                            </c:forEach>-->
+            <!--                            <li class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">-->
+            <!--                                <a class="page-link"-->
+            <!--                                   href="list_users?pageNumber=${currentPage + 1}&keyword=${keyword}">Sau</a>-->
+            <!--                            </li>-->
+            <!--                        </ul>-->
+            <!--                    </nav>-->
+            <!--                </div>-->
+            <!--            </c:if>-->
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>
+
+
+
