@@ -4,6 +4,7 @@ import com.hpt.backend.role.RoleRepository;
 import com.hpt.common.entity.Role;
 import com.hpt.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +13,10 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepo;
-
     @Autowired
     private RoleRepository roleRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Return a list of all users
@@ -40,6 +42,17 @@ public class UserService {
      * @param user User to be saved
      */
     public void save(User user) {
+        encodePassword(user);
         userRepo.save(user);
+    }
+
+    /**
+     * Encode the password of a user
+     *
+     * @param user User to be encoded
+     */
+    private void encodePassword(User user) {
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
     }
 }
