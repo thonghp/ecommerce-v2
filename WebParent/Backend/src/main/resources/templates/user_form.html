@@ -103,13 +103,12 @@
                                 </div>
 
                                 <div class="row form-group">
-                                    <label for="emailLabel"
-                                           class="col-sm-3 col-form-label input-label">Email</label>
+                                    <label class="col-sm-3 col-form-label input-label">Email</label>
 
                                     <div class="col-sm-9">
-                                        <input type="email" class="form-control" id="emailLabel"
-                                               placeholder="example@gmail.com" th:field="*{email}" required
-                                               minlength="8" maxlength="64">
+                                        <input type="email" class="form-control" placeholder="example@gmail.com"
+                                               th:field="*{email}" required minlength="8" maxlength="64">
+                                        <div id="email-status"></div>
                                     </div>
                                 </div>
 
@@ -221,7 +220,34 @@
     </div>
 </main>
 
-<script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        let emailInput = $('input[name="email"]');
+        let emailStatus = $('#email-status');
+        let url = "[[@{/users/check_email}]]";
+
+        // Kiểm tra email khi người dùng rời khỏi trường email hoặc thay đổi nội dung trường
+        emailInput.on('blur keyup', function () {
+            let email = $(this).val();
+            let csrfToken = $('input[name="_csrf"]').val();
+            if (email !== '') {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {email: email, _csrf: csrfToken},
+                    success: function (data) {
+                        if (data === 'OK') {
+                            emailStatus.html('');
+                        } else if (data === 'Duplicated') {
+                            emailStatus.html('<span style="color:red">Email đã tồn tại</span>');
+                        }
+                    }
+                });
+            } else {
+                emailStatus.empty();
+            }
+        });
+    });
 </script>
 
 </body>

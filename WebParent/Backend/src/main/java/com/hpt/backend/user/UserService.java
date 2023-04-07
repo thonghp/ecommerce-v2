@@ -37,6 +37,16 @@ public class UserService {
     }
 
     /**
+     * Encode the password of a user
+     *
+     * @param user User to be encoded
+     */
+    private void encodePassword(User user) {
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+    }
+
+    /**
      * Save a user to the database
      *
      * @param user User to be saved
@@ -47,12 +57,14 @@ public class UserService {
     }
 
     /**
-     * Encode the password of a user
+     * Check email is unique
      *
-     * @param user User to be encoded
+     * @param email Email to be checked
+     * @return True if email is unique, false otherwise
      */
-    private void encodePassword(User user) {
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+    public boolean isEmailUnique(String email) {
+        User userByEmail = userRepo.findByEmail(email);
+
+        return userByEmail == null;
     }
 }
