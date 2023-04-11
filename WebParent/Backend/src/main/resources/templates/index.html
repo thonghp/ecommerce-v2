@@ -1,80 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<head th:replace="fragments :: page_head('Admin - Trang chủ')"></head>
 
-    <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" th:href="@{/css/vendor.min.css}">
-    <link rel="stylesheet" th:href="@{/vendor/icon-set/style.css}">
+<body>
 
-    <!-- CSS Front Template -->
-    <link rel="stylesheet" th:href="@{/css/theme.min.css?v=1.0}">
+<div class="container-fluid">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <div th:replace="fragments :: navigation"></div>
 
-    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <title>Admin - Trang chủ</title>
-</head>
-
-<body class="footer-offset">
-
-<main id="content" role="main" class="main pointer-event">
-    <div class="content container-fluid">
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title">Chào mừng ABC trở lại trang quản lý VTV</h1>
-                </div>
-            </div>
-
-            <div class="row gx-2 gx-lg-3">
-                <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-                    <a class="card card-hover-shadow h-100" href="list_employees">
-                        <div class="card-body">
-                            <h6 class="card-subtitle text-center">Nhân viên</h6>
-                            <div class="card-title h2 text-center">100</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-                    <a class="card card-hover-shadow h-100" href="list_customers">
-                        <div class="card-body">
-                            <h6 class="card-subtitle text-center">Khách hàng</h6>
-                            <div class="card-title h2 text-center">100</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-                    <a class="card card-hover-shadow h-100" href="list_products">
-                        <div class="card-body">
-                            <h6 class="card-subtitle text-center">Sản phẩm</h6>
-                            <div class="card-title h2 text-center">100</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-                    <a class="card card-hover-shadow h-100" href="list_orders">
-                        <div class="card-body">
-                            <h6 class="card-subtitle text-center">Đơn hàng</h6>
-                            <div class="card-title h2 text-center">100</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+    <div class="text-center">
+        <h1>Trang chủ</h1>
     </div>
-</main>
 
+    <div th:replace="fragments :: footer"></div>
+
+</div>
 </body>
-
 </html>
-
-
-
