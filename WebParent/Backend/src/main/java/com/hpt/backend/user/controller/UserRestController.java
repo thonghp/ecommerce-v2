@@ -11,9 +11,8 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    // @RequestParam(value = "id", required = false) Integer id
     @PostMapping("/users/check_email")
-    public String checkDuplicateEmail(@RequestParam("email") String email) {
-        return userService.isEmailUnique(email) ? "OK" : "Duplicated";
+    public String checkDuplicateEmail(@RequestParam(value = "id", required = false) Integer id, @RequestParam("email") String email) {
+        return userService.isEmailUnique(id, email) ? "OK" : "Duplicated";
     }
 }

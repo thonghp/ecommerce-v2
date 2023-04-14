@@ -34,9 +34,9 @@
             </thead>
 
             <tbody>
-            <tr th:each="user : ${listUsers}">
+            <tr th:each="user : ${users}">
                 <td>[[${user.id}]]</td>
-                <td></td>
+                <td><span class="fas fa-portrait fa-3x icon-gray"></span></td>
                 <td>[[${user.email}]]</td>
                 <td th:if="${user.id == 1}">
                     [[${user.firstName}]]
@@ -46,10 +46,22 @@
                 </td>
                 <td>[[${user.phoneNumber}]]</td>
                 <td>[[${user.roles}]]</td>
-                <td>[[${user.enabled}]]</td>
-                <td>
-                    Edit &nbsp; Delete
-                </td>
+
+                <th:block>
+                    <td th:if="${user.id == 1}"></td>
+                    <td th:unless="${user.id == 1}">
+                        <a href="" class="fas fa-check-circle fa-2x icon-green" th:if="${user.enabled}"></a>
+                        <a href="" class="fas fa-check-circle fa-2x icon-gray" th:unless="${user.enabled}"></a>
+                    </td>
+                </th:block>
+
+                <th:block>
+                    <td th:if="${user.id == 1}"></td>
+                    <td th:unless="${user.id == 1}">
+                        <a th:href="@{'/users/edit/' + ${user.id}}" class="fas fa-edit fa-2x icon-green"></a>&nbsp;
+                        <a href="" class="fas fa-trash fa-2x icon-gray"></a>
+                    </td>
+                </th:block>
             </tr>
             </tbody>
         </table>

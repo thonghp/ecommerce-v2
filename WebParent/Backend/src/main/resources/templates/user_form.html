@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="fragments :: page_head('Admin - Tạo nhân viên')"></head>
+<head th:replace="fragments :: page_head(${pageTitle})"></head>
 
 <body>
 <div class="container-fluid">
@@ -9,11 +9,12 @@
     <div th:replace="fragments :: navigation"></div>
 
     <div class="text-center">
-        <h2>Thêm nhân viên</h2>
+        <h2>[[${pageTitle}]]</h2>
     </div>
 
     <form th:action="@{/users/save}" method="post" style="max-width: 700px; margin: 0 auto"
           th:object="${user}">
+        <input type="hidden" th:field="*{id}">
         <div class="border border-secondary rounded p-3">
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label">E-mail:</label>
@@ -43,8 +44,10 @@
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label">Password:</label>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" th:field="*{password}" required minlength="8"
-                           maxlength="20"/>
+                    <input th:if="${user.id == null}" type="password" class="form-control" required minlength="8"
+                           maxlength="64" th:field="*{password}"/>
+                    <input th:unless="${user.id == null}" type="password" class="form-control" minlength="8" maxlength="64"
+                           th:field="*{password}" placeholder="Để trống nếu bạn không muốn thay đổi mật khẩu"/>
                 </div>
             </div>
 
@@ -59,7 +62,7 @@
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label">Vai trò:</label>
                 <div class="col-sm-8">
-                    <th:block th:each="role : ${listRoles}">
+                    <th:block th:each="role : ${roles}">
                         <div th:remove="tag" th:if="${role.id == 1}">
                         </div>
                         <div th:remove="tag" th:unless="${role.id == 1}">
@@ -98,14 +101,15 @@
         let url = "[[@{/users/check_email}]]";
 
         // Kiểm tra email khi người dùng rời khỏi trường email hoặc thay đổi nội dung trường
-        emailInput.on('blur keyup', function () {
+        emailInput.on('blur', function () {
             let email = $(this).val();
             let csrfToken = $('input[name="_csrf"]').val();
+            let userId = $('#id').val();
             if (email !== '') {
                 $.ajax({
                     url: url,
                     type: 'POST',
-                    data: {email: email, _csrf: csrfToken},
+                    data: {id: userId, email: email, _csrf: csrfToken},
                     success: function (data) {
                         if (data === 'OK') {
                             emailStatus.html('');
