@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
     @Autowired
     private UserRepository userRepo;
@@ -118,5 +120,15 @@ public class UserService {
             throw new UserNotFoundException("Không tìm thấy nhân viên có id là " + id);
         }
         userRepo.deleteById(id);
+    }
+
+    /**
+     * Update the enabled status of a user
+     *
+     * @param id      id of the user
+     * @param enabled enabled status
+     */
+    public void updateUserEnabledStatus(Integer id, boolean enabled) {
+        userRepo.updateEnabledStatus(id, enabled);
     }
 }

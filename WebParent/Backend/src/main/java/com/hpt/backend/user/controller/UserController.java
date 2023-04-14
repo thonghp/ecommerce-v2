@@ -79,4 +79,14 @@ public class UserController {
 
         return "redirect:/users";
     }
+
+    @GetMapping("/users/{id}/enabled/{status}")
+    public String updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
+        userService.updateUserEnabledStatus(id, enabled);
+        String status = enabled ? " được kích hoạt" : " bị vô hiệu hoá";
+        String message = "Nhân viên có id là " + id + status;
+        redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/users";
+    }
 }
