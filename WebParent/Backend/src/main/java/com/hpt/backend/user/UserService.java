@@ -96,6 +96,7 @@ public class UserService {
      *
      * @param id id of the user
      * @return user object corresponding to id
+     * @throws UserNotFoundException if the user does not exist
      */
     public User get(Integer id) throws UserNotFoundException {
         try {
@@ -103,5 +104,19 @@ public class UserService {
         } catch (Exception ex) {
             throw new UserNotFoundException("Không tìm thấy nhân viên có id là " + id);
         }
+    }
+
+    /**
+     * Delete a user by id
+     *
+     * @param id id of the user you want to delete
+     * @throws UserNotFoundException if the user does not exist
+     */
+    public void delete(Integer id) throws UserNotFoundException {
+        Long countById = userRepo.countById(id);
+        if (countById == null || countById == 0) {
+            throw new UserNotFoundException("Không tìm thấy nhân viên có id là " + id);
+        }
+        userRepo.deleteById(id);
     }
 }
