@@ -53,24 +53,23 @@ public class UserService {
      * Save user information. If the id does not exist, save the user, otherwise the id already exists, update the user
      *
      * @param user user object to save
+     * @return saved user object
      */
-    public void save(User user) {
+    public User save(User user) {
         boolean isExistingId = (user.getId() != null);
 
         if (isExistingId) {
             User existingUser = userRepo.findById(user.getId()).get();
-
             if (user.getPassword().isEmpty()) {
                 user.setPassword(existingUser.getPassword());
             } else {
                 encodePassword(user);
             }
-
         } else {
             encodePassword(user);
         }
 
-        userRepo.save(user);
+        return userRepo.save(user);
     }
 
     /**

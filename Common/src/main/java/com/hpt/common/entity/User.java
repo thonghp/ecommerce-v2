@@ -48,4 +48,11 @@ public class User {
         return "User{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' + ", email='" + email + '\'' + ", password='" + password + '\'' + '}';
     }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (id == null || imagePath == null) return "/images/default-user.png";
+
+        return "/images/user-photos/" + this.id + "/" + this.imagePath;
+    }
 }
