@@ -5,6 +5,9 @@ import com.hpt.common.entity.Role;
 import com.hpt.common.entity.User;
 import com.hpt.common.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +24,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /**
-     * Return a list of all users
-     *
-     * @return List of users
-     */
-    public List<User> listAll() {
-        return (List<User>) userRepo.findAll();
-    }
+    public static final int USERS_PER_PAGE = 5;
 
     /**
      * Return a list of all roles
@@ -129,5 +125,17 @@ public class UserService {
      */
     public void updateUserEnabledStatus(Integer id, boolean enabled) {
         userRepo.updateEnabledStatus(id, enabled);
+    }
+
+    /**
+     * Returns a list of users based on the requested page
+     *
+     * @param pageNum The page requests to return data
+     * @return a list of users
+     */
+    public Page<User> listByPage(int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE);
+
+        return userRepo.findAll(pageable);
     }
 }

@@ -6,6 +6,7 @@ import com.hpt.common.entity.Role;
 import com.hpt.common.entity.User;
 import com.hpt.common.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -26,8 +27,26 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/users")
-    public String listAll(Model model) {
-        List<User> users = userService.listAll();
+    public String listFirstPage(Model model) {
+        return listByPage(1, model);
+    }
+
+    @GetMapping("/users/page/{pageNum}")
+    public String listByPage(@PathVariable(name = "pageNum") Integer pageNum, Model model) {
+        Page<User> page = userService.listByPage(pageNum);
+        List<User> users = page.getContent();
+
+        long startCount = (long) (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
+        long endCount = startCount + UserService.USERS_PER_PAGE - 1;
+        if (endCount > page.getTotalElements()) {
+            endCount = page.getTotalElements();
+        }
+
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("users", users);
 
         return "users";
@@ -54,7 +73,7 @@ public class UserController {
             user.setImagePath(fileName);
             User savedUser = userService.save(user);
 
-            String uploadDir = "images/user-photos/" + savedUser.getId();
+            String uploadDir = "user-photos/" + savedUser.getId();
 
             FileUploadUtils.cleanDir(uploadDir); // remove ảnh cũ trước khi lưu ảnh mới
             FileUploadUtils.saveFile(uploadDir, fileName, multipartFile);

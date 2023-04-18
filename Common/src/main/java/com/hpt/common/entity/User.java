@@ -53,6 +53,6 @@ public class User {
     public String getPhotosImagePath() {
         if (id == null || imagePath == null) return "/images/default-user.png";
 
-        return "/images/user-photos/" + this.id + "/" + this.imagePath;
+        return "/user-photos/" + this.id + "/" + this.imagePath;
     }
 }

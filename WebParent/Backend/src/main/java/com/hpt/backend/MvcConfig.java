@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String logicalPath = "images/user-photos";
+        String logicalPath = "user-photos";
         Path path = Paths.get(logicalPath);
         String absolutePath = path.toFile().getAbsolutePath();
 

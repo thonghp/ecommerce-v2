@@ -39,7 +39,7 @@
                 <td>
                     <span th:if="${user.imagePath == null}" class="fas fa-portrait fa-3x icon-gray"></span>
                     <img th:unless="${user.imagePath == null}" th:src="@{${user.photosImagePath}}" alt="personal photo"
-                    style="height: 70px">
+                         style="height: 70px">
                 </td>
                 <td>[[${user.email}]]</td>
                 <td th:if="${user.id == 1}">
@@ -73,6 +73,37 @@
             </tr>
             </tbody>
         </table>
+    </div>
+
+    <div class="text-center m-1" th:if="${totalItems > 0}">
+        <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+    </div>
+
+    <div class="text-center m-1" th:unless="${totalItems > 0}">
+        <span>Không tìm thấy người dùng</span>
+    </div>
+
+    <div>
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link" th:href="@{/users/page/1}">Đầu</a>
+                </li>
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link" th:href="@{'/users/page/' + ${currentPage - 1}}">Trước</a>
+                </li>
+                <li th:class="${currentPage != i ? 'page-item': 'page-item active'}"
+                    th:each="i : ${#numbers.sequence(1, totalPages)}">
+                    <a class="page-link" th:href="@{'/users/page/' + ${i}}">[[${i}]]</a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link" th:href="@{'/users/page/' + ${currentPage + 1}}">Sau</a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a class="page-link" th:href="@{'/users/page/' + ${totalPages}}">Cuối</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <div th:replace="fragments :: confirm_modal('nhân viên')"></div>
