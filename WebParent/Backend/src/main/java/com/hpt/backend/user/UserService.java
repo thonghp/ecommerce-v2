@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,8 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public static final int USERS_PER_PAGE = 5;
+    public final static int USERS_PER_PAGE = 5;
+    public final static String DEFAULT_SORT_TYPE = "asc";
 
     /**
      * Return a list of all roles
@@ -128,13 +130,18 @@ public class UserService {
     }
 
     /**
-     * Returns a list of users based on the requested page
+     * Returns a page containing a list of users based on the requested page and specifies a custom field sort type.
+     * Default is ascending sort
      *
-     * @param pageNum The page requests to return data
-     * @return a list of users
+     * @param pageNum   The page requests to return data
+     * @param sortField The field to sort
+     * @param sortType  The type of sort
+     * @return a page containing a list of users
      */
-    public Page<User> listByPage(int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE);
+    public Page<User> listByPage(int pageNum, String sortField, String sortType) {
+        Sort sort = Sort.by(sortField);
+        sort = sortType.equals(DEFAULT_SORT_TYPE) ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE, sort);
 
         return userRepo.findAll(pageable);
     }

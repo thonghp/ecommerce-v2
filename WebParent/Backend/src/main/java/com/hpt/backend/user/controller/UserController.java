@@ -21,20 +21,25 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+
 @Controller
 public class UserController {
+
     @Autowired
     private UserService userService;
 
     @GetMapping("/users")
     public String listFirstPage(Model model) {
-        return listByPage(1, model);
+        return listByPage(1, model, "id", UserService.DEFAULT_SORT_TYPE);
     }
 
     @GetMapping("/users/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") Integer pageNum, Model model) {
-        Page<User> page = userService.listByPage(pageNum);
+    public String listByPage(@PathVariable(name = "pageNum") Integer pageNum, Model model,
+                             @RequestParam(name = "sortField") String sortField,
+                             @RequestParam(name = "sortType") String sortType) {
+        Page<User> page = userService.listByPage(pageNum, sortField, sortType);
         List<User> users = page.getContent();
+        String reverseSortType = sortType.equals("asc") ? "desc" : "asc";
 
         long startCount = (long) (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
         long endCount = startCount + UserService.USERS_PER_PAGE - 1;
@@ -47,6 +52,9 @@ public class UserController {
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortType", sortType);
+        model.addAttribute("reverseSortType", reverseSortType);
         model.addAttribute("users", users);
 
         return "users";

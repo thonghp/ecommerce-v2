@@ -22,7 +22,18 @@
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
-                <th>ID</th>
+                <th>
+                    <a th:if="${sortField == 'id'}" class="text-white"
+                       th:href="@{'/users/page/' + ${currentPage} + '?sortField=id&sortType=' + ${reverseSortType}}">
+                        ID
+                    </a>
+                    <a th:unless="${sortField == 'id'}" class="text-white"
+                       th:href="@{'/users/page/' + ${currentPage} + '?sortField=id&sortType=' + ${sortType}}">
+                        ID
+                    </a>
+                    <span th:if="${sortField == 'id'}"
+                          th:class="${sortType == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+                </th>
                 <th>Ảnh</th>
                 <th>E-mail</th>
                 <th>Họ và tên</th>
@@ -87,20 +98,35 @@
         <nav>
             <ul class="pagination justify-content-center">
                 <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link" th:href="@{/users/page/1}">Đầu</a>
+                    <a class="page-link"
+                       th:href="@{'/users/page/1?sortField=' + ${sortField} + '&sortType=' + ${sortType}}">
+                        Đầu
+                    </a>
                 </li>
                 <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link" th:href="@{'/users/page/' + ${currentPage - 1}}">Trước</a>
+                    <a class="page-link"
+                       th:href="@{'/users/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType}}">
+                        Trước
+                    </a>
                 </li>
                 <li th:class="${currentPage != i ? 'page-item': 'page-item active'}"
                     th:each="i : ${#numbers.sequence(1, totalPages)}">
-                    <a class="page-link" th:href="@{'/users/page/' + ${i}}">[[${i}]]</a>
+                    <a class="page-link"
+                       th:href="@{'/users/page/' + ${i} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType}}">
+                        [[${i}]]
+                    </a>
                 </li>
                 <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link" th:href="@{'/users/page/' + ${currentPage + 1}}">Sau</a>
+                    <a class="page-link"
+                       th:href="@{'/users/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType}}">
+                        Sau
+                    </a>
                 </li>
                 <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link" th:href="@{'/users/page/' + ${totalPages}}">Cuối</a>
+                    <a class="page-link"
+                       th:href="@{'/users/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType}}">
+                        Cuối
+                    </a>
                 </li>
             </ul>
         </nav>
