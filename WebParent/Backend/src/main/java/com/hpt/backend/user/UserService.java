@@ -130,18 +130,23 @@ public class UserService {
     }
 
     /**
-     * Returns a page containing a list of users based on the requested page and specifies a custom field sort type.
-     * Default is ascending sort
+     * Returns a page containing a list of users based on the requested page, specifying the custom field sort type and
+     * search keyword if available. The default is to sort ascending and the keyword is not available
      *
      * @param pageNum   The page requests to return data
      * @param sortField The field to sort
      * @param sortType  The type of sort
+     * @param keyword   The keyword to search
      * @return a page containing a list of users
      */
-    public Page<User> listByPage(int pageNum, String sortField, String sortType) {
+    public Page<User> listByPage(int pageNum, String sortField, String sortType, String keyword) {
         Sort sort = Sort.by(sortField);
         sort = sortType.equals(DEFAULT_SORT_TYPE) ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE, sort);
+
+        if (keyword != null) {
+            return userRepo.findAll(keyword, pageable);
+        }
 
         return userRepo.findAll(pageable);
     }
