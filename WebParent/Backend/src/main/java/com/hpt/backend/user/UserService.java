@@ -29,6 +29,15 @@ public class UserService {
     public final static String DEFAULT_SORT_TYPE = "asc";
 
     /**
+     * Return a list of all users
+     *
+     * @return List of users
+     */
+    public List<User> listAll() {
+        return (List<User>) userRepo.findAll();
+    }
+
+    /**
      * Return a list of all roles
      *
      * @return List of roles

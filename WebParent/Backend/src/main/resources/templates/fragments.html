@@ -69,6 +69,22 @@
     </nav>
 </div>
 
+<th th:fragment="sort_column(fieldName, columnName)">
+    <a class="text-white"
+       th:href="@{'/users/page/' + ${currentPage} + '?sortField='+ ${fieldName} + '&sortType=' + ${sortField != fieldName ? sortType : reverseSortType} +
+                       ${keyword != null ? '&keyword=' + keyword : ''}}">
+        [[${columnName}]]
+    </a>
+    <span th:if="${sortField == fieldName}"
+          th:class="${sortType == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<a th:fragment="pagination(pageNum, label)"
+   th:href="@{'/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
+   ${keyword != null ? '&keyword=' + keyword : ''}}" class="page-link">
+    [[${label}]]
+</a>
+
 <div th:fragment="confirm_modal(content)" class="modal fade text-center" id="confirmModal">
     <div class="modal-dialog">
         <div class="modal-content">

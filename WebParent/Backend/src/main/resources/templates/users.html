@@ -12,6 +12,12 @@
     <div>
         <h2>Quản lý nhân viên</h2>
         <a th:href="@{/users/new}">Thêm nhân viên</a>
+        &nbsp;|&nbsp;
+        <a th:href="@{/users/export/csv}">Xuất ra CSV</a>
+        &nbsp;|&nbsp;
+        <a th:href="@{/users/export/excel}">Xuất ra Excel</a>
+        &nbsp;|&nbsp;
+        <a th:href="@{/users/export/pdf}">Xuất ra PDF</a>
     </div>
 
     <div th:if="${message != null}" class="alert alert-success text-center" id="hideMessage">
@@ -37,20 +43,7 @@
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
-                <th>
-                    <a th:unless="${sortField == 'id'}" class="text-white"
-                       th:href="@{'/users/page/' + ${currentPage} + '?sortField=id&sortType=' + ${sortType} +
-                       ${keyword != null ? '&keyword=' + keyword : ''}}">
-                        ID
-                    </a>
-                    <a th:if="${sortField == 'id'}" class="text-white"
-                       th:href="@{'/users/page/' + ${currentPage} + '?sortField=id&sortType=' + ${reverseSortType} +
-                       ${keyword != null ? '&keyword=' + keyword : ''}}">
-                        ID
-                    </a>
-                    <span th:if="${sortField == 'id'}"
-                          th:class="${sortType == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
-                </th>
+                <th th:replace="fragments :: sort_column('id', 'ID')"></th>
                 <th>Ảnh</th>
                 <th>E-mail</th>
                 <th>Họ và tên</th>
@@ -115,40 +108,20 @@
         <nav>
             <ul class="pagination justify-content-center">
                 <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link"
-                       th:href="@{'/users/page/1?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
-                       ${keyword != null ? '&keyword=' + keyword : ''}}">
-                        Đầu
-                    </a>
+                    <a th:replace="fragments :: pagination(1, 'Đầu')"></a>
                 </li>
                 <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link"
-                       th:href="@{'/users/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
-                       ${keyword != null ? '&keyword=' + keyword : ''}}">
-                        Trước
-                    </a>
+                    <a th:replace="fragments :: pagination(${currentPage - 1}, 'Trước')"></a>
                 </li>
                 <li th:class="${currentPage != i ? 'page-item': 'page-item active'}"
                     th:each="i : ${#numbers.sequence(1, totalPages)}">
-                    <a class="page-link"
-                       th:href="@{'/users/page/' + ${i} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
-                       ${keyword != null ? '&keyword=' + keyword : ''}}">
-                        [[${i}]]
-                    </a>
+                    <a th:replace="fragments :: pagination(${i}, ${i})"></a>
                 </li>
                 <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link"
-                       th:href="@{'/users/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
-                       ${keyword != null ? '&keyword=' + keyword : ''}}">
-                        Sau
-                    </a>
+                    <a th:replace="fragments :: pagination(${currentPage + 1}, 'Sau')"></a>
                 </li>
                 <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a class="page-link"
-                       th:href="@{'/users/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
-                       ${keyword != null ? '&keyword=' + keyword : ''}}">
-                        Cuối
-                    </a>
+                    <a th:replace="fragments :: pagination(${totalPages}, 'Cuối')"></a>
                 </li>
             </ul>
         </nav>
