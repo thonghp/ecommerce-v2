@@ -69,7 +69,7 @@
     </nav>
 </div>
 
-<th th:fragment="sort_column(fieldName, columnName)">
+<th th:fragment="sort_column(fieldName, columnName, removeTag)" th:remove="${removeTag}">
     <a class="text-white"
        th:href="@{'/users/page/' + ${currentPage} + '?sortField='+ ${fieldName} + '&sortType=' + ${sortField != fieldName ? sortType : reverseSortType} +
                        ${keyword != null ? '&keyword=' + keyword : ''}}">
@@ -78,6 +78,24 @@
     <span th:if="${sortField == fieldName}"
           th:class="${sortType == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
 </th>
+
+<div th:fragment="status(condition, url)" th:remove="tag">
+    <a th:if="${condition}" th:href="@{${url} + '/enabled/false'}" class="fas fa-check-circle fa-2x icon-green"
+       title="Vô hiệu hoá">
+    </a>
+    <a th:unless="${condition}" th:href="@{${url} + '/enabled/true'}" class="fas fa-check-circle fa-2x icon-gray"
+       title="Kích hoạt">
+    </a>
+</div>
+
+<div th:fragment="edit(url, titleName)" th:remove="tag">
+    <a th:href="@{${url}}" class="fas fa-edit fa-2x icon-green" th:title="${titleName}"></a>&nbsp;
+</div>
+
+<div th:fragment="delete(url, titleName, id)" th:remove="tag">
+    <a th:href="@{${url}}" class="fas fa-trash fa-2x icon-gray link-delete" th:title="${titleName}"
+       th:objectId="${id}"></a>
+</div>
 
 <a th:fragment="pagination(pageNum, label)"
    th:href="@{'/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +

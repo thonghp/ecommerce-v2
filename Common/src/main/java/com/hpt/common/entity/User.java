@@ -33,7 +33,7 @@ public class User {
     private String password;
     private boolean enabled;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -54,5 +54,10 @@ public class User {
         if (id == null || imagePath == null) return "/images/default-user.png";
 
         return "/user-photos/" + this.id + "/" + this.imagePath;
+    }
+
+    @Transient
+    public String getFullName() {
+        return lastName + " " + firstName;
     }
 }
