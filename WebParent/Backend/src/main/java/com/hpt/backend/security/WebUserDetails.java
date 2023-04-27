@@ -61,7 +61,7 @@ public class WebUserDetails implements UserDetails {
         return user.isEnabled();
     }
 
-//    public String getFullname() {
-//        return this.user.getFirstName() + " " + this.user.getLastName();
-//    }
+    public String getFullname() {
+        return this.user.getLastName() + " " + this.user.getFirstName();
+    }
 }

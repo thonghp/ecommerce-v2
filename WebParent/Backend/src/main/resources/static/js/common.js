@@ -1,8 +1,19 @@
-const message = document.getElementById('hideMessage');
-if (message !== null) {
-    function hideMessage() {
-        message.style.display = 'none';
-    }
+$(document).ready(function () {
+    // logout
+    $("#logoutLink").on("click", function (e) {
+        e.preventDefault();
+        document.logoutForm.submit();
+    });
 
-    setTimeout(hideMessage, 5000);
-}
+    // hide message
+    const message = document.getElementById('hideMessage');
+    if (message !== null) {
+        function hideMessage() {
+            message.style.display = 'none';
+        }
+        setTimeout(hideMessage, 5000);
+    }
+});
+
+
+
