@@ -159,4 +159,39 @@ public class UserService {
 
         return userRepo.findAll(pageable);
     }
+
+    /**
+     * Return the user corresponding to the email
+     *
+     * @param email email of the user
+     * @return the user object corresponding to email
+     */
+    public User getByEmail(String email) {
+        return userRepo.findByEmail(email);
+    }
+
+    /**
+     * Save information user sent from user profile to update
+     *
+     * @param userInForm the user object sent from user profile
+     * @return the user object after saving
+     */
+    public User updateAccount(User userInForm) {
+        User userInDB = userRepo.findById(userInForm.getId()).get();
+
+        if (!userInForm.getPassword().isEmpty()) {
+            userInDB.setPassword(userInForm.getPassword());
+            encodePassword(userInDB);
+        }
+
+        if (userInForm.getImagePath() != null) {
+            userInDB.setImagePath(userInForm.getImagePath());
+        }
+
+        userInDB.setFirstName(userInForm.getFirstName());
+        userInDB.setLastName(userInForm.getLastName());
+        userInDB.setPhoneNumber(userInForm.getPhoneNumber());
+
+        return userRepo.save(userInDB);
+    }
 }

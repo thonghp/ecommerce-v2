@@ -64,4 +64,16 @@ public class WebUserDetails implements UserDetails {
     public String getFullname() {
         return this.user.getLastName() + " " + this.user.getFirstName();
     }
+
+    public void setFirstName(String firstName) {
+        this.user.setFirstName(firstName);
+    }
+
+    public void setLastName(String lastName) {
+        this.user.setLastName(lastName);
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.user.setPhoneNumber(phoneNumber);
+    }
 }
