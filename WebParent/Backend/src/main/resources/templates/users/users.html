@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments :: page_head('Admin - Quản lý nhân viên')"></head>
+
+<body>
+
+<div class="container-fluid">
+
+    <div th:replace="fragments :: navigation"></div>
+
+    <div>
+        <h2>Quản lý nhân viên</h2>
+        <a th:href="@{/users/new}" class="fas fa-user-plus fa-2x icon-gray mr-2"></a>
+        <a th:href="@{/users/export/csv}" class="fas fa-file-csv fa-2x icon-gray mr-2"></a>
+        <a th:href="@{/users/export/excel}" class="fas fa-file-excel fa-2x icon-gray mr-2"></a>
+        <a th:href="@{/users/export/pdf}" class="fas fa-file-pdf fa-2x icon-gray"></a>
+    </div>
+
+    <div th:if="${message != null}" class="alert alert-success text-center" id="hideMessage">
+        [[${message}]]
+    </div>
+
+    <div>
+        <form th:action="@{/users/page/1}" class="form-inline m-3">
+            <input type="hidden" name="sortField" th:value="${sortField}"/>
+            <input type="hidden" name="sortType" th:value="${sortType}"/>
+
+            Tìm kiếm:&nbsp;
+            <input type="search" name="keyword" th:value="${keyword}" class="form-control" required
+                   placeholder="Tìm kiếm..."/>
+            &nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary" onclick="clearFilter()">
+                <i class="fas fa-eraser"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="full-details">
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th class="hideable-column">
+                    <div th:replace="fragments :: sort_column('id', 'ID', 'tag')"></div>
+                </th>
+                <th>Ảnh</th>
+                <th class="hideable-column">E-mail</th>
+                <th>Họ và tên</th>
+                <th>SĐT</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td class="hideable-column">[[${user.id}]]</td>
+                <td>
+                    <span th:if="${user.imagePath == null}" class="fas fa-portrait fa-3x icon-gray"></span>
+                    <img th:unless="${user.imagePath == null}" th:src="@{${user.photosImagePath}}" alt="personal photo"
+                         style="height: 70px">
+                </td>
+                <td class="hideable-column">[[${user.email}]]</td>
+                <td th:if="${user.id == 1}">
+                    [[${user.firstName}]]
+                </td>
+                <td th:unless="${user.id == 1}">
+                    [[${user.fullName}]]
+                </td>
+                <td>[[${user.phoneNumber}]]</td>
+                <td>[[${user.roles}]]</td>
+
+                <th:block>
+                    <td th:if="${user.id == 1}"></td>
+                    <td th:unless="${user.id == 1}">
+                        <div th:replace="fragments :: status(${user.enabled}, '/users/' + ${user.id})"></div>
+                    </td>
+                </th:block>
+
+                <th:block>
+                    <td th:if="${user.id == 1}"></td>
+                    <td th:unless="${user.id == 1}">
+                        <div th:replace="fragments :: edit('/users/edit/' + ${user.id}, 'Chỉnh sửa nhân viên')"></div>
+                        <div th:replace="fragments :: delete('/users/delete/' + ${user.id}, 'Xoá nhân viên', ${user.id})"></div>
+                    </td>
+                </th:block>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="less-details">
+        <div th:each="user : ${users}" class="row m-1">
+            <div class="col-4">
+                <span th:if="${user.imagePath == null}" class="fas fa-portrait fa-3x icon-gray"></span>
+                <img th:unless="${user.imagePath == null}" th:src="@{${user.photosImagePath}}" alt="personal photo"
+                     style="height: 70px">
+            </div>
+            <div class="col-8">
+                <div>[[${user.fullName}]]</div>
+                <div>[[${user.roles}]]</div>
+                <div class="mt-2">
+                    <div th:replace="fragments :: status(${user.enabled}, '/users/' + ${user.id})"></div>
+                    &nbsp;
+                    <th:block>
+                        <td th:if="${user.id == 1}"></td>
+                        <td th:unless="${user.id == 1}">
+                            <div th:replace="fragments :: edit('/users/edit/' + ${user.id}, 'Chỉnh sửa nhân viên')"></div>
+                            <div th:replace="fragments :: delete('/users/delete/' + ${user.id}, 'Xoá nhân viên', ${user.id})"></div>
+                        </td>
+                    </th:block>
+                </div>
+            </div>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+
+    <div class="text-center m-1" th:if="${totalItems > 0}">
+        <span>Từ [[${startCount}]] đến [[${endCount}]]</span>
+    </div>
+
+    <div class="text-center m-1" th:unless="${totalItems > 0}">
+        <span>Không tìm thấy người dùng</span>
+    </div>
+
+    <div th:if="${totalPages > 1}">
+        <nav>
+            <ul class="pagination justify-content-center flex-wrap">
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: pagination(1, 'Đầu')"></a>
+                </li>
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: pagination(${currentPage - 1}, 'Trước')"></a>
+                </li>
+                <li th:class="${currentPage != i ? 'page-item': 'page-item active'}"
+                    th:each="i : ${#numbers.sequence(1, totalPages)}">
+                    <a th:replace="fragments :: pagination(${i}, ${i})"></a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: pagination(${currentPage + 1}, 'Sau')"></a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: pagination(${totalPages}, 'Cuối')"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:replace="fragments :: confirm_modal('nhân viên')"></div>
+
+    <div th:replace="fragments :: footer"></div>
+
+</div>
+</body>
+<script th:src="@{/js/common.js}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            let link = $(this);
+            let userId = link.attr("objectId");
+            $("#yesButton").attr("href", link.attr("href"));
+            $("#confirmText").text("Bạn có chắc muốn xoá nhân viên có id là " + userId + " này không ?");
+            $("#confirmModal").modal();
+        });
+    });
+
+    function clearFilter() {
+        window.location = "[[@{/users}]]";
+    }
+</script>
+
+</html>
