@@ -1,5 +1,7 @@
 package com.hpt.backend;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -10,7 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class FileUploadUtils {
-//    private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadUtils.class);
 
     /**
      * Save the file to the specified directory. If the directory does not exist, a new directory will be created
@@ -49,14 +51,14 @@ public class FileUploadUtils {
                     try {
                         Files.delete(file);
                     } catch (IOException e) {
-//                        LOGGER.error("Could not delete file: " + file);
-                        System.out.println("Could not delete file: " + file);
+//                        System.out.println("Could not delete file: " + file);
+                        LOGGER.error("Could not delete file: " + file);
                     }
                 }
             });
         } catch (IOException e) {
-//            LOGGER.error("Could not list directory: " + dirPath);
-            System.out.println("Could not list directory: " + dirPath);
+//            System.out.println("Could not list directory: " + dirPath);
+            LOGGER.error("Could not list directory: " + dirPath);
         }
     }
 
@@ -73,8 +75,8 @@ public class FileUploadUtils {
         try {
             Files.delete(Paths.get(dir));
         } catch (IOException e) {
-//            LOGGER.error("Could not remove directory: " + dir);
-            System.out.println("Could not remove directory: " + dir);
+//            System.out.println("Could not remove directory: " + dir);
+            LOGGER.error("Could not remove directory: " + dir);
         }
     }
 }
