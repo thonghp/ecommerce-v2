@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments :: page_head('Admin - Quản lý thể loại')"></head>
+
+<body>
+
+<div class="container-fluid">
+
+    <div th:replace="fragments :: navigation"></div>
+
+    <div>
+        <h2>Quản lý thể loại</h2>
+        <a th:href="@{/categories/new}" class="fa-solid fa-user-plus fa-2x icon-gray mr-2"></a>
+        <a th:href="@{/categories/export/csv}" class="fas fa-file-csv fa-2x icon-gray mr-2"></a>
+        <a th:href="@{/categories/export/excel}" class="fas fa-file-excel fa-2x icon-gray mr-2"></a>
+        <a th:href="@{/categories/export/pdf}" class="fas fa-file-pdf fa-2x icon-gray"></a>
+    </div>
+
+    <div th:if="${message != null}" class="alert alert-success text-center" id="hideMessage">
+        [[${message}]]
+    </div>
+
+    <div>
+        <form th:action="@{/categories/page/1}" class="form-inline m-3">
+            <input type="hidden" name="sortField" th:value="${sortField}"/>
+            <input type="hidden" name="sortType" th:value="${sortType}"/>
+
+            Tìm kiếm:&nbsp;
+            <input type="search" name="keyword" th:value="${keyword}" class="form-control" required
+                   placeholder="Tìm kiếm..."/>
+            &nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary" onclick="clearFilter()">
+                <i class="fas fa-eraser"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="full-details">
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th class="hideable-column">
+                    <div th:replace="fragments :: sort_column('id', 'ID', 'tag')"></div>
+                </th>
+                <th>Ảnh</th>
+                <th>Tên</th>
+                <th>Alias</th>
+                <th>Parent</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="category : ${categories}">
+                <td class="hideable-column">[[${category.id}]]</td>
+                <td>
+                    <img th:src="@{${category.image}}" alt="personal photo" style="height: 70px">
+                </td>
+                <td>[[${category.name}]]</td>
+                <td>[[${category.alias}]]</td>
+                <td>[[${category.parent}]]</td>
+
+                <th:block>
+                    <td th:if="${category.id == 1}"></td>
+                    <td th:unless="${category.id == 1}">
+                        <div th:replace="fragments :: status(${category.enabled}, '/categories/' + ${category.id})"></div>
+                    </td>
+                </th:block>
+
+                <th:block>
+                    <td th:if="${category.id == 1}"></td>
+                    <td th:unless="${category.id == 1}">
+                        <div th:replace="fragments :: edit('/categories/edit/' + ${category.id}, 'Chỉnh sửa nhân viên')"></div>
+                        <div th:replace="fragments :: delete('/categories/delete/' + ${category.id}, 'Xoá nhân viên', ${category.id})"></div>
+                    </td>
+                </th:block>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="fragments :: confirm_modal('nhân viên')"></div>
+
+    <div th:replace="fragments :: footer"></div>
+
+</div>
+</body>
+<script th:src="@{/js/common.js}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            let link = $(this);
+            let categoryId = link.attr("objectId");
+            $("#yesButton").attr("href", link.attr("href"));
+            $("#confirmText").text("Bạn có chắc muốn xoá nhân viên có id là " + categoryId + " này không ?");
+            $("#confirmModal").modal();
+        });
+    });
+
+    function clearFilter() {
+        window.location = "[[@{/categories}]]";
+    }
+</script>
+
+</html>
