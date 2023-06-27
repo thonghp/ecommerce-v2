@@ -2,11 +2,16 @@ package com.hpt.backend.category;
 
 import com.hpt.backend.FileUploadUtils;
 import com.hpt.common.entity.Category;
+import com.hpt.common.entity.Role;
+import com.hpt.common.entity.User;
+import com.hpt.common.exception.CateogryNotFoundException;
+import com.hpt.common.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,5 +68,23 @@ public class CategoryController {
         redirectAttributes.addFlashAttribute("message", "Thể loại " + name + " đã được lưu thành công");
 
         return "redirect:/categories";
+    }
+
+    @GetMapping("/categories/edit/{id}")
+    public String editCategory(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            Category category = categoryService.get(id);
+            List<Category> categories = categoryService.listHierarchicalCategoriesInform();
+
+            model.addAttribute("category", category);
+            model.addAttribute("categories", categories);
+            model.addAttribute("pageTitle", "Chỉnh sửa thể loại");
+
+            return "categories/category_form";
+        } catch (CateogryNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+
+            return "redirect:/categories";
+        }
     }
 }

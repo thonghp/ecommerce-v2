@@ -64,7 +64,7 @@
                     <div th:replace="fragments :: status(${category.enabled}, '/categories/' + ${category.id})"></div>
                 </td>
                 <td>
-                    <div th:replace="fragments :: edit('/categories/edit/' + ${category.id}, 'Chỉnh sửa nhân viên')"></div>
+                    <div th:replace="fragments :: edit('/categories/edit/' + ${category.id}, 'Chỉnh sửa thể loại')"></div>
                     <div th:replace="fragments :: delete('/categories/delete/' + ${category.id}, 'Xoá nhân viên', ${category.id})"></div>
                 </td>
             </tr>
@@ -83,7 +83,7 @@
                 <div class="mt-2">
                     <div th:replace="fragments :: status(${category.enabled}, '/categories/' + ${category.id})"></div>
                     &nbsp;
-                    <div th:replace="fragments :: edit('/categories/edit/' + ${category.id}, 'Chỉnh sửa nhân viên')"></div>
+                    <div th:replace="fragments :: edit('/categories/edit/' + ${category.id}, 'Chỉnh sửa thể loại')"></div>
                     <div th:replace="fragments :: delete('/categories/delete/' + ${category.id}, 'Xoá nhân viên', ${category.id})"></div>
                 </div>
             </div>

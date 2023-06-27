@@ -1,6 +1,7 @@
 package com.hpt.backend.category;
 
 import com.hpt.common.entity.Category;
+import com.hpt.common.exception.CateogryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -135,5 +136,20 @@ public class CategoryService {
         }
 
         return repo.save(category);
+    }
+
+    /**
+     * Get a category by id
+     *
+     * @param id id of the category
+     * @return category object corresponding to id
+     * @throws CateogryNotFoundException if the category does not exist
+     */
+    public Category get(Integer id) throws CateogryNotFoundException {
+        try {
+            return repo.findById(id).get();
+        } catch (Exception ex) {
+            throw new CateogryNotFoundException("Không tìm thấy thể loại có id là " + id);
+        }
     }
 }
