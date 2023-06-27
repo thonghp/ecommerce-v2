@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,7 +22,7 @@ public class CategoryRepositoryTest {
         Category category = new Category();
         category.setName("Default");
         category.setAlias("default");
-        category.setImage("default.jpg");
+        category.setImagePath("default.jpg");
 
         Category savedCategory = repo.save(category);
         assertThat(savedCategory.getId()).isGreaterThan(0);
@@ -35,7 +36,7 @@ public class CategoryRepositoryTest {
         Category category = new Category();
         category.setName("Default Child");
         category.setAlias("default-child");
-        category.setImage("child.jpg");
+        category.setImagePath("child.jpg");
         category.setParent(parent);
 
         Category savedCategory = repo.save(category);
@@ -53,7 +54,7 @@ public class CategoryRepositoryTest {
         Category category = repo.findById(2).get();
         category.setName("Child");
         category.setAlias("child");
-        category.setImage("child.jpg");
+        category.setImagePath("child.jpg");
 
         Category savedCategory = repo.save(category);
 
@@ -99,5 +100,11 @@ public class CategoryRepositoryTest {
 
             testPrintChildren(subCategory, newSubLevel);
         }
+    }
+
+    @Test
+    public void testListRootCategories() {
+        List<Category> rootCategories = repo.findByParentIsNull();
+        rootCategories.forEach(System.out::println);
     }
 }

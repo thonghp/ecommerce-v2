@@ -9,9 +9,17 @@ import java.nio.file.Paths;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String logicalPath = "user-photos";
+        // User
+        exposeDirectory("user-photos", registry);
+
+        // Category
+        exposeDirectory("category-photos", registry);
+    }
+
+    private void exposeDirectory(String logicalPath, ResourceHandlerRegistry registry) {
         Path path = Paths.get(logicalPath);
         String absolutePath = path.toFile().getAbsolutePath();
 

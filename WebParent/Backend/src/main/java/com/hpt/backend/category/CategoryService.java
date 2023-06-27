@@ -15,68 +15,125 @@ public class CategoryService {
     private CategoryRepository repo;
 
     /**
-     * Return a list of all users
+     * Returns a list of categories in hierarchical order to display in list view
      *
-     * @return List of users
+     * @return List of categories
      */
     public List<Category> listAll() {
-        return (List<Category>) repo.findAll();
+        return listHierarchicalCategories(repo.findByParentIsNull());
     }
 
     /**
-     * Return a list of categories in hierarchical order
+     * Returns a list of categories in hierarchical order
      *
      * @return List of hierarchical categories
      */
-    public List<Category> listHierarchicalCategories() {
-        List<Category> list = new ArrayList<>();
+    private List<Category> listHierarchicalCategories(List<Category> rootCategories) {
+        List<Category> hierarchicalCategories = new ArrayList<>();
 
-        Iterable<Category> categories = repo.findAll();
+        for (Category rootCategory : rootCategories) {
+            hierarchicalCategories.add(Category.copyFull(rootCategory));
+            Set<Category> children = rootCategory.getChildren();
 
-        for (Category category : categories) {
-            if (category.getParent() == null) {
-                Category parent = new Category();
-                parent.setName(category.getName());
-                list.add(parent);
+            for (Category subCategory : children) {
+                String name = "--" + subCategory.getName();
+                hierarchicalCategories.add(Category.copyFull(subCategory, name));
 
-                Set<Category> children = category.getChildren();
-
-                for (Category subCategory : children) {
-                    String name = "--" + subCategory.getName();
-                    Category child = new Category();
-                    child.setName(name);
-                    list.add(child);
-
-                    listChildren(list, subCategory, 1);
-                }
+                listSubCategories(hierarchicalCategories, subCategory, 1);
             }
         }
 
-        return list;
+        return hierarchicalCategories;
     }
 
     /**
-     * Return a list of children categories
+     * Returns a list of children categories in hierarchical order
      *
      * @param categories List of categories
      * @param parent     Parent category
      * @param subLevel   Sub level
      */
-    public void listChildren(List<Category> categories, Category parent, int subLevel) {
+    public void listSubCategories(List<Category> categories, Category parent, int subLevel) {
         int newSubLevel = subLevel + 1;
         Set<Category> children = parent.getChildren();
 
         for (Category subCategory : children) {
             String name = "";
+
             for (int i = 0; i < newSubLevel; i++) {
                 name += "--";
             }
 
-            Category child = new Category();
-            child.setName(name + subCategory.getName());
+            categories.add(Category.copyFull(subCategory, name + subCategory.getName()));
+
+            listSubCategories(categories, subCategory, newSubLevel);
+        }
+    }
+
+    /**
+     * Returns a list of categories with only id and name in hierarchical order to use in the form
+     *
+     * @return List of hierarchical categories
+     */
+    public List<Category> listHierarchicalCategoriesInform() {
+        List<Category> hierarchicalCategories = new ArrayList<>();
+        List<Category> rootCategories = repo.findByParentIsNull();
+
+        for (Category rootCategory : rootCategories) {
+            hierarchicalCategories.add(Category.copyIdAndName(rootCategory));
+            Set<Category> children = rootCategory.getChildren();
+
+            for (Category subCategory : children) {
+                Integer id = subCategory.getId();
+                String name = "--" + subCategory.getName();
+                hierarchicalCategories.add(Category.copyIdAndName(id, name));
+
+                listSubCategoriesInform(hierarchicalCategories, subCategory, 1);
+            }
+        }
+
+        return hierarchicalCategories;
+    }
+
+    /**
+     * Returns a list of children categories with only id and name in hierarchical order to use in the form
+     *
+     * @param categories List of categories
+     * @param parent     Parent category
+     * @param subLevel   Sub level
+     */
+    public void listSubCategoriesInform(List<Category> categories, Category parent, int subLevel) {
+        int newSubLevel = subLevel + 1;
+        Set<Category> children = parent.getChildren();
+
+        for (Category subCategory : children) {
+            String name = "";
+
+            for (int i = 0; i < newSubLevel; i++) {
+                name += "--";
+            }
+
+            Category child = Category.copyIdAndName(subCategory.getId(), name + subCategory.getName());
             categories.add(child);
 
-            listChildren(categories, subCategory, newSubLevel);
+            listSubCategoriesInform(categories, subCategory, newSubLevel);
         }
+    }
+
+    /**
+     * Save category information. If the id does not exist, save the category, otherwise the id already exists, update the category
+     *
+     * @param category category object to save
+     * @return saved category object
+     */
+    public Category save(Category category) {
+        if (category.getAlias() == null || category.getAlias().isEmpty()) {
+            String defaultAlias = category.getName().replaceAll(" ", "-");
+            category.setAlias(defaultAlias);
+        } else {
+            category.setAlias(category.getAlias().replaceAll(" ", "-"));
+        }
+
+        return repo.save(category);
     }
 }
