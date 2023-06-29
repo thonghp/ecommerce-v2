@@ -107,4 +107,20 @@ public class CategoryRepositoryTest {
         List<Category> rootCategories = repo.findByParentIsNull();
         rootCategories.forEach(System.out::println);
     }
+
+    @Test
+    public void testFindByName() {
+        String name = "Laptop";
+        Category category = repo.findByName(name);
+        assertThat(category).isNotNull();
+        assertThat(category.getName()).isEqualTo(name);
+    }
+
+    @Test
+    public void testFindByAlias() {
+        String alias = "Chuột-bàn-phím";
+        Category category = repo.findByAlias(alias);
+        assertThat(category).isNotNull();
+        assertThat(category.getAlias()).isEqualTo(alias);
+    }
 }

@@ -152,4 +152,34 @@ public class CategoryService {
             throw new CateogryNotFoundException("Không tìm thấy thể loại có id là " + id);
         }
     }
+
+    /**
+     * Check category name and alias is unique
+     *
+     * @param id    id of the category
+     * @param name  name of the category
+     * @param alias alias of the category
+     * @return String "OK" if the category name and alias is unique, otherwise return "DuplicateName" or "DuplicateAlias" if the name or alias is not unique
+     */
+    public String checkUnique(Integer id, String name, String alias) {
+        boolean isCreatingNew = (id == null || id == 0);
+
+        Category categoryByName = repo.findByName(name);
+
+        if (isCreatingNew) {
+            if (categoryByName != null) {
+                return "Duplicate name";
+            } else {
+                Category categoryByAlias = repo.findByAlias(alias);
+                if (categoryByAlias != null) return "Duplicate alias";
+            }
+        } else {
+            if (categoryByName != null && categoryByName.getId() != id) return "Duplicate name";
+
+            Category categoryByAlias = repo.findByAlias(alias);
+            if (categoryByAlias != null && categoryByAlias.getId() != id) return "Duplicate alias";
+        }
+
+        return "OK";
+    }
 }

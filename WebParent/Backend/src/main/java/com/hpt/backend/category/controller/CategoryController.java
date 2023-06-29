@@ -1,11 +1,9 @@
-package com.hpt.backend.category;
+package com.hpt.backend.category.controller;
 
 import com.hpt.backend.FileUploadUtils;
+import com.hpt.backend.category.CategoryService;
 import com.hpt.common.entity.Category;
-import com.hpt.common.entity.Role;
-import com.hpt.common.entity.User;
 import com.hpt.common.exception.CateogryNotFoundException;
-import com.hpt.common.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

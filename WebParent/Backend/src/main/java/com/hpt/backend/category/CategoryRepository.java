@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends PagingAndSortingRepository<Category, Integer> {
     List<Category> findByParentIsNull();
+
+    Category findByName(String name);
+
+    Category findByAlias(String alias);
 }

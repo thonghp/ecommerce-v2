@@ -20,6 +20,7 @@
                 <label class="col-sm-4 col-form-label">Tên:</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" th:field="*{name}" required/>
+                    <div id="name-status"></div>
                 </div>
             </div>
 
@@ -28,6 +29,7 @@
                 <div class="col-sm-8">
                     <input type="text" class="form-control" th:field="*{alias}"
                            placeholder="Để trống nếu muốn dùng alias giống tên"/>
+                    <div id="alias-status"></div>
                 </div>
             </div>
 
@@ -74,34 +76,82 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        let emailInput = $('input[name="email"]');
-        let emailStatus = $('#email-status');
-        let url = "[[@{/categories/check_email}]]";
+        let aliasInput = $('input[name="alias"]');
+        let aliasStatus = $('#alias-status');
 
-        // Kiểm tra email khi người dùng rời khỏi trường email hoặc thay đổi nội dung trường
-        emailInput.on('blur', function () {
-            let email = $(this).val();
+        let nameInput = $('input[name="name"]');
+        let nameStatus = $('#name-status');
+
+        let url = "[[@{/categories/check_unique}]]";
+        let nameFlag = false;
+        let aliasFlag = false;
+
+        nameInput.on('blur', function () {
+            nameFlag = true;
+            let name = nameInput.val();
+            let alias = aliasInput.val();
             let csrfToken = $('input[name="_csrf"]').val();
             let categoryId = $('#id').val();
-            if (email !== '') {
+
+            if (name !== '') {
                 $.ajax({
                     url: url,
                     type: 'POST',
-                    data: {id: categoryId, email: email, _csrf: csrfToken},
+                    data: {id: categoryId, name: name, alias: alias, _csrf: csrfToken},
                     success: function (data) {
                         if (data === 'OK') {
-                            emailStatus.html('');
-                        } else if (data === 'Duplicated') {
-                            emailStatus.html('<span style="color:red">Email đã tồn tại</span>');
+                            nameStatus.html('');
+                        } else if (data === 'Duplicate name') {
+                            nameStatus.html('<span style="color:red">Tên đã tồn tại</span>');
                         }
                     }
                 });
             } else {
-                emailStatus.empty();
+                nameStatus.empty();
+            }
+        });
+
+        aliasInput.on('blur', function () {
+            aliasFlag = true;
+            let name = nameInput.val();
+            let alias = aliasInput.val();
+            let csrfToken = $('input[name="_csrf"]').val();
+            let categoryId = $('#id').val();
+
+            if (alias !== '') {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {id: categoryId, name: name, alias: alias, _csrf: csrfToken},
+                    success: function (data) {
+                        if (data === 'OK') {
+                            aliasStatus.html('');
+                        } else if (data === 'Duplicate alias') {
+                            aliasStatus.html('<span style="color:red">Alias đã tồn tại</span>');
+                        }
+                    }
+                });
+            } else {
+                aliasStatus.empty();
+            }
+        });
+
+        nameInput.on('keyup', function () {
+            if (nameFlag) {
+                nameFlag = false;
+                aliasFlag = false;
+                aliasInput.val('');
+                aliasStatus.empty();
+            }
+        });
+
+        aliasInput.on('keyup', function () {
+            if (aliasFlag) {
+                aliasFlag = false;
+                aliasStatus.empty();
             }
         });
     });
-
 </script>
 <script th:src="@{/js/common_photo.js}"></script>
 </body>
