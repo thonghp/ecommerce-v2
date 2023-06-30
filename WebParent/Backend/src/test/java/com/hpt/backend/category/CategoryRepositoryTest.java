@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Set;
@@ -104,8 +105,8 @@ public class CategoryRepositoryTest {
 
     @Test
     public void testListRootCategories() {
-        List<Category> rootCategories = repo.findByParentIsNull();
-        rootCategories.forEach(System.out::println);
+        List<Category> rootCategories = repo.findByParentIsNull(Sort.by("name").ascending());
+        rootCategories.forEach(cat -> System.out.println(cat.getName()));
     }
 
     @Test

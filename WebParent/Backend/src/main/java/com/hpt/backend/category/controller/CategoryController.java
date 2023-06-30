@@ -22,13 +22,19 @@ import java.util.Objects;
 @Controller
 public class CategoryController {
     @Autowired
-    private CategoryService categoryService;
+    private CategoryService service;
 
     @GetMapping("/categories")
-    public String listAll(Model model) {
-        List<Category> categories = categoryService.listAll();
+    public String listAll(Model model, @RequestParam(name = "sortType", required = false) String sortType) {
+        if (sortType == null || sortType.isEmpty()) {
+            sortType = "asc";
+        }
+
+        List<Category> categories = service.listAll(sortType);
+        String reverseSortType = sortType.equals("asc") ? "desc" : "asc";
 
         model.addAttribute("categories", categories);
+        model.addAttribute("reverseSortType", reverseSortType);
 
         return "categories/categories";
     }
@@ -36,7 +42,7 @@ public class CategoryController {
     @GetMapping("/categories/new")
     public String newCategory(Model model) {
         Category category = new Category();
-        List<Category> categories = categoryService.listHierarchicalCategoriesInform();
+        List<Category> categories = service.listHierarchicalCategoriesInform();
 
         model.addAttribute("categories", categories);
         model.addAttribute("category", category);
@@ -51,7 +57,7 @@ public class CategoryController {
         if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             category.setImagePath(fileName);
-            Category savedCategory = categoryService.save(category);
+            Category savedCategory = service.save(category);
 
             String uploadDir = "category-photos/" + savedCategory.getId();
 
@@ -59,7 +65,7 @@ public class CategoryController {
             FileUploadUtils.saveFile(uploadDir, fileName, multipartFile);
         } else {
             if (category.getImagePath().isEmpty()) category.setImagePath(null);
-            categoryService.save(category);
+            service.save(category);
         }
 
         String name = category.getName();
@@ -71,8 +77,8 @@ public class CategoryController {
     @GetMapping("/categories/edit/{id}")
     public String editCategory(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
         try {
-            Category category = categoryService.get(id);
-            List<Category> categories = categoryService.listHierarchicalCategoriesInform();
+            Category category = service.get(id);
+            List<Category> categories = service.listHierarchicalCategoriesInform();
 
             model.addAttribute("category", category);
             model.addAttribute("categories", categories);

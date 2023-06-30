@@ -45,7 +45,10 @@
                     <div th:replace="fragments :: sort_column('id', 'ID', 'tag')"></div>
                 </th>
                 <th>Ảnh</th>
-                <th>Tên</th>
+                <th>
+                    <a class="text-white" th:href="@{'/categories?sortType=' + ${reverseSortType}}">Tên</a>
+                    <span th:class="${reverseSortType == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+                </th>
                 <th>Alias</th>
                 <th>Trạng thái</th>
                 <th></th>

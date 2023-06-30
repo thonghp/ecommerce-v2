@@ -3,60 +3,74 @@ package com.hpt.backend.category;
 import com.hpt.common.entity.Category;
 import com.hpt.common.exception.CateogryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 
 public class CategoryService {
+    public static final String ASCENDING = "asc";
+    public static final String DESCENDING = "desc";
+    public static final String SORT_FIELD_NAME = "name";
     @Autowired
     private CategoryRepository repo;
 
     /**
-     * Returns a list of categories in hierarchical order to display in list view
+     * Returns a list of categories in hierarchical order and sorted ascending or descending by the name field for
+     * display in the list view
      *
-     * @return List of categories
+     * @return List of categories are sorted ascending or descending by the name field
      */
-    public List<Category> listAll() {
-        return listHierarchicalCategories(repo.findByParentIsNull());
+    public List<Category> listAll(String sortType) {
+        Sort sort = Sort.by(SORT_FIELD_NAME);
+
+        if (sortType.equals(ASCENDING)) {
+            sort = sort.ascending();
+        } else if (sortType.equals(DESCENDING)) {
+            sort = sort.descending();
+        }
+
+        List<Category> rootCategories = repo.findByParentIsNull(sort);
+
+        return listHierarchicalCategories(rootCategories, sortType);
     }
 
     /**
-     * Returns a list of categories in hierarchical order
+     * Returns a list of categories in hierarchical order and sorted ascending or descending
      *
-     * @return List of hierarchical categories
+     * @return List of hierarchical categories are sorted ascending or descending
      */
-    private List<Category> listHierarchicalCategories(List<Category> rootCategories) {
+    private List<Category> listHierarchicalCategories(List<Category> rootCategories, String sortType) {
         List<Category> hierarchicalCategories = new ArrayList<>();
 
         for (Category rootCategory : rootCategories) {
             hierarchicalCategories.add(Category.copyFull(rootCategory));
-            Set<Category> children = rootCategory.getChildren();
+            Set<Category> children = sortSubCategories(rootCategory.getChildren(), sortType);
 
             for (Category subCategory : children) {
                 String name = "--" + subCategory.getName();
                 hierarchicalCategories.add(Category.copyFull(subCategory, name));
 
-                listSubCategories(hierarchicalCategories, subCategory, 1);
+                listSubCategories(hierarchicalCategories, subCategory, 1, sortType);
             }
         }
 
         return hierarchicalCategories;
     }
 
+
     /**
-     * Returns a list of children categories in hierarchical order
+     * Returns a list of children categories in hierarchical order and sorted ascending or descending
      *
      * @param categories List of categories
      * @param parent     Parent category
      * @param subLevel   Sub level
      */
-    public void listSubCategories(List<Category> categories, Category parent, int subLevel) {
+    public void listSubCategories(List<Category> categories, Category parent, int subLevel, String sortType) {
+        Set<Category> children = sortSubCategories(parent.getChildren(), sortType);
         int newSubLevel = subLevel + 1;
-        Set<Category> children = parent.getChildren();
 
         for (Category subCategory : children) {
             String name = "";
@@ -67,22 +81,23 @@ public class CategoryService {
 
             categories.add(Category.copyFull(subCategory, name + subCategory.getName()));
 
-            listSubCategories(categories, subCategory, newSubLevel);
+            listSubCategories(categories, subCategory, newSubLevel, sortType);
         }
     }
 
     /**
-     * Returns a list of categories with only id and name in hierarchical order to use in the form
+     * Returns a list of categories with only id and name in hierarchical order and sorted ascending by name field for
+     * use in the form
      *
-     * @return List of hierarchical categories
+     * @return List of hierarchical categories with only id and name are sorted ascending by name field
      */
     public List<Category> listHierarchicalCategoriesInform() {
         List<Category> hierarchicalCategories = new ArrayList<>();
-        List<Category> rootCategories = repo.findByParentIsNull();
+        List<Category> rootCategories = repo.findByParentIsNull(Sort.by(SORT_FIELD_NAME).ascending());
 
         for (Category rootCategory : rootCategories) {
             hierarchicalCategories.add(Category.copyIdAndName(rootCategory));
-            Set<Category> children = rootCategory.getChildren();
+            Set<Category> children = sortSubCategories(rootCategory.getChildren());
 
             for (Category subCategory : children) {
                 Integer id = subCategory.getId();
@@ -105,7 +120,7 @@ public class CategoryService {
      */
     public void listSubCategoriesInform(List<Category> categories, Category parent, int subLevel) {
         int newSubLevel = subLevel + 1;
-        Set<Category> children = parent.getChildren();
+        Set<Category> children = sortSubCategories(parent.getChildren());
 
         for (Category subCategory : children) {
             String name = "";
@@ -122,7 +137,8 @@ public class CategoryService {
     }
 
     /**
-     * Save category information. If the id does not exist, save the category, otherwise the id already exists, update the category
+     * Save category information. If the id does not exist, save the category, otherwise the id already exists,
+     * update the category
      *
      * @param category category object to save
      * @return saved category object
@@ -159,7 +175,8 @@ public class CategoryService {
      * @param id    id of the category
      * @param name  name of the category
      * @param alias alias of the category
-     * @return String "OK" if the category name and alias is unique, otherwise return "DuplicateName" or "DuplicateAlias" if the name or alias is not unique
+     * @return String "OK" if the category name and alias is unique, otherwise return "DuplicateName" or
+     * "DuplicateAlias" if the name or alias is not unique
      */
     public String checkUnique(Integer id, String name, String alias) {
         boolean isCreatingNew = (id == null || id == 0);
@@ -181,5 +198,39 @@ public class CategoryService {
         }
 
         return "OK";
+    }
+
+    /**
+     * Sorts a set of categories by name in ascending or descending order
+     *
+     * @param children Set of categories to sort
+     * @param sortType Sort type (asc or desc)
+     * @return Sorted set of categories
+     */
+    private SortedSet<Category> sortSubCategories(Set<Category> children, String sortType) {
+        SortedSet<Category> sortedChildren = new TreeSet<>(new Comparator<Category>() {
+            @Override
+            public int compare(Category cat1, Category cat2) {
+                if (sortType.equals(ASCENDING)) {
+                    return cat1.getName().compareTo(cat2.getName());
+                } else {
+                    return cat2.getName().compareTo(cat1.getName());
+                }
+            }
+        });
+
+        sortedChildren.addAll(children);
+
+        return sortedChildren;
+    }
+
+    /**
+     * Sorts a set of categories by name in ascending order
+     *
+     * @param children Set of categories to sort
+     * @return Sorted set of categories in ascending order
+     */
+    private SortedSet<Category> sortSubCategories(Set<Category> children) {
+        return sortSubCategories(children, ASCENDING);
     }
 }
