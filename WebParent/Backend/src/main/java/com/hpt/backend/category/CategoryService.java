@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
-
+@Transactional
 public class CategoryService {
     public static final String ASCENDING = "asc";
     public static final String DESCENDING = "desc";
@@ -232,5 +233,15 @@ public class CategoryService {
      */
     private SortedSet<Category> sortSubCategories(Set<Category> children) {
         return sortSubCategories(children, ASCENDING);
+    }
+
+    /**
+     * Update the enabled status of a category
+     *
+     * @param id      id of the category
+     * @param enabled enabled status
+     */
+    public void updateCategoryEnabledStatus(Integer id, boolean enabled) {
+        repo.updateEnabledStatus(id, enabled);
     }
 }

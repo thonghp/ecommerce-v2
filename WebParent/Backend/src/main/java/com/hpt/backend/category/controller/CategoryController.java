@@ -91,4 +91,15 @@ public class CategoryController {
             return "redirect:/categories";
         }
     }
+
+    @GetMapping("/categories/{id}/enabled/{status}")
+    public String updateCategoryEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled,
+                                          RedirectAttributes redirectAttributes) {
+        service.updateCategoryEnabledStatus(id, enabled);
+        String status = enabled ? " được kích hoạt" : " bị vô hiệu hoá";
+        String message = "Thể loại có id là " + id + status;
+        redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/categories";
+    }
 }
