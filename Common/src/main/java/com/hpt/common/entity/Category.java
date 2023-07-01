@@ -31,6 +31,8 @@ public class Category {
     private Category parent;
     @OneToMany(mappedBy = "parent")
     private Set<Category> children = new HashSet<>();
+    @Transient
+    private boolean hasChildren;
 
     public static Category copyIdAndName(Category category) {
         Category copyCategory = new Category();
@@ -55,6 +57,8 @@ public class Category {
         copyCategory.setAlias(category.getAlias());
         copyCategory.setImagePath(category.getImagePath());
         copyCategory.setEnabled(category.isEnabled());
+        // Mục đích là nếu category có thể loại con thì nó sẽ true lúc này sẽ không hiển thị icon xoá đợi xoá hết con mới xoá được
+        copyCategory.setHasChildren(category.getChildren().size() > 0);
 
         return copyCategory;
     }

@@ -1,7 +1,7 @@
 package com.hpt.backend.category;
 
 import com.hpt.common.entity.Category;
-import com.hpt.common.exception.CateogryNotFoundException;
+import com.hpt.common.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -160,13 +160,13 @@ public class CategoryService {
      *
      * @param id id of the category
      * @return category object corresponding to id
-     * @throws CateogryNotFoundException if the category does not exist
+     * @throws CategoryNotFoundException if the category does not exist
      */
-    public Category get(Integer id) throws CateogryNotFoundException {
+    public Category get(Integer id) throws CategoryNotFoundException {
         try {
             return repo.findById(id).get();
         } catch (Exception ex) {
-            throw new CateogryNotFoundException("Không tìm thấy thể loại có id là " + id);
+            throw new CategoryNotFoundException("Không tìm thấy thể loại có id là " + id);
         }
     }
 
@@ -243,5 +243,19 @@ public class CategoryService {
      */
     public void updateCategoryEnabledStatus(Integer id, boolean enabled) {
         repo.updateEnabledStatus(id, enabled);
+    }
+
+    /**
+     * Delete a category by id
+     *
+     * @param id id of the category you want to delete
+     * @throws CategoryNotFoundException if the category does not exist
+     */
+    public void delete(Integer id) throws CategoryNotFoundException {
+        Long countById = repo.countById(id);
+        if (countById == null || countById == 0) {
+            throw new CategoryNotFoundException("Không tìm thấy thể loại có id là " + id);
+        }
+        repo.deleteById(id);
     }
 }

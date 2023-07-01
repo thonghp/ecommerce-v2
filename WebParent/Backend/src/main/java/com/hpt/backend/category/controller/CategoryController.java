@@ -3,7 +3,7 @@ package com.hpt.backend.category.controller;
 import com.hpt.backend.FileUploadUtils;
 import com.hpt.backend.category.CategoryService;
 import com.hpt.common.entity.Category;
-import com.hpt.common.exception.CateogryNotFoundException;
+import com.hpt.common.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -85,7 +85,7 @@ public class CategoryController {
             model.addAttribute("pageTitle", "Chỉnh sửa thể loại");
 
             return "categories/category_form";
-        } catch (CateogryNotFoundException ex) {
+        } catch (CategoryNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
 
             return "redirect:/categories";
@@ -94,11 +94,26 @@ public class CategoryController {
 
     @GetMapping("/categories/{id}/enabled/{status}")
     public String updateCategoryEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled,
-                                          RedirectAttributes redirectAttributes) {
+                                              RedirectAttributes redirectAttributes) {
         service.updateCategoryEnabledStatus(id, enabled);
         String status = enabled ? " được kích hoạt" : " bị vô hiệu hoá";
         String message = "Thể loại có id là " + id + status;
         redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/categories";
+    }
+
+    @GetMapping("/categories/delete/{id}")
+    public String deleteCategory(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            service.delete(id);
+            String categoryDir = "category-photos/" + id;
+            FileUploadUtils.removeDir(categoryDir);
+
+            redirectAttributes.addFlashAttribute("message", "Thể loại có id là " + id + " đã được xóa thành công");
+        } catch (CategoryNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+        }
 
         return "redirect:/categories";
     }

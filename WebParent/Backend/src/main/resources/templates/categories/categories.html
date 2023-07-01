@@ -68,7 +68,10 @@
                 </td>
                 <td>
                     <div th:replace="fragments :: edit('/categories/edit/' + ${category.id}, 'Chỉnh sửa thể loại')"></div>
-                    <div th:replace="fragments :: delete('/categories/delete/' + ${category.id}, 'Xoá nhân viên', ${category.id})"></div>
+                    <a th:if="${category.hasChildren == false}" th:href="@{'/categories/delete/' + ${category.id}}"
+                       class="fas fa-trash fa-2x icon-gray link-delete" title="Xoá thể loại"
+                       th:objectId="${category.id}">
+                    </a>
                 </td>
             </tr>
             </tbody>
@@ -87,36 +90,37 @@
                     <div th:replace="fragments :: status(${category.enabled}, '/categories/' + ${category.id})"></div>
                     &nbsp;
                     <div th:replace="fragments :: edit('/categories/edit/' + ${category.id}, 'Chỉnh sửa thể loại')"></div>
-                    <div th:replace="fragments :: delete('/categories/delete/' + ${category.id}, 'Xoá nhân viên', ${category.id})"></div>
+                    <a th:if="${category.hasChildren == false}" th:href="@{'/categories/delete/' + ${category.id}}"
+                       class="fas fa-trash fa-2x icon-gray link-delete" title="Xoá thể loại"
+                       th:objectId="${category.id}">
+                    </a>
                 </div>
             </div>
             <div>&nbsp;</div>
         </div>
     </div>
 
-    <div th:replace="fragments :: confirm_modal('nhân viên')"></div>
+    <div th:replace="fragments :: confirm_modal('thể loại')"></div>
 
     <div th:replace="fragments :: footer"></div>
 
 </div>
 </body>
-<script th:src="@{/js/common.js}"></script>
 
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
+    moduleURL = "[[@{/categories}]]";
+
     $(document).ready(function () {
+        hideMessageInListView();
+
         $(".link-delete").on("click", function (e) {
             e.preventDefault();
             let link = $(this);
-            let categoryId = link.attr("objectId");
-            $("#yesButton").attr("href", link.attr("href"));
-            $("#confirmText").text("Bạn có chắc muốn xoá nhân viên có id là " + categoryId + " này không ?");
-            $("#confirmModal").modal();
+            showDeleteConfirmModal(link, 'thể loại');
         });
     });
-
-    function clearFilter() {
-        window.location = "[[@{/categories}]]";
-    }
 </script>
 
 </html>

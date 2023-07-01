@@ -20,4 +20,6 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
     @Query("UPDATE Category SET enabled = ?2 WHERE id = ?1")
     @Modifying
     void updateEnabledStatus(Integer id, boolean enabled);
+
+    Long countById(Integer id);
 }
