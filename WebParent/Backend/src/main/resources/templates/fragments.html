@@ -117,6 +117,16 @@
           th:class="${sortType == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
 </th>
 
+<th th:fragment="sort_column_advance(moduleURL, fieldName, columnName, removeTag)" th:remove="${removeTag}">
+    <a class="text-white"
+       th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField='+ ${fieldName} + '&sortType=' +
+       ${sortField != fieldName ? sortType : reverseSortType} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+        [[${columnName}]]
+    </a>
+    <span th:if="${sortField == fieldName}"
+          th:class="${sortType == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
 <div th:fragment="status(condition, url)" th:remove="tag">
     <a th:if="${condition}" th:href="@{${url} + '/enabled/false'}" class="fas fa-check-circle fa-2x icon-green"
        title="Vô hiệu hoá">
@@ -140,6 +150,44 @@
    ${keyword != null ? '&keyword=' + keyword : ''}}" class="page-link">
     [[${label}]]
 </a>
+
+<a th:fragment="page_link(moduleURL, pageNum, label)"
+   th:href="@{${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
+   ${keyword != null ? '&keyword=' + keyword : ''}}" class="page-link">
+    [[${label}]]
+</a>
+
+<div th:fragment="paginationAdvanced(moduleURL, entityName)" th:remove="tag">
+    <div class="text-center m-1" th:if="${totalItems > 0 && startCount >0}">
+        <span>Từ [[${startCount}]] đến [[${endCount}]]</span>
+    </div>
+    <div class="text-center m-1" th:unless="${totalItems > 0}">
+        <span>Không tìm thấy [[${entityName}]]</span>
+    </div>
+
+    <div th:if="${totalPages > 1}">
+        <nav>
+            <ul class="pagination justify-content-center flex-wrap">
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, 1, 'Đầu')"></a>
+                </li>
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage - 1}, 'Trước')"></a>
+                </li>
+                <li th:class="${currentPage != i ? 'page-item': 'page-item active'}"
+                    th:each="i : ${#numbers.sequence(1, totalPages)}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${i}, ${i})"></a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage + 1}, 'Sau')"></a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${totalPages}, 'Cuối')"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
 
 <div th:fragment="confirm_modal(content)" class="modal fade text-center" id="confirmModal">
     <div class="modal-dialog">

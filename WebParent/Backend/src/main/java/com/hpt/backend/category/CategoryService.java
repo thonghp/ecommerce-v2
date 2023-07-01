@@ -2,7 +2,11 @@ package com.hpt.backend.category;
 
 import com.hpt.common.entity.Category;
 import com.hpt.common.exception.CategoryNotFoundException;
+import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,7 @@ public class CategoryService {
     public static final String ASCENDING = "asc";
     public static final String DESCENDING = "desc";
     public static final String SORT_FIELD_NAME = "name";
+    private static final int ROOT_CATEGORIES_PER_PAGE = 4;
     @Autowired
     private CategoryRepository repo;
 
@@ -257,5 +262,28 @@ public class CategoryService {
             throw new CategoryNotFoundException("Không tìm thấy thể loại có id là " + id);
         }
         repo.deleteById(id);
+    }
+
+    /**
+     * Returns 1 page of hierarchical category list sorted ascending or descending and paginated
+     *
+     * @param pageInfo Page information
+     * @param pageNum  Page number
+     * @param sortType Sort type (asc or desc)
+     * @return 1 page of hierarchical category list sorted and paginated
+     */
+    public List<Category> listByPage(PageInfo pageInfo, int pageNum, String sortType) {
+        Sort sort = Sort.by(SORT_FIELD_NAME);
+        sort = sortType.equals(ASCENDING) ? sort.ascending() : sort.descending();
+
+        Pageable pageable = PageRequest.of(pageNum - 1, ROOT_CATEGORIES_PER_PAGE, sort);
+
+        Page<Category> pageCategories = repo.findByParentIsNull(pageable);
+        List<Category> rootCategories = pageCategories.getContent();
+
+        pageInfo.setTotalPages(pageCategories.getTotalPages());
+        pageInfo.setTotalElements(pageCategories.getTotalElements());
+
+        return listHierarchicalCategories(rootCategories, sortType);
     }
 }

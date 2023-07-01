@@ -1,6 +1,8 @@
 package com.hpt.backend.category;
 
 import com.hpt.common.entity.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +14,8 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends PagingAndSortingRepository<Category, Integer> {
     List<Category> findByParentIsNull(Sort sort);
+
+    Page<Category> findByParentIsNull(Pageable pageable);
 
     Category findByName(String name);
 

@@ -41,13 +41,10 @@
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
-                <th class="hideable-column">
-                    <div th:replace="fragments :: sort_column('id', 'ID', 'tag')"></div>
-                </th>
+                <th class="hideable-column">ID</th>
                 <th>Ảnh</th>
                 <th>
-                    <a class="text-white" th:href="@{'/categories?sortType=' + ${reverseSortType}}">Tên</a>
-                    <span th:class="${reverseSortType == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+                    <div th:replace="fragments :: sort_column_advance('/categories', ${sortField}, 'Tên', 'tag')"></div>
                 </th>
                 <th>Alias</th>
                 <th>Trạng thái</th>
@@ -99,6 +96,8 @@
             <div>&nbsp;</div>
         </div>
     </div>
+
+    <div th:replace="fragments :: paginationAdvanced('/categories', 'thể loại')"></div>
 
     <div th:replace="fragments :: confirm_modal('thể loại')"></div>
 

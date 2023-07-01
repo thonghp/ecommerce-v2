@@ -4,6 +4,7 @@ import com.hpt.backend.FileUploadUtils;
 import com.hpt.backend.category.CategoryService;
 import com.hpt.common.entity.Category;
 import com.hpt.common.exception.CategoryNotFoundException;
+import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,14 +26,22 @@ public class CategoryController {
     private CategoryService service;
 
     @GetMapping("/categories")
-    public String listAll(Model model, @RequestParam(name = "sortType", required = false) String sortType) {
-        if (sortType == null || sortType.isEmpty()) {
-            sortType = "asc";
-        }
+    public String listFirstPage(Model model) {
+        return listByPage(1, model, CategoryService.ASCENDING);
+    }
 
-        List<Category> categories = service.listAll(sortType);
-        String reverseSortType = sortType.equals("asc") ? "desc" : "asc";
+    @GetMapping("/categories/page/{pageNum}")
+    public String listByPage(@PathVariable(name = "pageNum") Integer pageNum, Model model,
+                             @RequestParam(name = "sortType") String sortType) {
+        PageInfo pageInfo = new PageInfo();
+        List<Category> categories = service.listByPage(pageInfo, pageNum, sortType);
+        String reverseSortType = sortType.equals(CategoryService.ASCENDING) ? CategoryService.DESCENDING : CategoryService.ASCENDING;
 
+        model.addAttribute("totalPages", pageInfo.getTotalPages());
+        model.addAttribute("totalItems", pageInfo.getTotalElements());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("sortField", "name");
+        model.addAttribute("sortType", sortType);
         model.addAttribute("categories", categories);
         model.addAttribute("reverseSortType", reverseSortType);
 
