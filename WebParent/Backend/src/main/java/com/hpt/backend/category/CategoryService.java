@@ -19,7 +19,7 @@ public class CategoryService {
     public static final String ASCENDING = "asc";
     public static final String DESCENDING = "desc";
     public static final String SORT_FIELD_NAME = "name";
-    private static final int ROOT_CATEGORIES_PER_PAGE = 4;
+    public static final int ROOT_CATEGORIES_PER_PAGE = 4;
     @Autowired
     private CategoryRepository repo;
 
@@ -270,20 +270,34 @@ public class CategoryService {
      * @param pageInfo Page information
      * @param pageNum  Page number
      * @param sortType Sort type (asc or desc)
+     * @param keyword  Keyword to search
      * @return 1 page of hierarchical category list sorted and paginated
      */
-    public List<Category> listByPage(PageInfo pageInfo, int pageNum, String sortType) {
+    public List<Category> listByPage(PageInfo pageInfo, int pageNum, String sortType, String keyword) {
         Sort sort = Sort.by(SORT_FIELD_NAME);
         sort = sortType.equals(ASCENDING) ? sort.ascending() : sort.descending();
 
         Pageable pageable = PageRequest.of(pageNum - 1, ROOT_CATEGORIES_PER_PAGE, sort);
 
-        Page<Category> pageCategories = repo.findByParentIsNull(pageable);
+        Page<Category> pageCategories = (keyword != null && !keyword.isEmpty()) ? repo.search(keyword, pageable) :
+                repo.findByParentIsNull(pageable);
+
         List<Category> rootCategories = pageCategories.getContent();
 
         pageInfo.setTotalPages(pageCategories.getTotalPages());
         pageInfo.setTotalElements(pageCategories.getTotalElements());
 
-        return listHierarchicalCategories(rootCategories, sortType);
+        if (keyword != null && !keyword.isEmpty()) {
+            List<Category> searchResult = pageCategories.getContent();
+            for (Category category : searchResult) {
+// Nếu không set thì category cha cũng hiển thị nút xoá khi category con còn tồn tại trong danh sách trả về khi tìm kiếm
+                category.setHasChildren(category.getChildren().size() > 0);
+            }
+
+            return searchResult;
+
+        } else {
+            return listHierarchicalCategories(rootCategories, sortType);
+        }
     }
 }

@@ -27,23 +27,29 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, CategoryService.ASCENDING);
+        return listByPage(1, model, CategoryService.ASCENDING, null);
     }
 
     @GetMapping("/categories/page/{pageNum}")
     public String listByPage(@PathVariable(name = "pageNum") Integer pageNum, Model model,
-                             @RequestParam(name = "sortType") String sortType) {
+                             @RequestParam(name = "sortType") String sortType,
+                             @RequestParam(name = "keyword", required = false) String keyword) {
         PageInfo pageInfo = new PageInfo();
-        List<Category> categories = service.listByPage(pageInfo, pageNum, sortType);
+        List<Category> categories = service.listByPage(pageInfo, pageNum, sortType, keyword);
         String reverseSortType = sortType.equals(CategoryService.ASCENDING) ? CategoryService.DESCENDING : CategoryService.ASCENDING;
+        long startCount = pageInfo.getStartCount(pageNum, CategoryService.ROOT_CATEGORIES_PER_PAGE);
+        long endCount = pageInfo.getEndCount(pageNum, CategoryService.ROOT_CATEGORIES_PER_PAGE);
 
         model.addAttribute("totalPages", pageInfo.getTotalPages());
         model.addAttribute("totalItems", pageInfo.getTotalElements());
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
         model.addAttribute("currentPage", pageNum);
-        model.addAttribute("sortField", "name");
+        model.addAttribute("sortField", CategoryService.SORT_FIELD_NAME);
         model.addAttribute("sortType", sortType);
         model.addAttribute("categories", categories);
         model.addAttribute("reverseSortType", reverseSortType);
+        model.addAttribute("keyword", keyword);
 
         return "categories/categories";
     }
