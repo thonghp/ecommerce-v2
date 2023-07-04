@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments :: page_head('Admin - Quản lý thể loại')"></head>
+
+<body>
+
+<div class="container-fluid">
+
+    <div th:replace="fragments :: navigation"></div>
+
+    <div>
+        <h2>Quản lý thể loại</h2>
+        <a th:href="@{/categories/new}" class="fas fa-folder-plus fa-2x icon-gray mr-2"></a>
+    </div>
+
+    <div th:replace="fragments :: search_form_and_message('/categories/page/1')"></div>
+
+    <div class="full-details">
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th class="hideable-column">ID</th>
+                <th>Ảnh</th>
+                <th>
+                    <div th:replace="fragments :: sort_column('/categories', ${sortField}, 'Tên', 'tag')"></div>
+                </th>
+                <th>Alias</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="category : ${categories}">
+                <td class="hideable-column">[[${category.id}]]</td>
+                <td>
+                    <img th:src="@{${category.photosImagePath}}" alt="category photo" style="height: 70px;">
+                </td>
+                <td>[[${category.name}]]</td>
+                <td>[[${category.alias}]]</td>
+                <td>
+                    <div th:replace="fragments :: status(${category.enabled}, '/categories/' + ${category.id})"></div>
+                </td>
+                <td>
+                    <div th:replace="fragments :: edit('/categories/edit/' + ${category.id}, 'Chỉnh sửa thể loại')"></div>
+                    <a th:if="${category.hasChildren == false}" th:href="@{'/categories/delete/' + ${category.id}}"
+                       class="fas fa-trash fa-2x icon-gray link-delete" title="Xoá thể loại"
+                       th:objectId="${category.id}">
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="less-details">
+        <div th:each="category : ${categories}" class="row m-1">
+            <div class="col-4">
+                <img th:src="@{${category.photosImagePath}}" alt="category photo" style="height: 70px">
+            </div>
+            <div class="col-8">
+                <div>[[${category.name}]]</div>
+                <div>[[${category.alias}]]</div>
+                <div class="mt-2">
+                    <div th:replace="fragments :: status(${category.enabled}, '/categories/' + ${category.id})"></div>
+                    &nbsp;
+                    <div th:replace="fragments :: edit('/categories/edit/' + ${category.id}, 'Chỉnh sửa thể loại')"></div>
+                    <a th:if="${category.hasChildren == false}" th:href="@{'/categories/delete/' + ${category.id}}"
+                       class="fas fa-trash fa-2x icon-gray link-delete" title="Xoá thể loại"
+                       th:objectId="${category.id}">
+                    </a>
+                </div>
+            </div>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+
+    <div th:replace="fragments :: pagination('/categories', 'thể loại')"></div>
+
+    <div th:replace="fragments :: confirm_modal('thể loại')"></div>
+
+    <div th:replace="fragments :: footer"></div>
+
+</div>
+</body>
+
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/common_list.js}"></script>
+<script type="text/javascript">
+    moduleURL = "[[@{/categories}]]";
+
+    $(document).ready(function () {
+        hideMessageInListView();
+
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            let link = $(this);
+            showDeleteConfirmModal(link, 'thể loại');
+        });
+    });
+</script>
+
+</html>

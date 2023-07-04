@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments :: page_head(${pageTitle})"></head>
+
+<body>
+<div class="container-fluid">
+
+    <div th:replace="fragments :: navigation"></div>
+
+    <div class="text-center">
+        <h2>[[${pageTitle}]]</h2>
+    </div>
+
+    <form th:action="@{/categories/save}" method="post" th:object="${category}" style="max-width: 550px; margin: 0 auto"
+          enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+        <div class="border border-secondary rounded p-3">
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Tên:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" th:field="*{name}" required/>
+                    <div id="name-status"></div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Alias:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" th:field="*{alias}"
+                           placeholder="Để trống nếu muốn dùng alias giống tên"/>
+                    <div id="alias-status"></div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Thể loại cha (nếu có)</label>
+                <div class="col-sm-8">
+                    <select class="form-control" th:field="*{parent}">
+                        <option value="0">[Thể loại cha]</option>
+                        <th:block th:each="cat : ${categories}">
+                            <option th:value="${cat.id}">[[${cat.name}]]</option>
+                        </th:block>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Ảnh thể loại:</label>
+                <div class="col-sm-8">
+                    <input type="hidden" th:field="*{imagePath}"/>
+                    <input type="file" id="fileImage" name="image" accept="image/png, image/jpeg"
+                           class="mb-2"/>
+                    <img id="thumbnail" alt="Photos preview" th:src="@{${category.photosImagePath}}" class="img-fluid"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Trạng thái:</label>
+                <div class="col-sm-8">
+                    <input type="checkbox" th:field="*{enabled}" class="mt-3"/>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <input type="submit" value="Lưu" class="btn btn-primary m-3"/>
+                <a th:href="@{/categories}" class="btn btn-secondary">Huỷ</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="text-center">
+        <p>Shopme Control Panel - Copyright &copy; Shopme</p>
+    </div>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        let aliasInput = $('input[name="alias"]');
+        let aliasStatus = $('#alias-status');
+
+        let nameInput = $('input[name="name"]');
+        let nameStatus = $('#name-status');
+
+        let url = "[[@{/categories/check_unique}]]";
+        let nameFlag = false;
+        let aliasFlag = false;
+
+        nameInput.on('blur', function () {
+            nameFlag = true;
+            let name = nameInput.val();
+            let alias = aliasInput.val();
+            let csrfToken = $('input[name="_csrf"]').val();
+            let categoryId = $('#id').val();
+
+            if (name !== '') {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {id: categoryId, name: name, alias: alias, _csrf: csrfToken},
+                    success: function (data) {
+                        if (data === 'OK') {
+                            nameStatus.html('');
+                        } else if (data === 'Duplicate name') {
+                            nameStatus.html('<span style="color:red">Tên đã tồn tại</span>');
+                        }
+                    }
+                });
+            } else {
+                nameStatus.empty();
+            }
+        });
+
+        aliasInput.on('blur', function () {
+            aliasFlag = true;
+            let name = nameInput.val();
+            let alias = aliasInput.val();
+            let csrfToken = $('input[name="_csrf"]').val();
+            let categoryId = $('#id').val();
+
+            if (alias !== '') {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {id: categoryId, name: name, alias: alias, _csrf: csrfToken},
+                    success: function (data) {
+                        if (data === 'OK') {
+                            aliasStatus.html('');
+                        } else if (data === 'Duplicate alias') {
+                            aliasStatus.html('<span style="color:red">Alias đã tồn tại</span>');
+                        }
+                    }
+                });
+            } else {
+                aliasStatus.empty();
+            }
+        });
+
+        nameInput.on('keyup', function () {
+            if (nameFlag) {
+                nameFlag = false;
+                aliasFlag = false;
+                aliasInput.val('');
+                aliasStatus.empty();
+            }
+        });
+
+        aliasInput.on('keyup', function () {
+            if (aliasFlag) {
+                aliasFlag = false;
+                aliasStatus.empty();
+            }
+        });
+    });
+</script>
+<script th:src="@{/js/common_photo.js}"></script>
+</body>
+</html>

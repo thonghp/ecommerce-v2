@@ -17,35 +17,14 @@
         <a th:href="@{/users/export/pdf}" class="fas fa-file-pdf fa-2x icon-gray"></a>
     </div>
 
-    <div th:if="${message != null}" class="alert alert-success text-center" id="hideMessage">
-        [[${message}]]
-    </div>
-
-    <div>
-        <form th:action="@{/users/page/1}" class="form-inline m-3">
-            <input type="hidden" name="sortField" th:value="${sortField}"/>
-            <input type="hidden" name="sortType" th:value="${sortType}"/>
-
-            Tìm kiếm:&nbsp;
-            <input type="search" name="keyword" th:value="${keyword}" class="form-control" required
-                   placeholder="Tìm kiếm..."/>
-            &nbsp;&nbsp;
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-search"></i>
-            </button>
-            &nbsp;&nbsp;
-            <button type="button" class="btn btn-secondary" onclick="clearFilter()">
-                <i class="fas fa-eraser"></i>
-            </button>
-        </form>
-    </div>
+    <div th:replace="fragments :: search_form_and_message('/users/page/1')"></div>
 
     <div class="full-details">
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
                 <th class="hideable-column">
-                    <div th:replace="fragments :: sort_column('id', 'ID', 'tag')"></div>
+                    <div th:replace="fragments :: sort_column('/users', 'id', 'ID', 'tag')"></div>
                 </th>
                 <th>Ảnh</th>
                 <th class="hideable-column">E-mail</th>
@@ -120,36 +99,7 @@
         </div>
     </div>
 
-    <div class="text-center m-1" th:if="${totalItems > 0}">
-        <span>Từ [[${startCount}]] đến [[${endCount}]]</span>
-    </div>
-
-    <div class="text-center m-1" th:unless="${totalItems > 0}">
-        <span>Không tìm thấy người dùng</span>
-    </div>
-
-    <div th:if="${totalPages > 1}">
-        <nav>
-            <ul class="pagination justify-content-center flex-wrap">
-                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments :: pagination(1, 'Đầu')"></a>
-                </li>
-                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments :: pagination(${currentPage - 1}, 'Trước')"></a>
-                </li>
-                <li th:class="${currentPage != i ? 'page-item': 'page-item active'}"
-                    th:each="i : ${#numbers.sequence(1, totalPages)}">
-                    <a th:replace="fragments :: pagination(${i}, ${i})"></a>
-                </li>
-                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments :: pagination(${currentPage + 1}, 'Sau')"></a>
-                </li>
-                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments :: pagination(${totalPages}, 'Cuối')"></a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <div th:replace="fragments :: pagination('/users', 'nhân viên')"></div>
 
     <div th:replace="fragments :: confirm_modal('nhân viên')"></div>
 
@@ -158,22 +108,20 @@
 </div>
 </body>
 <script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/common_list.js}"></script>
 
 <script type="text/javascript">
+    moduleURL = "[[@{/users}]]";
+
     $(document).ready(function () {
+        hideMessageInListView();
+
         $(".link-delete").on("click", function (e) {
             e.preventDefault();
             let link = $(this);
-            let userId = link.attr("objectId");
-            $("#yesButton").attr("href", link.attr("href"));
-            $("#confirmText").text("Bạn có chắc muốn xoá nhân viên có id là " + userId + " này không ?");
-            $("#confirmModal").modal();
+            showDeleteConfirmModal(link, 'nhân viên');
         });
     });
-
-    function clearFilter() {
-        window.location = "[[@{/users}]]";
-    }
 </script>
 
 </html>
