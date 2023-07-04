@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
@@ -83,10 +85,11 @@ public class CategoryController {
             service.save(category);
         }
 
-        String name = category.getName();
+        String name =  category.getName();
         redirectAttributes.addFlashAttribute("message", "Thể loại " + name + " đã được lưu thành công");
 
-        return "redirect:/categories";
+        name = URLEncoder.encode(name, StandardCharsets.UTF_8);
+        return "redirect:/categories/page/1?sortField=name&sortType=asc&keyword=" + name;
     }
 
     @GetMapping("/categories/edit/{id}")
