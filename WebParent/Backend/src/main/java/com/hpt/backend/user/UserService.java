@@ -4,6 +4,7 @@ import com.hpt.backend.role.RoleRepository;
 import com.hpt.common.entity.Role;
 import com.hpt.common.entity.User;
 import com.hpt.common.exception.UserNotFoundException;
+import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
+import static com.hpt.common.utils.CommonUtils.*;
 
 @Service
 @Transactional
@@ -26,7 +29,6 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public final static int USERS_PER_PAGE = 5;
-    public final static String DEFAULT_SORT_TYPE = "asc";
 
     /**
      * Return a list of all users
@@ -139,25 +141,25 @@ public class UserService {
     }
 
     /**
-     * Returns a page containing a list of users based on the requested page, specifying the custom field sort type and
-     * search keyword if available. The default is to sort ascending and the keyword is not available
+     * Returns a paginated list of default or search users and sorted ascending or descending by the specified column.
      *
+     * @param pageInfo  object containing pagination information
      * @param pageNum   The page requests to return data
      * @param sortField The field to sort
      * @param sortType  The type of sort
      * @param keyword   The keyword to search
-     * @return a page containing a list of users
+     * @return a list of users
      */
-    public Page<User> listByPage(int pageNum, String sortField, String sortType, String keyword) {
+    public List<User> listByPage(PageInfo pageInfo, int pageNum, String sortField, String sortType, String keyword) {
         Sort sort = Sort.by(sortField);
-        sort = sortType.equals(DEFAULT_SORT_TYPE) ? sort.ascending() : sort.descending();
+        sort = sortType.equals(ASCENDING) ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, USERS_PER_PAGE, sort);
+        Page<User> page = (keyword != null) ? userRepo.findAll(keyword, pageable) : userRepo.findAll(pageable);
 
-        if (keyword != null) {
-            return userRepo.findAll(keyword, pageable);
-        }
+        pageInfo.setTotalPages(page.getTotalPages());
+        pageInfo.setTotalElements(page.getTotalElements());
 
-        return userRepo.findAll(pageable);
+        return page.getContent();
     }
 
     /**

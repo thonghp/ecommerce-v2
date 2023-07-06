@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 
+import static com.hpt.common.utils.CommonUtils.*;
+
 @Service
 @Transactional
 public class CategoryService {
-    public static final String ASCENDING = "asc";
-    public static final String DESCENDING = "desc";
+
     public static final String SORT_FIELD_NAME = "name";
     public static final int ROOT_CATEGORIES_PER_PAGE = 4;
     @Autowired
@@ -31,12 +32,7 @@ public class CategoryService {
      */
     public List<Category> listAll(String sortType) {
         Sort sort = Sort.by(SORT_FIELD_NAME);
-
-        if (sortType.equals(ASCENDING)) {
-            sort = sort.ascending();
-        } else if (sortType.equals(DESCENDING)) {
-            sort = sort.descending();
-        }
+        sort = sortType.equals(ASCENDING) ? sort.ascending() : sort.descending();
 
         List<Category> rootCategories = repo.findByParentIsNull(sort);
 
@@ -267,7 +263,7 @@ public class CategoryService {
     /**
      * Returns 1 page of hierarchical category list sorted ascending or descending and paginated
      *
-     * @param pageInfo Page information
+     * @param pageInfo object containing pagination information
      * @param pageNum  Page number
      * @param sortType Sort type (asc or desc)
      * @param keyword  Keyword to search

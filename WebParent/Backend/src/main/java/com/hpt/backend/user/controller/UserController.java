@@ -1,15 +1,15 @@
 package com.hpt.backend.user.controller;
 
 import com.hpt.backend.FileUploadUtils;
+import com.hpt.backend.user.UserService;
 import com.hpt.backend.user.export.UserCsvExporter;
 import com.hpt.backend.user.export.UserExcelExporter;
-import com.hpt.backend.user.UserService;
 import com.hpt.backend.user.export.UserPdfExporter;
 import com.hpt.common.entity.Role;
 import com.hpt.common.entity.User;
 import com.hpt.common.exception.UserNotFoundException;
+import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import static com.hpt.common.utils.CommonUtils.*;
+
 
 @Controller
 public class UserController {
@@ -32,9 +34,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private final static String SORT_FIELD_NAME = "id";
+
     @GetMapping("/users")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, "id", UserService.DEFAULT_SORT_TYPE, null);
+        return listByPage(1, model, SORT_FIELD_NAME, ASCENDING, null);
     }
 
     @GetMapping("/users/page/{pageNum}")
@@ -42,21 +46,18 @@ public class UserController {
                              @RequestParam(name = "sortField") String sortField,
                              @RequestParam(name = "sortType") String sortType,
                              @RequestParam(name = "keyword", required = false) String keyword) {
-        Page<User> page = userService.listByPage(pageNum, sortField, sortType, keyword);
-        List<User> users = page.getContent();
-        String reverseSortType = sortType.equals("asc") ? "desc" : "asc";
+        PageInfo pageInfo = new PageInfo();
+        List<User> users = userService.listByPage(pageInfo, pageNum, sortField, sortType, keyword);
+        String reverseSortType = sortType.equals(ASCENDING) ? DESCENDING : ASCENDING;
 
-        long startCount = (long) (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
-        long endCount = startCount + UserService.USERS_PER_PAGE - 1;
-        if (endCount > page.getTotalElements()) {
-            endCount = page.getTotalElements();
-        }
+        long startCount = pageInfo.getStartCount(pageNum, UserService.USERS_PER_PAGE);
+        long endCount = pageInfo.getEndCount(pageNum, UserService.USERS_PER_PAGE);
 
         model.addAttribute("startCount", startCount);
         model.addAttribute("endCount", endCount);
         model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", pageInfo.getTotalElements());
+        model.addAttribute("totalPages", pageInfo.getTotalPages());
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortType", sortType);
         model.addAttribute("reverseSortType", reverseSortType);
@@ -129,6 +130,9 @@ public class UserController {
     public String deleteUser(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             userService.delete(id);
+            String categoryDir = "user-photos/" + id;
+            FileUploadUtils.removeDir(categoryDir);
+
             redirectAttributes.addFlashAttribute("message", "Nhân viên có id là " + id + " đã được xóa thành công");
         } catch (UserNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
@@ -154,6 +158,7 @@ public class UserController {
         UserCsvExporter exporter = new UserCsvExporter();
         exporter.export(listUsers, response);
     }
+
     @GetMapping("/users/export/excel")
     public void exportToExcel(HttpServletResponse response) throws IOException {
         List<User> listUsers = userService.listAll();
@@ -161,6 +166,7 @@ public class UserController {
         UserExcelExporter exporter = new UserExcelExporter();
         exporter.export(listUsers, response);
     }
+
     @GetMapping("/users/export/pdf")
     public void exportToPdf(HttpServletResponse response) throws IOException {
         List<User> listUsers = userService.listAll();

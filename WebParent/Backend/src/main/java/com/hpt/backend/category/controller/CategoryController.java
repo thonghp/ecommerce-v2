@@ -22,6 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
+import static com.hpt.common.utils.CommonUtils.*;
+
 @Controller
 public class CategoryController {
     @Autowired
@@ -29,7 +31,7 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, CategoryService.ASCENDING, null);
+        return listByPage(1, model, ASCENDING, null);
     }
 
     @GetMapping("/categories/page/{pageNum}")
@@ -38,7 +40,7 @@ public class CategoryController {
                              @RequestParam(name = "keyword", required = false) String keyword) {
         PageInfo pageInfo = new PageInfo();
         List<Category> categories = service.listByPage(pageInfo, pageNum, sortType, keyword);
-        String reverseSortType = sortType.equals(CategoryService.ASCENDING) ? CategoryService.DESCENDING : CategoryService.ASCENDING;
+        String reverseSortType = sortType.equals(ASCENDING) ? DESCENDING : ASCENDING;
         long startCount = pageInfo.getStartCount(pageNum, CategoryService.ROOT_CATEGORIES_PER_PAGE);
         long endCount = pageInfo.getEndCount(pageNum, CategoryService.ROOT_CATEGORIES_PER_PAGE);
 
@@ -85,7 +87,7 @@ public class CategoryController {
             service.save(category);
         }
 
-        String name =  category.getName();
+        String name = category.getName();
         redirectAttributes.addFlashAttribute("message", "Thể loại " + name + " đã được lưu thành công");
 
         name = URLEncoder.encode(name, StandardCharsets.UTF_8);
