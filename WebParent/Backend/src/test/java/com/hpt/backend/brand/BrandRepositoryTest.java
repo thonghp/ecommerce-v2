@@ -58,6 +58,6 @@ class BrandRepositoryTest {
     @Test
     public void testListAllBrands() {
         Iterable<Brand> brands = repo.findAll();
-        brands.forEach(System.out::println); 
+        brands.forEach(System.out::println);
     }
 }
