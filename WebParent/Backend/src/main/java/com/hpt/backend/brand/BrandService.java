@@ -10,11 +10,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static com.hpt.common.utils.CommonUtils.ASCENDING;
 
 @Service
+@Transactional
 public class BrandService {
     @Autowired
     private BrandRepository repo;
@@ -70,5 +72,15 @@ public class BrandService {
         } catch (Exception ex) {
             throw new BrandNotFoundException("Không tìm thấy thương hiệu có id là " + id);
         }
+    }
+
+    /**
+     * Update the enabled status of a brand
+     *
+     * @param id      id of the brand
+     * @param enabled enabled status
+     */
+    public void updateBrandEnabledStatus(Integer id, boolean enabled) {
+        repo.updateEnabledStatus(id, enabled);
     }
 }

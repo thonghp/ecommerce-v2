@@ -118,4 +118,15 @@ public class BrandController {
             return "redirect:/brands";
         }
     }
+
+    @GetMapping("/brands/{id}/enabled/{status}")
+    public String updateBrandEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled,
+                                              RedirectAttributes redirectAttributes) {
+        service.updateBrandEnabledStatus(id, enabled);
+        String status = enabled ? " được kích hoạt" : " bị vô hiệu hoá";
+        String message = "Thương hiệu có id là " + id + status;
+        redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/brands";
+    }
 }
