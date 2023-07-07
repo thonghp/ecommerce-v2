@@ -16,4 +16,6 @@ public interface BrandRepository extends PagingAndSortingRepository<Brand, Integ
     @Query("UPDATE Brand SET enabled = ?2 WHERE id = ?1")
     @Modifying
     void updateEnabledStatus(Integer id, boolean enabled);
+
+    Long countById(Integer id);
 }

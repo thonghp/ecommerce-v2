@@ -83,4 +83,18 @@ public class BrandService {
     public void updateBrandEnabledStatus(Integer id, boolean enabled) {
         repo.updateEnabledStatus(id, enabled);
     }
+
+    /**
+     * Delete a brand by id
+     *
+     * @param id id of the brand you want to delete
+     * @throws BrandNotFoundException if the brand does not exist
+     */
+    public void delete(Integer id) throws BrandNotFoundException {
+        Long countById = repo.countById(id);
+        if (countById == null || countById == 0) {
+            throw new BrandNotFoundException("Không tìm thấy nhân viên có id là " + id);
+        }
+        repo.deleteById(id);
+    }
 }

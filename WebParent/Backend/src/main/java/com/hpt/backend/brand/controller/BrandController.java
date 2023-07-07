@@ -121,11 +121,26 @@ public class BrandController {
 
     @GetMapping("/brands/{id}/enabled/{status}")
     public String updateBrandEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled,
-                                              RedirectAttributes redirectAttributes) {
+                                           RedirectAttributes redirectAttributes) {
         service.updateBrandEnabledStatus(id, enabled);
         String status = enabled ? " được kích hoạt" : " bị vô hiệu hoá";
         String message = "Thương hiệu có id là " + id + status;
         redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/brands";
+    }
+
+    @GetMapping("/brands/delete/{id}")
+    public String deleteBrand(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            service.delete(id);
+            String categoryDir = "brand-photos/" + id;
+            FileUploadUtils.removeDir(categoryDir);
+
+            redirectAttributes.addFlashAttribute("message", "Thương hiệu có id là " + id + " đã được xóa thành công");
+        } catch (BrandNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+        }
 
         return "redirect:/brands";
     }
