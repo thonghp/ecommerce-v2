@@ -18,4 +18,6 @@ public interface BrandRepository extends PagingAndSortingRepository<Brand, Integ
     void updateEnabledStatus(Integer id, boolean enabled);
 
     Long countById(Integer id);
+
+    Brand findByName(String name);
 }

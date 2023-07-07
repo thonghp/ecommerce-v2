@@ -97,4 +97,26 @@ public class BrandService {
         }
         repo.deleteById(id);
     }
+
+    /**
+     * Check brand name is unique
+     *
+     * @param id   id of the brand
+     * @param name name of the brand
+     * @return "Ok" if the brand name is unique, otherwise return "Duplicated"
+     */
+    public String checkUnique(Integer id, String name) {
+        boolean isCreatingNew = (id == null || id == 0);
+        Brand brandByName = repo.findByName(name);
+
+        if (isCreatingNew) {
+            if (brandByName != null) return "Duplicated";
+        } else {
+            if (brandByName != null && brandByName.getId() != id) {
+                return "Duplicated";
+            }
+        }
+
+        return "OK";
+    }
 }

@@ -75,6 +75,7 @@
 <script th:src="@{/js/common_photo.js}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        // xử lý chọn thể loại
         dropdownCategories = $("#categories");
         divChosenCategories = $("#chosenCategories");
 
@@ -83,6 +84,33 @@
             showChosenCategories();
         });
         showChosenCategories();
+
+        // xử lý kiểm tra tên thương hiệu
+        let nameInput = $('input[name="name"]');
+        let nameStatus = $('#name-status');
+        let url = "[[@{/brands/check_unique}]]";
+
+        nameInput.on('blur', function () {
+            let name = $(this).val();
+            let csrfToken = $('input[name="_csrf"]').val();
+            let brandId = $('#id').val();
+            if (name !== '') {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {id: brandId, name: name, _csrf: csrfToken},
+                    success: function (data) {
+                        if (data === 'OK') {
+                            nameStatus.html('');
+                        } else if (data === 'Duplicated') {
+                            nameStatus.html('<span style="color:red">Tên thương hiệu đã tồn tại</span>');
+                        }
+                    }
+                });
+            } else {
+                nameStatus.empty();
+            }
+        });
     });
 
     function showChosenCategories() {
