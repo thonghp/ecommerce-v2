@@ -1,5 +1,6 @@
 package com.hpt.backend.brand.controller;
 
+import com.hpt.backend.FileUploadUtils;
 import com.hpt.backend.brand.BrandService;
 import com.hpt.backend.category.CategoryService;
 import com.hpt.common.entity.Brand;
@@ -8,11 +9,17 @@ import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static com.hpt.common.utils.CommonUtils.ASCENDING;
 import static com.hpt.common.utils.CommonUtils.DESCENDING;
@@ -52,7 +59,7 @@ public class BrandController {
         model.addAttribute("sortType", sortType);
         model.addAttribute("reverseSortType", reverseSortType);
         model.addAttribute("keyword", keyword);
-        model.addAttribute("users", brands);
+        model.addAttribute("brands", brands);
 
         return "brands/brands";
     }
@@ -68,5 +75,28 @@ public class BrandController {
         model.addAttribute("pageTitle", "Thêm thương hiệu");
 
         return "brands/brand_form";
+    }
+
+    @PostMapping("/brands/save")
+    public String saveBrand(Brand brand, RedirectAttributes redirectAttributes,
+                            @RequestParam("image") MultipartFile multipartFile) throws IOException {
+        if (!multipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+            brand.setImagePath(fileName);
+            Brand savedBrand = service.save(brand);
+
+            String uploadDir = "brand-photos/" + savedBrand.getId();
+
+            FileUploadUtils.cleanDir(uploadDir); // remove ảnh cũ trước khi lưu ảnh mới
+            FileUploadUtils.saveFile(uploadDir, fileName, multipartFile);
+        } else {
+            if (brand.getImagePath().isEmpty()) brand.setImagePath(null);
+            service.save(brand);
+        }
+
+        String name = brand.getName();
+        redirectAttributes.addFlashAttribute("message", "Thương hiệu " + name + " đã được lưu thành công");
+
+        return "redirect:/brands/page/1?sortField=id&sortType=asc&keyword=" + name;
     }
 }

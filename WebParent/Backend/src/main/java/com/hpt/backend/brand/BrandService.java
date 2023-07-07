@@ -1,7 +1,6 @@
 package com.hpt.backend.brand;
 
 import com.hpt.common.entity.Brand;
-import com.hpt.common.entity.User;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,5 +44,15 @@ public class BrandService {
         pageInfo.setTotalElements(page.getTotalElements());
 
         return page.getContent();
+    }
+
+    /**
+     * Save brand information. If the id does not exist, save the brand, otherwise the id already exists, update the brand
+     *
+     * @param brand brand object to save
+     * @return saved brand object
+     */
+    public Brand save(Brand brand) {
+        return repo.save(brand);
     }
 }

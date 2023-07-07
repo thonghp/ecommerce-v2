@@ -29,7 +29,7 @@
                 <div class="col-sm-8">
                     <input type="hidden" th:field="*{imagePath}"/>
                     <input type="file" id="fileImage" name="image" accept="image/png, image/jpeg"
-                           class="mb-2"/>
+                           th:required="${brand.id == null}" class="mb-2"/>
                     <img id="thumbnail" alt="Photos preview" th:src="@{${brand.photosImagePath}}" class="img-fluid"/>
                 </div>
             </div>
