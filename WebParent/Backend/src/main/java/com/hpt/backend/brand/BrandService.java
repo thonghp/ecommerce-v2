@@ -1,6 +1,7 @@
 package com.hpt.backend.brand;
 
 import com.hpt.common.entity.Brand;
+import com.hpt.common.exception.BrandNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,5 +55,20 @@ public class BrandService {
      */
     public Brand save(Brand brand) {
         return repo.save(brand);
+    }
+
+    /**
+     * Get a brand by id
+     *
+     * @param id id of the brand
+     * @return brand object corresponding to id
+     * @throws BrandNotFoundException if the brand does not exist
+     */
+    public Brand get(Integer id) throws BrandNotFoundException {
+        try {
+            return repo.findById(id).get();
+        } catch (Exception ex) {
+            throw new BrandNotFoundException("Không tìm thấy thương hiệu có id là " + id);
+        }
     }
 }

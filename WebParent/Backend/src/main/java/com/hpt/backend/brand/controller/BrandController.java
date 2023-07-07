@@ -5,6 +5,7 @@ import com.hpt.backend.brand.BrandService;
 import com.hpt.backend.category.CategoryService;
 import com.hpt.common.entity.Brand;
 import com.hpt.common.entity.Category;
+import com.hpt.common.exception.BrandNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -98,5 +99,23 @@ public class BrandController {
         redirectAttributes.addFlashAttribute("message", "Thương hiệu " + name + " đã được lưu thành công");
 
         return "redirect:/brands/page/1?sortField=id&sortType=asc&keyword=" + name;
+    }
+
+    @GetMapping("/brands/edit/{id}")
+    public String editBrand(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            Brand brand = service.get(id);
+            List<Category> listCategories = categoryService.listHierarchicalCategoriesInform();
+
+            model.addAttribute("brand", brand);
+            model.addAttribute("listCategories", listCategories);
+            model.addAttribute("pageTitle", "Chỉnh sửa thương hiệu");
+
+            return "brands/brand_form";
+        } catch (BrandNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+
+            return "redirect:/brands";
+        }
     }
 }
