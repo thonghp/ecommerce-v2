@@ -26,6 +26,8 @@ public class Brand {
     @Column(nullable = false, length = 128)
     private String imagePath;
 
+    private boolean enabled;
+
     @ManyToMany
     @JoinTable(name = "brand_category",
             joinColumns = @JoinColumn(name = "brand_id"),
@@ -34,7 +36,8 @@ public class Brand {
 
     @Override
     public String toString() {
-        return "Brand{" + "id=" + id + ", name='" + name + '\'' + ", imagePath='" + imagePath + '}';
+        return "Brand{" + "id=" + id + ", name='" + name + '\'' + ", imagePath='" + imagePath + '\'' +
+                ", enabled=" + enabled + '}';
     }
 
     @Transient

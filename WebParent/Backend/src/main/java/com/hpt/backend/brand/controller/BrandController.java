@@ -1,7 +1,9 @@
 package com.hpt.backend.brand.controller;
 
 import com.hpt.backend.brand.BrandService;
+import com.hpt.backend.category.CategoryService;
 import com.hpt.common.entity.Brand;
+import com.hpt.common.entity.Category;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ import static com.hpt.common.utils.CommonUtils.DESCENDING;
 public class BrandController {
     @Autowired
     private BrandService service;
+    @Autowired
+    private CategoryService categoryService;
 
     private final static String SORT_FIELD_NAME = "id";
 
@@ -51,5 +55,18 @@ public class BrandController {
         model.addAttribute("users", brands);
 
         return "brands/brands";
+    }
+
+    @GetMapping("/brands/new")
+    public String newBrand(Model model) {
+        Brand brand = new Brand();
+        brand.setEnabled(true);
+        List<Category> listCategories = categoryService.listHierarchicalCategoriesInform();
+
+        model.addAttribute("brand", brand);
+        model.addAttribute("listCategories", listCategories);
+        model.addAttribute("pageTitle", "Thêm thương hiệu");
+
+        return "brands/brand_form";
     }
 }
