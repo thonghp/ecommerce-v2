@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments :: page_head('Admin - Quản lý thương hiệu')"></head>
+
+<body>
+
+<div class="container-fluid">
+
+    <div th:replace="fragments :: navigation"></div>
+
+    <div>
+        <h2>Quản lý thương hiệu</h2>
+        <a th:href="@{/brands/new}" class="fas fa-folder-plus fa-2x icon-gray mr-2"></a>
+    </div>
+
+    <div th:replace="fragments :: search_form_and_message('/brands/page/1')"></div>
+
+    <div class="full-details">
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th class="hideable-column">
+                    <div th:replace="fragments :: sort_column('/brands', 'id', 'ID', 'tag')"></div>
+                </th>
+                <th>Ảnh</th>
+                <th>Tên thương hiệu</th>
+                <th class="hideable-column">Thể loại</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="brand : ${brands}">
+                <td class="hideable-column">[[${brand.id}]]</td>
+                <td>
+                    <img th:src="@{${brand.photosImagePath}}" alt="brand photo" style="width: 100px" class="img-fluid">
+                </td>
+                <td>[[${brand.name}]]</td>
+                <td class="hideable-column">
+                    <th:block th:each="cat : ${brand.categories}">
+                        <span class="badge badge-secondary" th:text="${cat.name}"></span>
+                    </th:block>
+                </td>
+                <td>
+                    <div th:replace="fragments :: status(${brand.enabled}, '/brands/' + ${brand.id})"></div>
+                </td>
+                <td>
+                    <div th:replace="fragments :: edit('/brands/edit/' + ${brand.id}, 'Chỉnh sửa thương hiệu')"></div>
+                    <div th:replace="fragments :: delete('/brands/delete/' + ${brand.id}, 'Xoá thương hiệu', ${brand.id})"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="less-details">
+        <div th:each="brand : ${brands}" class="row m-1">
+            <div class="col-4">
+                <img th:src="@{${brand.photosImagePath}}" alt="brand photo" style="width: 100px" class="img-fluid">
+            </div>
+            <div class="col-8">
+                <div>[[${brand.name}]]</div>
+                <div class="mt-2">
+                    <div th:replace="fragments :: status(${brand.enabled}, '/brands/' + ${brand.id})"></div>
+                    &nbsp;
+                    <div th:replace="fragments :: edit('/brands/edit/' + ${brand.id}, 'Chỉnh sửa thương hiệu')"></div>
+                    <div th:replace="fragments :: delete('/brands/delete/' + ${brand.id}, 'Xoá thương hiệu', ${brand.id})"></div>
+                </div>
+            </div>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+
+    <div th:replace="fragments :: pagination('/brands', 'thương hiệu')"></div>
+
+    <div th:replace="fragments :: confirm_modal('thương hiệu')"></div>
+
+    <div th:replace="fragments :: footer"></div>
+
+</div>
+</body>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/common_list.js}"></script>
+
+<script type="text/javascript">
+    moduleURL = "[[@{/brands}]]";
+
+    $(document).ready(function () {
+        hideMessageInListView();
+
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            let link = $(this);
+            showDeleteConfirmModal(link, 'thương hiệu');
+        });
+    });
+</script>
+
+</html>
