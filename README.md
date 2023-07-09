@@ -4,7 +4,9 @@
 
 Technologies used in the project
 
-- Spring boot, MySQL, JPA
+- Boostrap 4, Rich text editor, Jquery, Google chart
+- Spring boot, Thymeleaf, MySQL, JPA, Spring mail, Spring OAuth
+- Junit, Mockito
 - [CSV][csv], [Excel][excel], [PDF][pdf] library
 
 [csv]: https://super-csv.github.io/super-csv/index.html
