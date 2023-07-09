@@ -65,4 +65,26 @@ public class ProductService {
 
         return repo.save(product);
     }
+
+    /**
+     * Check product name is unique
+     *
+     * @param id   id of the product
+     * @param name name of the product
+     * @return "Ok" if the product name is unique, otherwise return "Duplicated"
+     */
+    public String checkUnique(Integer id, String name) {
+        boolean isCreatingNew = (id == null || id == 0);
+        Product productByName = repo.findByName(name);
+
+        if (isCreatingNew) {
+            if (productByName != null) return "Duplicated";
+        } else {
+            if (productByName != null && productByName.getId() != id) {
+                return "Duplicated";
+            }
+        }
+
+        return "OK";
+    }
 }
