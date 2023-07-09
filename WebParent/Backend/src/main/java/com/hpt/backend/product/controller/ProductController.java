@@ -4,6 +4,7 @@ import com.hpt.backend.brand.BrandService;
 import com.hpt.backend.product.ProductService;
 import com.hpt.common.entity.Brand;
 import com.hpt.common.entity.Product;
+import com.hpt.common.exception.ProductNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -75,8 +76,35 @@ public class ProductController {
 
     @PostMapping("/products/save")
     public String saveProduct(Product product, RedirectAttributes redirectAttributes) {
-        service.save(product);
-        redirectAttributes.addFlashAttribute("message", "The product has been saved successfully.");
+        Product savedProduct = service.save(product);
+        String name = savedProduct.getName();
+        redirectAttributes.addFlashAttribute("message", name + " đã được lưu thành công.");
+
+        return "redirect:/products";
+    }
+
+    @GetMapping("/products/{id}/enabled/{status}")
+    public String updateCategoryEnabledStatus(@PathVariable("id") Integer id,
+                                              @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
+        service.updateProductEnabledStatus(id, enabled);
+        String status = enabled ? " được kích hoạt" : " bị vô hiệu hoá";
+        String message = "Sản phẩm có id là " + id + status;
+        redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/products";
+    }
+
+    @GetMapping("/products/delete/{id}")
+    public String deleteProduct(@PathVariable(name = "id") Integer id,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+        try {
+            service.delete(id);
+
+            redirectAttributes.addFlashAttribute("message", "Sản phẩm có id là " + id + " đã được xóa thành công");
+        } catch (ProductNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+        }
 
         return "redirect:/products";
     }

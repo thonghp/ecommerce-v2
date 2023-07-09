@@ -1,6 +1,7 @@
 package com.hpt.backend.product;
 
 import com.hpt.common.entity.Product;
+import com.hpt.common.exception.ProductNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,12 +10,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
 import static com.hpt.common.utils.CommonUtils.ASCENDING;
 
 @Service
+@Transactional
 public class ProductService {
     @Autowired
     private ProductRepository repo;
@@ -86,5 +89,31 @@ public class ProductService {
         }
 
         return "OK";
+    }
+
+    /**
+     * Update the enabled status of a product
+     *
+     * @param id      id of the product
+     * @param enabled enabled status
+     */
+    public void updateProductEnabledStatus(Integer id, boolean enabled) {
+        repo.updateEnabledStatus(id, enabled);
+    }
+
+    /**
+     * Delete a product by id
+     *
+     * @param id id of the product you want to delete
+     * @throws ProductNotFoundException if the product does not exist
+     */
+    public void delete(Integer id) throws ProductNotFoundException {
+        Long countById = repo.countById(id);
+
+        if (countById == null || countById == 0) {
+            throw new ProductNotFoundException("Could not find any product with ID " + id);
+        }
+
+        repo.deleteById(id);
     }
 }
