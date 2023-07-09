@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.hpt.common.utils.CommonUtils.ASCENDING;
@@ -39,5 +40,29 @@ public class ProductService {
         pageInfo.setTotalElements(page.getTotalElements());
 
         return page.getContent();
+    }
+
+    /**
+     * Save product information. If the id does not exist, save the product, otherwise the id already exists,
+     * update the product
+     *
+     * @param product product object to save
+     * @return saved product object
+     */
+    public Product save(Product product) {
+        if (product.getId() == null) {
+            product.setCreatedTime(new Date());
+        }
+
+        if (product.getAlias() == null || product.getAlias().isEmpty()) {
+            String defaultAlias = product.getName().replaceAll(" ", "-");
+            product.setAlias(defaultAlias);
+        } else {
+            product.setAlias(product.getAlias().replaceAll(" ", "-"));
+        }
+
+        product.setUpdatedTime(new Date());
+
+        return repo.save(product);
     }
 }
