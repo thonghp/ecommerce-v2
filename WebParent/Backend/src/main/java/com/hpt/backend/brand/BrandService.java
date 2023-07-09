@@ -23,8 +23,13 @@ public class BrandService {
 
     public final static int BRANDS_PER_PAGE = 5;
 
+    /**
+     * Returns a list of brands only with id and name
+     *
+     * @return a list of brands
+     */
     public List<Brand> listAll() {
-        return (List<Brand>) repo.findAll();
+        return repo.findAll();
     }
 
     /**

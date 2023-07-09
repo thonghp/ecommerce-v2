@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:replace="fragments :: page_head('Admin - Quản lý sản phẩm')"></head>
+<head th:replace="fragments :: page_head('Admin - Quản lý sản phẩm', 'none')"></head>
 
 <body>
 
@@ -45,6 +45,9 @@
                     <div th:replace="fragments :: status(${product.enabled}, '/products/' + ${product.id})"></div>
                 </td>
                 <td>
+                    <a class="fas fa-file-alt fa-2x icon-green" th:href="@{'/products/detail/' + ${product.id}}"
+                       title="Chi tiết sản phẩm">
+                    </a>
                     <div th:replace="fragments :: edit('/products/edit/' + ${product.id}, 'Chỉnh sửa sản phẩm')"></div>
                     <div th:replace="fragments :: delete('/products/delete/' + ${product.id}, 'Xoá sản phẩm', ${product.id})"></div>
                 </td>
@@ -62,6 +65,9 @@
                 <div class="mt-2">
                     <div th:replace="fragments :: status(${product.enabled}, '/products/' + ${product.id})"></div>
                     &nbsp;
+                    <a class="fas fa-file-alt fa-2x icon-green" th:href="@{'/products/detail/' + ${product.id}}"
+                       title="Chi tiết sản phẩm">
+                    </a>
                     <div th:replace="fragments :: edit('/products/edit/' + ${product.id}, 'Chỉnh sửa sản phẩm')"></div>
                     <div th:replace="fragments :: delete('/products/delete/' + ${product.id}, 'Xoá sản phẩm', ${product.id})"></div>
                 </div>

@@ -1,6 +1,8 @@
 package com.hpt.backend.product.controller;
 
+import com.hpt.backend.brand.BrandService;
 import com.hpt.backend.product.ProductService;
+import com.hpt.common.entity.Brand;
 import com.hpt.common.entity.Product;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import static com.hpt.common.utils.CommonUtils.DESCENDING;
 public class ProductController {
     @Autowired
     private ProductService service;
+    @Autowired
+    private BrandService brandService;
     private final static String SORT_FIELD_NAME = "id";
 
     @GetMapping("/products")
@@ -50,5 +54,20 @@ public class ProductController {
         model.addAttribute("products", products);
 
         return "products/products";
+    }
+
+    @GetMapping("/products/new")
+    public String newProduct(Model model) {
+        List<Brand> listBrands = brandService.listAll();
+
+        Product product = new Product();
+        product.setEnabled(true);
+        product.setInStock(true);
+
+        model.addAttribute("product", product);
+        model.addAttribute("listBrands", listBrands);
+        model.addAttribute("pageTitle", "Thêm sản phẩm");
+
+        return "products/product_form";
     }
 }
