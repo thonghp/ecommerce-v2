@@ -57,12 +57,24 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private Set<ProductImage> images = new HashSet<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<ProductDetail> details = new HashSet<>();
+
     public void addExtraImage(String imageName) {
         ProductImage images = new ProductImage();
         images.setName(imageName);
         images.setProduct(this);
 
         this.images.add(images);
+    }
+
+    public void addDetail(String name, String value) {
+        ProductDetail detail = new ProductDetail();
+        detail.setName(name);
+        detail.setValue(value);
+        detail.setProduct(this);
+
+        this.details.add(detail);
     }
 
     @Override
