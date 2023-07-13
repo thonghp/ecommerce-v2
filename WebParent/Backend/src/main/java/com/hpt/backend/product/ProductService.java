@@ -116,4 +116,19 @@ public class ProductService {
 
         repo.deleteById(id);
     }
+
+    /**
+     * Get a product by id
+     *
+     * @param id id of the product
+     * @return product object corresponding to id
+     * @throws ProductNotFoundException if the product does not exist
+     */
+    public Product get(Integer id) throws ProductNotFoundException {
+        try {
+            return repo.findById(id).get();
+        } catch (Exception ex) {
+            throw new ProductNotFoundException("Could not find any product with ID " + id);
+        }
+    }
 }

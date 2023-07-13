@@ -22,4 +22,9 @@ public class ProductImage {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Transient
+    public String getImagePath() {
+        return "/product-photos/" + product.getId() + "/extras/" + this.name;
+    }
 }

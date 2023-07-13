@@ -1,17 +1,16 @@
 dropdownBrands = $("#brand");
 dropdownCategories = $("#category");
 
-$(document).ready(function() {
-
+$(document).ready(function () {
     $("#shortDescription").richText();
     $("#fullDescription").richText();
 
-    dropdownBrands.change(function() {
+    dropdownBrands.change(function () {
         dropdownCategories.empty();
         getCategories();
     });
 
-    getCategories();
+    getCategoriesForNewForm();
 
     // xử lý kiểm tra tên sản phẩm
     let nameInput = $('input[name="name"]');
@@ -39,16 +38,26 @@ $(document).ready(function() {
             nameStatus.empty();
         }
     });
-
 });
 
 function getCategories() {
     brandId = dropdownBrands.val();
     url = brandModuleURL + "/" + brandId + "/categories";
 
-    $.get(url, function(responseJson) {
-        $.each(responseJson, function(index, category) {
+    $.get(url, function (responseJson) {
+        $.each(responseJson, function (index, category) {
             $("<option>").val(category.id).text(category.name).appendTo(dropdownCategories);
         });
     });
+}
+
+function getCategoriesForNewForm() {
+    catIdField = $("#categoryId");
+    editMode = false;
+
+    if (catIdField.length) {
+        editMode = true;
+    }
+
+    if (!editMode) getCategories();
 }
