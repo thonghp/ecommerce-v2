@@ -37,7 +37,7 @@ public class ProductService {
         Sort sort = Sort.by(sortField);
         sort = sortType.equals(ASCENDING) ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
-        Page<Product> page = repo.findAll(pageable);
+        Page<Product> page = (keyword != null) ? repo.search(keyword, pageable) : repo.findAll(pageable);
 
         pageInfo.setTotalPages(page.getTotalPages());
         pageInfo.setTotalElements(page.getTotalElements());

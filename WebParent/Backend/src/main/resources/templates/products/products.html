@@ -38,15 +38,19 @@
                 <td>
                     <img th:src="@{${product.mainImagePath}}" style="width: 120px" class="img-fluid" alt="main image"/>
                 </td>
-                <td>[[${product.name}]]</td>
+                <td>
+                    <a class="link-detail" th:href="@{'/products/detail/' + ${product.id}}" th:title="${product.name}">
+                        [[${product.shortName}]]
+                    </a>
+                </td>
                 <td class="hideable-column">[[${product.brand.name}]]</td>
                 <td class="hideable-column">[[${product.category.name}]]</td>
                 <td>
                     <div th:replace="fragments :: status(${product.enabled}, '/products/' + ${product.id})"></div>
                 </td>
                 <td>
-                    <a class="fas fa-file-alt fa-2x icon-green" th:href="@{'/products/detail/' + ${product.id}}"
-                       title="Chi tiết sản phẩm">
+                    <a class="fas fa-file-alt fa-2x icon-green link-detail"
+                       th:href="@{'/products/detail/' + ${product.id}}" title="Chi tiết sản phẩm">
                     </a>
                     <div th:replace="fragments :: edit('/products/edit/' + ${product.id}, 'Chỉnh sửa sản phẩm')"></div>
                     <div th:replace="fragments :: delete('/products/delete/' + ${product.id}, 'Xoá sản phẩm', ${product.id})"></div>
@@ -81,6 +85,13 @@
 
     <div th:replace="fragments :: confirm_modal('sản phẩm')"></div>
 
+    <div class="modal fade" id="detailModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
     <div th:replace="fragments :: footer"></div>
 
 </div>
@@ -98,6 +109,12 @@
             e.preventDefault();
             let link = $(this);
             showDeleteConfirmModal(link, 'sản phẩm');
+        });
+
+        $(".link-detail").on("click", function (e) {
+            e.preventDefault();
+            linkDetailURL = $(this).attr("href");
+            $("#detailModal").modal("show").find(".modal-content").load(linkDetailURL);
         });
     });
 </script>

@@ -255,8 +255,23 @@ public class ProductController {
             model.addAttribute("listBrands", listBrands);
             model.addAttribute("pageTitle", "Chỉnh sửa sản phẩm");
             model.addAttribute("numberOfExistingExtraImages", numberOfExistingExtraImages);
-            
+
             return "products/product_form";
+        } catch (ProductNotFoundException e) {
+            ra.addFlashAttribute("message", e.getMessage());
+
+            return "redirect:/products";
+        }
+    }
+
+    @GetMapping("/products/detail/{id}")
+    public String viewProductDetails(@PathVariable("id") Integer id, Model model,
+                                     RedirectAttributes ra) {
+        try {
+            Product product = service.get(id);
+            model.addAttribute("product", product);
+
+            return "products/product_detail_modal";
 
         } catch (ProductNotFoundException e) {
             ra.addFlashAttribute("message", e.getMessage());
