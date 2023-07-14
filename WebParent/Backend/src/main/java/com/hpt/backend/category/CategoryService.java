@@ -152,6 +152,12 @@ public class CategoryService {
         } else {
             category.setAlias(category.getAlias().replaceAll(" ", "-"));
         }
+        Category parent = category.getParent();
+        if (parent != null) {
+            String allParentIds = parent.getAllParentIDs() == null ? "-" : parent.getAllParentIDs();
+            allParentIds += parent.getId() + "-";
+            category.setAllParentIDs(allParentIds);
+        }
 
         return repo.save(category);
     }

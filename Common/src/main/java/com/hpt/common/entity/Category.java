@@ -26,6 +26,8 @@ public class Category {
     @Column(name = "image_path", length = 128)
     private String imagePath;
     private boolean enabled;
+    @Column(name = "all_parent_ids", length = 256)
+    private String allParentIDs;
     @OneToOne
     @JoinColumn(name = "parent_id")
     private Category parent;

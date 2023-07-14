@@ -2,8 +2,10 @@ package com.hpt.backend.product.controller;
 
 import com.hpt.backend.FileUploadUtils;
 import com.hpt.backend.brand.BrandService;
+import com.hpt.backend.category.CategoryService;
 import com.hpt.backend.product.ProductService;
 import com.hpt.common.entity.Brand;
+import com.hpt.common.entity.Category;
 import com.hpt.common.entity.Product;
 import com.hpt.common.entity.ProductImage;
 import com.hpt.common.exception.ProductNotFoundException;
@@ -39,26 +41,33 @@ public class ProductController {
     private ProductService service;
     @Autowired
     private BrandService brandService;
+    @Autowired
+    private CategoryService categoryService;
     private final static String SORT_FIELD_NAME = "id";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
     @GetMapping("/products")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, SORT_FIELD_NAME, ASCENDING, null);
+        return listByPage(1, model, SORT_FIELD_NAME, ASCENDING, null, 0);
     }
 
     @GetMapping("/products/page/{pageNum}")
     public String listByPage(@PathVariable(name = "pageNum") Integer pageNum, Model model,
                              @RequestParam(name = "sortField") String sortField,
                              @RequestParam(name = "sortType") String sortType,
-                             @RequestParam(name = "keyword", required = false) String keyword) {
+                             @RequestParam(name = "keyword", required = false) String keyword,
+                             @RequestParam(name = "categoryId") Integer categoryId) {
         PageInfo pageInfo = new PageInfo();
-        List<Product> products = service.listByPage(pageInfo, pageNum, sortField, sortType, keyword);
+        List<Product> products = service.listByPage(pageInfo, pageNum, sortField, sortType, keyword, categoryId);
+        List<Category> listCategories = categoryService.listHierarchicalCategoriesInform();
         String reverseSortType = sortType.equals(ASCENDING) ? DESCENDING : ASCENDING;
 
         long startCount = pageInfo.getStartCount(pageNum, ProductService.PRODUCTS_PER_PAGE);
         long endCount = pageInfo.getEndCount(pageNum, ProductService.PRODUCTS_PER_PAGE);
+
+        if (categoryId != null)
+            model.addAttribute("categoryId", categoryId);
 
         model.addAttribute("startCount", startCount);
         model.addAttribute("endCount", endCount);
@@ -70,6 +79,7 @@ public class ProductController {
         model.addAttribute("reverseSortType", reverseSortType);
         model.addAttribute("keyword", keyword);
         model.addAttribute("products", products);
+        model.addAttribute("listCategories", listCategories);
 
         return "products/products";
     }

@@ -33,11 +33,28 @@ public class ProductService {
      * @param keyword   The keyword to search
      * @return a list of products
      */
-    public List<Product> listByPage(PageInfo pageInfo, int pageNum, String sortField, String sortType, String keyword) {
+    public List<Product> listByPage(PageInfo pageInfo, int pageNum, String sortField, String sortType, String keyword,
+                                    Integer categoryId) {
         Sort sort = Sort.by(sortField);
         sort = sortType.equals(ASCENDING) ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
-        Page<Product> page = (keyword != null) ? repo.search(keyword, pageable) : repo.findAll(pageable);
+
+        Page<Product> page = repo.findAll(pageable);
+
+        if (keyword != null && !keyword.isEmpty()) {
+            if (categoryId != null && categoryId > 0) {
+                String categoryIdMatch = "-" + categoryId + "-";
+                page = repo.searchInCategory(categoryId, categoryIdMatch, keyword, pageable);
+            }
+
+            page = repo.search(keyword, pageable);
+        }
+
+        if (categoryId != null && categoryId > 0) {
+            String categoryIdMatch = "-" + categoryId + "-";
+            page = repo.findAllInCategory(categoryId, categoryIdMatch, pageable);
+        }
+
 
         pageInfo.setTotalPages(page.getTotalPages());
         pageInfo.setTotalElements(page.getTotalElements());

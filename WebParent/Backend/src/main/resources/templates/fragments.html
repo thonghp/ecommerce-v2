@@ -132,7 +132,8 @@
 <th th:fragment="sort_column(moduleURL, fieldName, columnName, removeTag)" th:remove="${removeTag}">
     <a class="text-white"
        th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField='+ ${fieldName} + '&sortType=' +
-       ${sortField != fieldName ? sortType : reverseSortType} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+       ${sortField != fieldName ? sortType : reverseSortType} + ${keyword != null ? '&keyword=' + keyword : ''} +
+       ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
         [[${columnName}]]
     </a>
     <span th:if="${sortField == fieldName}"
@@ -159,7 +160,7 @@
 
 <a th:fragment="page_link(moduleURL, pageNum, label)"
    th:href="@{${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
-   ${keyword != null ? '&keyword=' + keyword : ''}}" class="page-link">
+   ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}" class="page-link">
     [[${label}]]
 </a>
 
