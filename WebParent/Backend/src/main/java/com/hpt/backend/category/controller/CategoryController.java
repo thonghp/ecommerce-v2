@@ -61,6 +61,7 @@ public class CategoryController {
     @GetMapping("/categories/new")
     public String newCategory(Model model) {
         Category category = new Category();
+        category.setEnabled(true);
         List<Category> categories = service.listHierarchicalCategoriesInform();
 
         model.addAttribute("categories", categories);

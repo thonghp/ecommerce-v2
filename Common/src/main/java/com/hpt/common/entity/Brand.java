@@ -34,6 +34,11 @@ public class Brand {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
+    public Brand(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "Brand{" + "id=" + id + ", name='" + name + '\'' + ", imagePath='" + imagePath + '\'' +
