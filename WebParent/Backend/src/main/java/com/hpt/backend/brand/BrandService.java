@@ -75,7 +75,7 @@ public class BrandService {
         try {
             return repo.findById(id).get();
         } catch (Exception ex) {
-            throw new BrandNotFoundException("Không tìm thấy thương hiệu có id là " + id);
+            throw new BrandNotFoundException("Could not find a brand with id " + id);
         }
     }
 
@@ -98,7 +98,7 @@ public class BrandService {
     public void delete(Integer id) throws BrandNotFoundException {
         Long countById = repo.countById(id);
         if (countById == null || countById == 0) {
-            throw new BrandNotFoundException("Không tìm thấy nhân viên có id là " + id);
+            throw new BrandNotFoundException("Could not find a brand with id " + id);
         }
         repo.deleteById(id);
     }

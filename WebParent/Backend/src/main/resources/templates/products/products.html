@@ -12,7 +12,7 @@
 
     <div>
         <h2>Quản lý sản phẩm</h2>
-        <a sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')" th:href="@{/products/new}"
+        <a sec:authorize="hasAnyAuthority('Admin', 'Editor')" th:href="@{/products/new}"
            class="fas fa-folder-plus fa-2x icon-gray mr-2"></a>
     </div>
 
@@ -59,7 +59,7 @@
                 <th>Tên sản phẩm</th>
                 <th class="hideable-column">Thương hiệu</th>
                 <th class="hideable-column">Thể loại</th>
-                <th sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">Trạng thái</th>
+                <th sec:authorize="hasAnyAuthority('Admin', 'Editor')">Trạng thái</th>
                 <th></th>
             </tr>
             </thead>
@@ -77,7 +77,7 @@
                 </td>
                 <td class="hideable-column">[[${product.brand.name}]]</td>
                 <td class="hideable-column">[[${product.category.name}]]</td>
-                <td sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">
+                <td sec:authorize="hasAnyAuthority('Admin', 'Editor')">
                     <div th:replace="fragments :: status(${product.enabled}, '/products/' + ${product.id})"></div>
                 </td>
                 <td>
@@ -85,10 +85,10 @@
                        th:href="@{'/products/detail/' + ${product.id}}" title="Chi tiết sản phẩm">
                     </a>
                     &nbsp;&nbsp;
-                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên', 'Nhân viên bán hàng')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
                         <div th:replace="fragments :: edit('/products/edit/' + ${product.id}, 'Chỉnh sửa sản phẩm')"></div>
                     </th:block>
-                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
                         <div th:replace="fragments :: delete('/products/delete/' + ${product.id}, 'Xoá sản phẩm', ${product.id})"></div>
                     </th:block>
 
@@ -112,10 +112,10 @@
                        title="Chi tiết sản phẩm">
                     </a>
                     &nbsp;
-                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên', 'Nhân viên bán hàng')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
                         <div th:replace="fragments :: edit('/products/edit/' + ${product.id}, 'Chỉnh sửa sản phẩm')"></div>
                     </th:block>
-                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
                         <div th:replace="fragments :: delete('/products/delete/' + ${product.id}, 'Xoá sản phẩm', ${product.id})"></div>
                     </th:block>
                 </div>

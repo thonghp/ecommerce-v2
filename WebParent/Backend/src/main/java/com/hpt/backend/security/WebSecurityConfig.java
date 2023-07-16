@@ -42,14 +42,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/users/**").hasAuthority("Admin")
-                .antMatchers("/categories/**, /brands/**").hasAnyAuthority("Admin", "Biên tập viên")
+                .antMatchers("/categories/**, /brands/**").hasAnyAuthority("Admin", "Editor")
 
                 .antMatchers("/products", "/products/", "/products/detail/**", "/products/page/**")
-                    .hasAnyAuthority("Admin", "Nhân viên bán hàng", "Biên tập viên", "Nhân viên giao hàng")
-                .antMatchers("/products/new", "/products/delete/**").hasAnyAuthority("Admin", "Biên tập viên")
+                    .hasAnyAuthority("Admin", "Salesperson", "Editor", "Shipper")
+                .antMatchers("/products/new", "/products/delete/**").hasAnyAuthority("Admin", "Editor")
                 .antMatchers("/products/edit/**", "/products/save", "/products/check_unique")
-                    .hasAnyAuthority("Admin", "Biên tập viên", "Nhân viên bán hàng")
-                .antMatchers("/products/**").hasAnyAuthority("Admin", "Biên tập viên")
+                    .hasAnyAuthority("Admin", "Editor", "Salesperson")
+                .antMatchers("/products/**").hasAnyAuthority("Admin", "Editor")
 
                 .anyRequest().authenticated()
                 .and()

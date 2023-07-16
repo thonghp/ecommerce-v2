@@ -8,7 +8,6 @@ import com.hpt.backend.security.WebUserDetails;
 import com.hpt.common.entity.Brand;
 import com.hpt.common.entity.Category;
 import com.hpt.common.entity.Product;
-import com.hpt.common.entity.ProductImage;
 import com.hpt.common.exception.ProductNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,14 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
+import static com.hpt.backend.product.ProductSaveHelper.*;
 import static com.hpt.common.utils.CommonUtils.ASCENDING;
 import static com.hpt.common.utils.CommonUtils.DESCENDING;
 
@@ -112,7 +105,7 @@ public class ProductController {
                               @RequestParam(name = "imageIDs", required = false) String[] imageIDs,
                               @RequestParam(name = "imageNames", required = false) String[] imageNames,
                               @AuthenticationPrincipal WebUserDetails loggedUser) throws IOException {
-        if (loggedUser.hasRole("Nhân viên bán hàng")) {
+        if (loggedUser.hasRole("Salesperson")) {
             service.saveProductPrice(product);
             redirectAttributes.addFlashAttribute("message", "Sản phẩm đã được lưu thành công.");
             return "redirect:/products";
@@ -132,104 +125,6 @@ public class ProductController {
         redirectAttributes.addFlashAttribute("message", savedProduct.getName() + " đã được lưu thành công.");
 
         return "redirect:/products";
-    }
-
-    private void setMainImageName(MultipartFile multipartFile, Product product) {
-        if (!multipartFile.isEmpty()) {
-            String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-            product.setMainImage(fileName);
-        }
-    }
-
-    private void setExistingExtraImageNames(String[] imageIDs, String[] imageNames,
-                                            Product product) {
-        if (imageIDs == null || imageIDs.length == 0) return;
-
-        Set<ProductImage> images = new HashSet<>();
-
-        for (int count = 0; count < imageIDs.length; count++) {
-            Integer id = Integer.parseInt(imageIDs[count]);
-            String name = imageNames[count];
-
-            images.add(new ProductImage(id, name, product));
-        }
-
-        product.setImages(images);
-    }
-
-    private void setNewExtraImageNames(MultipartFile[] extraImageMultiparts, Product product) {
-        for (MultipartFile multipartFile : extraImageMultiparts) {
-            if (!multipartFile.isEmpty()) {
-                String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-
-                if (!product.containsImageName(fileName)) {
-                    product.addExtraImage(fileName);
-                }
-            }
-        }
-    }
-
-    private void setProductDetails(String[] detailIDs, String[] detailNames, String[] detailValues, Product product) {
-        if (detailNames == null || detailNames.length == 0) return;
-
-        for (int count = 0; count < detailNames.length; count++) {
-            String name = detailNames[count];
-            String value = detailValues[count];
-            Integer id = Integer.parseInt(detailIDs[count]);
-
-            if (id != 0) {
-                product.addDetail(id, name, value);
-            } else if (!name.isEmpty() && !value.isEmpty()) {
-                product.addDetail(name, value);
-            }
-        }
-    }
-
-    private void saveUploadedImages(MultipartFile mainImageMultipart,
-                                    MultipartFile[] extraImageMultiparts, Product savedProduct) throws IOException {
-        if (!mainImageMultipart.isEmpty()) {
-            String fileName = StringUtils.cleanPath(Objects.requireNonNull(mainImageMultipart.getOriginalFilename()));
-            String uploadDir = "product-photos/" + savedProduct.getId();
-
-            FileUploadUtils.cleanDir(uploadDir);
-            FileUploadUtils.saveFile(uploadDir, fileName, mainImageMultipart);
-        }
-
-        if (extraImageMultiparts.length > 0) {
-            String uploadDir = "product-photos/" + savedProduct.getId() + "/extras";
-
-            for (MultipartFile multipartFile : extraImageMultiparts) {
-                if (multipartFile.isEmpty()) continue;
-
-                String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-                FileUploadUtils.saveFile(uploadDir, fileName, multipartFile);
-            }
-        }
-    }
-
-
-    private void deleteExtraImagesWeredRemovedOnForm(Product product) {
-        String extraImageDir = "product-photos/" + product.getId() + "/extras";
-        Path dirPath = Paths.get(extraImageDir);
-
-        try {
-            Files.list(dirPath).forEach(file -> {
-                String filename = file.toFile().getName();
-
-                if (!product.containsImageName(filename)) {
-                    try {
-                        Files.delete(file);
-                        LOGGER.info("Deleted extra image: " + filename);
-
-                    } catch (IOException e) {
-                        LOGGER.error("Could not delete extra image: " + filename);
-                    }
-                }
-
-            });
-        } catch (IOException ex) {
-            LOGGER.error("Could not list directory: " + dirPath);
-        }
     }
 
     @GetMapping("/products/{id}/enabled/{status}")
