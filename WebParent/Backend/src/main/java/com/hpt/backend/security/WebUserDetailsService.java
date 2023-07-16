@@ -18,6 +18,6 @@ public class WebUserDetailsService implements UserDetailsService {
         if (user != null) {
             return new WebUserDetails(user);
         }
-        throw new UsernameNotFoundException("Không tìm thấy người dùng với email: " + email);
+        throw new UsernameNotFoundException("User not found with email: " + email);
     }
 }

@@ -112,7 +112,7 @@ public class UserService {
         try {
             return userRepo.findById(id).get();
         } catch (Exception ex) {
-            throw new UserNotFoundException("Không tìm thấy nhân viên có id là " + id);
+            throw new UserNotFoundException("Could not find an employee with id " + id);
         }
     }
 
@@ -125,7 +125,7 @@ public class UserService {
     public void delete(Integer id) throws UserNotFoundException {
         Long countById = userRepo.countById(id);
         if (countById == null || countById == 0) {
-            throw new UserNotFoundException("Không tìm thấy nhân viên có id là " + id);
+            throw new UserNotFoundException("Could not find an employee with id " + id);
         }
         userRepo.deleteById(id);
     }

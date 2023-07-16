@@ -152,6 +152,12 @@ public class CategoryService {
         } else {
             category.setAlias(category.getAlias().replaceAll(" ", "-"));
         }
+        Category parent = category.getParent();
+        if (parent != null) {
+            String allParentIds = parent.getAllParentIDs() == null ? "-" : parent.getAllParentIDs();
+            allParentIds += parent.getId() + "-";
+            category.setAllParentIDs(allParentIds);
+        }
 
         return repo.save(category);
     }
@@ -167,7 +173,7 @@ public class CategoryService {
         try {
             return repo.findById(id).get();
         } catch (Exception ex) {
-            throw new CategoryNotFoundException("Không tìm thấy thể loại có id là " + id);
+            throw new CategoryNotFoundException("Could not find a category with id " + id);
         }
     }
 
@@ -255,7 +261,7 @@ public class CategoryService {
     public void delete(Integer id) throws CategoryNotFoundException {
         Long countById = repo.countById(id);
         if (countById == null || countById == 0) {
-            throw new CategoryNotFoundException("Không tìm thấy thể loại có id là " + id);
+            throw new CategoryNotFoundException("Could not find a category with id " + id);
         }
         repo.deleteById(id);
     }

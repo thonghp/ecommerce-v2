@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 public class WebUserDetails implements UserDetails {
+    private static final long serialVersionUID = 1L;
     private User user;
 
     public WebUserDetails(User user) {
@@ -75,5 +76,9 @@ public class WebUserDetails implements UserDetails {
 
     public void setPhoneNumber(String phoneNumber) {
         this.user.setPhoneNumber(phoneNumber);
+    }
+
+    public boolean hasRole(String roleName) {
+        return user.hasRole(roleName);
     }
 }
