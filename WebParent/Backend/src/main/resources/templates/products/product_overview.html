@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <body>
 
@@ -7,7 +8,8 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Tên sản phẩm:</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" th:field="*{name}" required/>
+            <input type="text" class="form-control" th:field="*{name}" required
+                   th:readonly="${#authorization.expression('hasAuthority(''Nhân viên bán hàng'')')}"/>
             <div id="name-status"></div>
         </div>
     </div>
@@ -16,6 +18,7 @@
         <label class="col-sm-2 col-form-label">Alias:</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" th:field="*{alias}"
+                   th:readonly="${#authorization.expression('hasAuthority(''Nhân viên bán hàng'')')}"
                    placeholder="Mặc định là tên sản phẩm (dấu cách được thay bằng dấu gạch ngang)"/>
         </div>
     </div>
@@ -23,28 +26,38 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Thương hiệu:</label>
         <div class="col-sm-10">
-            <select th:field="*{brand}" class="form-control" required>
+            <select th:field="*{brand}" class="form-control" required
+                    sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">
                 <th:block th:each="brand : ${listBrands}">
                     <option th:value="${brand.id}">[[${brand.name}]]</option>
                 </th:block>
             </select>
+            <th:block sec:authorize="hasAuthority('Nhân viên bán hàng')">
+                <input type="text" class="form-control" th:value="${product.brand.name}" readonly/>
+            </th:block>
         </div>
     </div>
 
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Thể loại:</label>
         <div class="col-sm-10">
-            <th:block th:if="${product.category != null}">
-                <select th:field="*{category}" class="form-control" required>
-                    <th:block th:each="cat : ${product.brand.categories}">
-                        <option th:value="${cat.id}">[[${cat.name}]]</option>
-                    </th:block>
-                </select>
+            <th:block sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">
+                <th:block th:if="${product.category != null}">
+                    <select th:field="*{category}" class="form-control" required>
+                        <th:block th:each="cat : ${product.brand.categories}">
+                            <option th:value="${cat.id}">[[${cat.name}]]</option>
+                        </th:block>
+                    </select>
+                </th:block>
+
+                <th:block th:if="${product.category == null}">
+                    <select th:field="*{category}" class="form-control" required>
+                    </select>
+                </th:block>
             </th:block>
 
-            <th:block th:if="${product.category == null}">
-                <select th:field="*{category}" class="form-control" required>
-                </select>
+            <th:block sec:authorize="hasAuthority('Nhân viên bán hàng')">
+                <input type="text" class="form-control" th:value="${product.category.name}" readonly/>
             </th:block>
         </div>
     </div>
@@ -52,13 +65,15 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Trạng thái:</label>
         <div class="col-sm-10">
-            <input type="checkbox" th:field="*{enabled}"/>
+            <input type="checkbox" th:field="*{enabled}"
+                   th:disabled="${#authorization.expression('hasAuthority(''Nhân viên bán hàng'')')}"/>
         </div>
     </div>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Còn hàng:</label>
         <div class="col-sm-10">
-            <input type="checkbox" th:field="*{inStock}"/>
+            <input type="checkbox" th:field="*{inStock}"
+                   th:disabled="${#authorization.expression('hasAuthority(''Nhân viên bán hàng'')')}"/>
         </div>
     </div>
 

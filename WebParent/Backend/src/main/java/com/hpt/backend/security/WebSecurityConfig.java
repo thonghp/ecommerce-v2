@@ -43,7 +43,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/users/**").hasAuthority("Admin")
                 .antMatchers("/categories/**, /brands/**").hasAnyAuthority("Admin", "Biên tập viên")
-                .antMatchers("/products/**").hasAnyAuthority("Admin", "Nhân viên bán hàng", "Biên tập viên", "Nhân viên giao hàng")
+
+                .antMatchers("/products", "/products/", "/products/detail/**", "/products/page/**")
+                    .hasAnyAuthority("Admin", "Nhân viên bán hàng", "Biên tập viên", "Nhân viên giao hàng")
+                .antMatchers("/products/new", "/products/delete/**").hasAnyAuthority("Admin", "Biên tập viên")
+                .antMatchers("/products/edit/**", "/products/save", "/products/check_unique")
+                    .hasAnyAuthority("Admin", "Biên tập viên", "Nhân viên bán hàng")
+                .antMatchers("/products/**").hasAnyAuthority("Admin", "Biên tập viên")
+
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

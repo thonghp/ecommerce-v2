@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head th:replace="fragments :: page_head('Admin - Quản lý sản phẩm', 'none')"></head>
 
@@ -11,7 +12,8 @@
 
     <div>
         <h2>Quản lý sản phẩm</h2>
-        <a th:href="@{/products/new}" class="fas fa-folder-plus fa-2x icon-gray mr-2"></a>
+        <a sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')" th:href="@{/products/new}"
+           class="fas fa-folder-plus fa-2x icon-gray mr-2"></a>
     </div>
 
     <div>
@@ -57,7 +59,7 @@
                 <th>Tên sản phẩm</th>
                 <th class="hideable-column">Thương hiệu</th>
                 <th class="hideable-column">Thể loại</th>
-                <th>Trạng thái</th>
+                <th sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">Trạng thái</th>
                 <th></th>
             </tr>
             </thead>
@@ -75,15 +77,21 @@
                 </td>
                 <td class="hideable-column">[[${product.brand.name}]]</td>
                 <td class="hideable-column">[[${product.category.name}]]</td>
-                <td>
+                <td sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">
                     <div th:replace="fragments :: status(${product.enabled}, '/products/' + ${product.id})"></div>
                 </td>
                 <td>
                     <a class="fas fa-file-alt fa-2x icon-green link-detail"
                        th:href="@{'/products/detail/' + ${product.id}}" title="Chi tiết sản phẩm">
                     </a>
-                    <div th:replace="fragments :: edit('/products/edit/' + ${product.id}, 'Chỉnh sửa sản phẩm')"></div>
-                    <div th:replace="fragments :: delete('/products/delete/' + ${product.id}, 'Xoá sản phẩm', ${product.id})"></div>
+                    &nbsp;&nbsp;
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên', 'Nhân viên bán hàng')">
+                        <div th:replace="fragments :: edit('/products/edit/' + ${product.id}, 'Chỉnh sửa sản phẩm')"></div>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">
+                        <div th:replace="fragments :: delete('/products/delete/' + ${product.id}, 'Xoá sản phẩm', ${product.id})"></div>
+                    </th:block>
+
                 </td>
             </tr>
             </tbody>
@@ -93,18 +101,23 @@
     <div class="less-details">
         <div th:each="product : ${products}" class="row m-1">
             <div class="col-4">
-                <img th:src="@{${product.mainImagePath}}" style="width: 120px" class="img-fluid" alt="main image"/>
+                <img th:src="@{${product.mainImagePath}}" style="width: 80px" class="img-fluid" alt="main image"/>
             </div>
             <div class="col-8">
-                <div>[[${product.name}]]</div>
+                <div>
+                    <a class="link-detail" th:href="@{'/products/detail/' + ${product.id}}">[[${product.shortName}]]</a>
+                </div>
                 <div class="mt-2">
-                    <div th:replace="fragments :: status(${product.enabled}, '/products/' + ${product.id})"></div>
-                    &nbsp;
                     <a class="fas fa-file-alt fa-2x icon-green" th:href="@{'/products/detail/' + ${product.id}}"
                        title="Chi tiết sản phẩm">
                     </a>
-                    <div th:replace="fragments :: edit('/products/edit/' + ${product.id}, 'Chỉnh sửa sản phẩm')"></div>
-                    <div th:replace="fragments :: delete('/products/delete/' + ${product.id}, 'Xoá sản phẩm', ${product.id})"></div>
+                    &nbsp;
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên', 'Nhân viên bán hàng')">
+                        <div th:replace="fragments :: edit('/products/edit/' + ${product.id}, 'Chỉnh sửa sản phẩm')"></div>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin', 'Biên tập viên')">
+                        <div th:replace="fragments :: delete('/products/delete/' + ${product.id}, 'Xoá sản phẩm', ${product.id})"></div>
+                    </th:block>
                 </div>
             </div>
             <div>&nbsp;</div>
