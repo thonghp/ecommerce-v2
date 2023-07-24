@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
     List<Category> findAllByEnabledTrueOrderByNameAsc();
+
+    Category findByAliasAndEnabledTrue(String alias);
 }
