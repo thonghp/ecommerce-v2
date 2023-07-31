@@ -16,6 +16,27 @@
 
 <body>
 
+<div th:fragment="breadcrumb" th:remove="tag">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-3" th:if="${listCategoryParents != null}">
+        <div class="container d-flex align-items-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a th:href="@{/}">Trang chủ</a>
+                </li>
+                <th:block th:each="parent : ${listCategoryParents}">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{'/c/' + ${parent.alias}}">[[${parent.name}]]</a>
+                    </li>
+                </th:block>
+
+                <li class="breadcrumb-item" th:if="${product != null}">
+                    <span>[[${product.shortName}]]</span>
+                </li>
+            </ol>
+        </div>
+    </nav>
+</div>
+
 <a th:fragment="page_link(moduleURL, pageNum, label)" class="page-link"
    th:href="@{${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
    ${keyword != null ? '&keyword=' + keyword : ''}}">

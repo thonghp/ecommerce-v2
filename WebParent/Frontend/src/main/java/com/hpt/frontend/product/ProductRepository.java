@@ -13,4 +13,6 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
             + "AND (p.category.id = ?1 OR p.category.allParentIDs LIKE %?2%)"
             + " ORDER BY p.name ASC")
     Page<Product> listByCategory(Integer categoryId, String categoryIdMarch, Pageable pageable);
+
+    Product findByAlias(String alias);
 }

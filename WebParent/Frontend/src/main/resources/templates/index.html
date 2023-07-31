@@ -173,10 +173,10 @@
                             <nav class="side-nav">
                                 <ul class="menu-vertical sf-arrows">
                                     <th:block th:each="root : ${listCategories}">
-                                        <li th:if="${#lists.isEmpty(root.children)}">
+                                        <li th:if="${root.children.size() == 0}">
                                             <a th:href="@{'/c/' + ${root.alias}}">[[${root.name}]]</a>
                                         </li>
-                                        <li class="megamenu-container">
+                                        <li class="megamenu-container" th:if="${root.children.size() > 0}">
                                             <a class="sf-with-ul" th:href="@{'/c/' + ${root.alias}}">
                                                 [[${root.name}]]
                                             </a>

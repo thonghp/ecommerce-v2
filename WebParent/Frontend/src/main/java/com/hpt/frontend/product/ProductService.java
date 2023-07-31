@@ -1,6 +1,7 @@
 package com.hpt.frontend.product;
 
 import com.hpt.common.entity.Product;
+import com.hpt.common.exception.ProductNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Service
 public class ProductService {
-    public static final int PRODUCTS_PER_PAGE = 10;
+    public static final int PRODUCTS_PER_PAGE = 12;
 
     @Autowired
     private ProductRepository repo;
@@ -25,5 +26,14 @@ public class ProductService {
         pageInfo.setTotalElements(page.getTotalElements());
 
         return page.getContent();
+    }
+
+    public Product getProduct(String alias) throws ProductNotFoundException {
+        Product product = repo.findByAlias(alias);
+        if (product == null) {
+            throw new ProductNotFoundException("Could not find any product with alias " + alias);
+        }
+
+        return product;
     }
 }

@@ -1,6 +1,7 @@
 package com.hpt.frontend.category;
 
 import com.hpt.common.entity.Category;
+import com.hpt.common.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +41,12 @@ public class CategoryService {
      * @param alias the alias of category
      * @return a category by alias
      */
-    public Category getCategory(String alias) {
-        return repo.findByAliasAndEnabledTrue(alias);
+    public Category getCategory(String alias) throws CategoryNotFoundException {
+        Category category = repo.findByAliasAndEnabledTrue(alias);
+        if (category == null) {
+            throw new CategoryNotFoundException("Could not find any category with alias " + alias);
+        }
+        return category;
     }
 
     /**

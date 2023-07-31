@@ -143,7 +143,6 @@
                 </div><!-- End .header-right -->
             </div><!-- End .container -->
         </div>
-
         <div class="header-bottom sticky-header">
             <div class="container">
                 <div class="row">
@@ -152,334 +151,170 @@
                             <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false" data-display="static"
                                title="Browse Categories">
-                                Browse Categories
+                                DANH MỤC SẢN PHẨM
                             </a>
 
                             <div class="dropdown-menu">
                                 <nav class="side-nav">
                                     <ul class="menu-vertical sf-arrows">
-                                        <li class="megamenu-container">
-                                            <a class="sf-with-ul" href="#">Electronics</a>
+                                        <th:block th:each="root : ${listCategories}">
+                                            <li th:if="${root.children.size() == 0}">
+                                                <a th:href="@{'/c/' + ${root.alias}}">[[${root.name}]]</a>
+                                            </li>
+                                            <li class="megamenu-container" th:if="${root.children.size() > 0}">
+                                                <a class="sf-with-ul" th:href="@{'/c/' + ${root.alias}}">
+                                                    [[${root.name}]]
+                                                </a>
+                                                <div class="megamenu" th:if="${root.children.size() == 3}">
+                                                    <div class="menu-col">
+                                                        <div class="row">
+                                                            <div class="col-md-4"
+                                                                 th:each="childrenCat : ${root.children}">
+                                                                <div class="menu-title">[[${childrenCat.name}]]</div>
+                                                                <ul th:each="childCat : ${childrenCat.children}">
+                                                                    <li>
+                                                                        <a th:href="@{'/c/' + ${childCat.alias}}">[[${childCat.name}]]</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row menu-banners">
+                                                            <div class="col-md-4">
+                                                                <div class="banner">
+                                                                    <a href="#">
+                                                                        <img th:src="@{/images/demos/demo-13/menu/1.jpg}"
+                                                                             alt="image">
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="banner">
+                                                                    <a href="#">
+                                                                        <img th:src="@{/images/demos/demo-13/menu/2.jpg}"
+                                                                             alt="image">
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="banner">
+                                                                    <a href="#">
+                                                                        <img th:src="@{/images/demos/demo-13/menu/3.jpg}"
+                                                                             alt="image">
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                            <div class="megamenu">
-                                                <div class="row no-gutters">
-                                                    <div class="col-md-8">
-                                                        <div class="menu-col">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="menu-title">Laptops & Computers</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#">Desktop Computers</a></li>
-                                                                        <li><a href="#">Monitors</a></li>
-                                                                        <li><a href="#">Laptops</a></li>
-                                                                        <li><a href="#">iPad & Tablets</a></li>
-                                                                        <li><a href="#">Hard Drives & Storage</a></li>
-                                                                        <li><a href="#">Printers & Supplies</a></li>
-                                                                        <li><a href="#">Computer Accessories</a></li>
-                                                                    </ul>
-
-                                                                    <div class="menu-title">TV & Video</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#">TVs</a></li>
-                                                                        <li><a href="#">Home Audio Speakers</a></li>
-                                                                        <li><a href="#">Projectors</a></li>
-                                                                        <li><a href="#">Media Streaming Devices</a></li>
-                                                                    </ul>
-                                                                </div><!-- End .col-md-6 -->
-
-                                                                <div class="col-md-6">
-                                                                    <div class="menu-title">Cell Phones</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#">Carrier Phones</a></li>
-                                                                        <li><a href="#">Unlocked Phones</a></li>
-                                                                        <li><a href="#">Phone & Cellphone Cases</a></li>
-                                                                        <li><a href="#">Cellphone Chargers </a></li>
-                                                                    </ul>
-
-                                                                    <div class="menu-title">Digital Cameras</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#">Digital SLR Cameras</a></li>
-                                                                        <li><a href="#">Sports & Action Cameras</a></li>
-                                                                        <li><a href="#">Camcorders</a></li>
-                                                                        <li><a href="#">Camera Lenses</a></li>
-                                                                        <li><a href="#">Photo Printer</a></li>
-                                                                        <li><a href="#">Digital Memory Cards</a></li>
-                                                                        <li><a href="#">Camera Bags, Backpacks &
-                                                                            Cases</a></li>
-                                                                    </ul>
-                                                                </div><!-- End .col-md-6 -->
-                                                            </div><!-- End .row -->
-                                                        </div><!-- End .menu-col -->
-                                                    </div><!-- End .col-md-8 -->
-
-                                                    <div class="col-md-4">
-                                                        <div class="banner banner-overlay">
-                                                            <a href="category.html" class="banner banner-menu">
-                                                                <img th:src="@{/images/demos/demo-13/menu/banner-1.jpg}"
-                                                                     alt="Banner">
-                                                            </a>
-                                                        </div><!-- End .banner banner-overlay -->
-                                                    </div><!-- End .col-md-4 -->
-                                                </div><!-- End .row -->
-                                            </div><!-- End .megamenu -->
-                                        </li>
-                                        <li class="megamenu-container">
-                                            <a class="sf-with-ul" href="#">Furniture</a>
-
-                                            <div class="megamenu">
-                                                <div class="row no-gutters">
-                                                    <div class="col-md-8">
-                                                        <div class="menu-col">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="menu-title">Bedroom</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#">Beds, Frames & Bases</a></li>
-                                                                        <li><a href="#">Dressers</a></li>
-                                                                        <li><a href="#">Nightstands</a></li>
-                                                                        <li><a href="#">Kids' Beds & Headboards</a></li>
-                                                                        <li><a href="#">Armoires</a></li>
-                                                                    </ul>
-
-                                                                    <div class="menu-title">Living Room</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#">Coffee Tables</a></li>
-                                                                        <li><a href="#">Chairs</a></li>
-                                                                        <li><a href="#">Tables</a></li>
-                                                                        <li><a href="#">Futons & Sofa Beds</a></li>
-                                                                        <li><a href="#">Cabinets & Chests</a></li>
-                                                                    </ul>
-                                                                </div><!-- End .col-md-6 -->
-
-                                                                <div class="col-md-6">
-                                                                    <div class="menu-title">Office</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#">Office Chairs</a></li>
-                                                                        <li><a href="#">Desks</a></li>
-                                                                        <li><a href="#">Bookcases</a></li>
-                                                                        <li><a href="#">File Cabinets</a></li>
-                                                                        <li><a href="#">Breakroom Tables</a></li>
-                                                                    </ul>
-
-                                                                    <div class="menu-title">Kitchen & Dining</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#">Dining Sets</a></li>
-                                                                        <li><a href="#">Kitchen Storage Cabinets</a>
-                                                                        </li>
-                                                                        <li><a href="#">Bakers Racks</a></li>
-                                                                        <li><a href="#">Dining Chairs</a></li>
-                                                                        <li><a href="#">Dining Room Tables</a></li>
-                                                                        <li><a href="#">Bar Stools</a></li>
-                                                                    </ul>
-                                                                </div><!-- End .col-md-6 -->
-                                                            </div><!-- End .row -->
-                                                        </div><!-- End .menu-col -->
-                                                    </div><!-- End .col-md-8 -->
-
-                                                    <div class="col-md-4">
-                                                        <div class="banner banner-overlay">
-                                                            <a href="category.html" class="banner banner-menu">
-                                                                <img th:src="@{/images/demos/demo-13/menu/banner-2.jpg}"
-                                                                     alt="Banner">
-                                                            </a>
-                                                        </div><!-- End .banner banner-overlay -->
-                                                    </div><!-- End .col-md-4 -->
-                                                </div><!-- End .row -->
-                                            </div><!-- End .megamenu -->
-                                        </li>
-                                        <li class="megamenu-container">
-                                            <a class="sf-with-ul" href="#">Cooking</a>
-
-                                            <div class="megamenu">
-                                                <div class="menu-col">
-                                                    <div class="row">
+                                                <div class="megamenu" th:if="${root.children.size() == 2}">
+                                                    <div class="row no-gutters">
+                                                        <div class="col-md-8">
+                                                            <div class="menu-col">
+                                                                <div class="row">
+                                                                    <div class="col-md-6"
+                                                                         th:each="childrenCat : ${root.children}">
+                                                                        <div class="menu-title">[[${childrenCat.name}]]
+                                                                        </div>
+                                                                        <ul th:each="childCat : ${childrenCat.children}">
+                                                                            <li>
+                                                                                <a th:href="@{'/c/' + ${childCat.alias}}">[[${childCat.name}]]</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="col-md-4">
-                                                            <div class="menu-title">Cookware</div>
-                                                            <!-- End .menu-title -->
-                                                            <ul>
-                                                                <li><a href="#">Cookware Sets</a></li>
-                                                                <li><a href="#">Pans, Griddles & Woks</a></li>
-                                                                <li><a href="#">Pots</a></li>
-                                                                <li><a href="#">Skillets & Grill Pans</a></li>
-                                                                <li><a href="#">Kettles</a></li>
-                                                                <li><a href="#">Soup & Stockpots</a></li>
-                                                            </ul>
-                                                        </div><!-- End .col-md-4 -->
-
-                                                        <div class="col-md-4">
-                                                            <div class="menu-title">Dinnerware & Tabletop</div>
-                                                            <!-- End .menu-title -->
-                                                            <ul>
-                                                                <li><a href="#">Plates</a></li>
-                                                                <li><a href="#">Cups & Mugs</a></li>
-                                                                <li><a href="#">Trays & Platters</a></li>
-                                                                <li><a href="#">Coffee & Tea Serving</a></li>
-                                                                <li><a href="#">Salt & Pepper Shaker</a></li>
-                                                            </ul>
-                                                        </div><!-- End .col-md-4 -->
-
-                                                        <div class="col-md-4">
-                                                            <div class="menu-title">Cooking Appliances</div>
-                                                            <!-- End .menu-title -->
-                                                            <ul>
-                                                                <li><a href="#">Microwaves</a></li>
-                                                                <li><a href="#">Coffee Makers</a></li>
-                                                                <li><a href="#">Mixers & Attachments</a></li>
-                                                                <li><a href="#">Slow Cookers</a></li>
-                                                                <li><a href="#">Air Fryers</a></li>
-                                                                <li><a href="#">Toasters & Ovens</a></li>
-                                                            </ul>
-                                                        </div><!-- End .col-md-4 -->
-                                                    </div><!-- End .row -->
-
-                                                    <div class="row menu-banners">
-                                                        <div class="col-md-4">
-                                                            <div class="banner">
-                                                                <a href="#">
-                                                                    <img th:src="@{/images/demos/demo-13/menu/1.jpg}"
-                                                                         alt="image">
+                                                            <div class="banner banner-overlay">
+                                                                <a href="category.html" class="banner banner-menu">
+                                                                    <img th:src="@{/images/demos/demo-13/menu/banner-3.jpg}"
+                                                                         alt="Banner">
                                                                 </a>
-                                                            </div><!-- End .banner -->
-                                                        </div><!-- End .col-md-4 -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="menu-col menu-brands">
+                                                        <div class="row">
+                                                            <div class="col-lg-2">
+                                                                <a href="#" class="brand">
+                                                                    <img th:src="@{/images/brands/1.png}"
+                                                                         alt="Brand Name">
+                                                                </a>
+                                                            </div><!-- End .col-lg-2 -->
+
+                                                            <div class="col-lg-2">
+                                                                <a href="#" class="brand">
+                                                                    <img th:src="@{/images/brands/2.png}"
+                                                                         alt="Brand Name">
+                                                                </a>
+                                                            </div><!-- End .col-lg-2 -->
+
+                                                            <div class="col-lg-2">
+                                                                <a href="#" class="brand">
+                                                                    <img th:src="@{/images/brands/3.png}"
+                                                                         alt="Brand Name">
+                                                                </a>
+                                                            </div><!-- End .col-lg-2 -->
+
+                                                            <div class="col-lg-2">
+                                                                <a href="#" class="brand">
+                                                                    <img th:src="@{/images/brands/4.png}"
+                                                                         alt="Brand Name">
+                                                                </a>
+                                                            </div><!-- End .col-lg-2 -->
+
+                                                            <div class="col-lg-2">
+                                                                <a href="#" class="brand">
+                                                                    <img th:src="@{/images/brands/5.png}"
+                                                                         alt="Brand Name">
+                                                                </a>
+                                                            </div><!-- End .col-lg-2 -->
+
+                                                            <div class="col-lg-2">
+                                                                <a href="#" class="brand">
+                                                                    <img th:src="@{/images/brands/6.png}"
+                                                                         alt="Brand Name">
+                                                                </a>
+                                                            </div><!-- End .col-lg-2 -->
+                                                        </div><!-- End .row -->
+                                                    </div>
+                                                </div>
+
+                                                <div class="megamenu" th:if="${root.children.size() > 3}">
+                                                    <div class="row no-gutters">
+                                                        <div class="col-md-8">
+                                                            <div class="menu-col">
+                                                                <div class="row">
+                                                                    <div class="col-md-3"
+                                                                         th:each="childrenCat : ${root.children}">
+                                                                        <div class="menu-title">[[${childrenCat.name}]]
+                                                                        </div>
+                                                                        <ul th:each="childCat : ${childrenCat.children}">
+                                                                            <li>
+                                                                                <a th:href="@{'/c/' + ${childCat.alias}}">[[${childCat.name}]]</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
                                                         <div class="col-md-4">
-                                                            <div class="banner">
-                                                                <a href="#">
-                                                                    <img th:src="@{/images/demos/demo-13/menu/2.jpg}"
-                                                                         alt="image">
+                                                            <div class="banner banner-overlay">
+                                                                <a href="category.html" class="banner banner-menu">
+                                                                    <img th:src="@{/images/demos/demo-13/menu/banner-2.jpg}"
+                                                                         alt="Banner">
                                                                 </a>
-                                                            </div><!-- End .banner -->
-                                                        </div><!-- End .col-md-4 -->
-
-                                                        <div class="col-md-4">
-                                                            <div class="banner">
-                                                                <a href="#">
-                                                                    <img th:src="@{/images/demos/demo-13/menu/3.jpg}"
-                                                                         alt="image">
-                                                                </a>
-                                                            </div><!-- End .banner -->
-                                                        </div><!-- End .col-md-4 -->
-                                                    </div><!-- End .row -->
-                                                </div><!-- End .menu-col -->
-                                            </div><!-- End .megamenu -->
-                                        </li>
-                                        <li class="megamenu-container">
-                                            <a class="sf-with-ul" href="#">Clothing</a>
-
-                                            <div class="megamenu">
-                                                <div class="row no-gutters">
-                                                    <div class="col-md-8">
-                                                        <div class="menu-col">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="menu-title">Women</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#"><strong>New
-                                                                            Arrivals</strong></a></li>
-                                                                        <li><a href="#"><strong>Best
-                                                                            Sellers</strong></a></li>
-                                                                        <li><a href="#"><strong>Trending</strong></a>
-                                                                        </li>
-                                                                        <li><a href="#">Clothing</a></li>
-                                                                        <li><a href="#">Shoes</a></li>
-                                                                        <li><a href="#">Bags</a></li>
-                                                                        <li><a href="#">Accessories</a></li>
-                                                                        <li><a href="#">Jewlery & Watches</a></li>
-                                                                        <li><a href="#"><strong>Sale</strong></a></li>
-                                                                    </ul>
-                                                                </div><!-- End .col-md-6 -->
-
-                                                                <div class="col-md-6">
-                                                                    <div class="menu-title">Men</div>
-                                                                    <!-- End .menu-title -->
-                                                                    <ul>
-                                                                        <li><a href="#"><strong>New
-                                                                            Arrivals</strong></a></li>
-                                                                        <li><a href="#"><strong>Best
-                                                                            Sellers</strong></a></li>
-                                                                        <li><a href="#"><strong>Trending</strong></a>
-                                                                        </li>
-                                                                        <li><a href="#">Clothing</a></li>
-                                                                        <li><a href="#">Shoes</a></li>
-                                                                        <li><a href="#">Bags</a></li>
-                                                                        <li><a href="#">Accessories</a></li>
-                                                                        <li><a href="#">Jewlery & Watches</a></li>
-                                                                    </ul>
-                                                                </div><!-- End .col-md-6 -->
-                                                            </div><!-- End .row -->
-                                                        </div><!-- End .menu-col -->
-                                                    </div><!-- End .col-md-8 -->
-
-                                                    <div class="col-md-4">
-                                                        <div class="banner banner-overlay">
-                                                            <a href="category.html" class="banner banner-menu">
-                                                                <img th:src="@{/images/demos/demo-13/menu/banner-3.jpg}"
-                                                                     alt="Banner">
-                                                            </a>
-                                                        </div><!-- End .banner banner-overlay -->
-                                                    </div><!-- End .col-md-4 -->
-                                                </div><!-- End .row -->
-
-                                                <div class="menu-col menu-brands">
-                                                    <div class="row">
-                                                        <div class="col-lg-2">
-                                                            <a href="#" class="brand">
-                                                                <img th:src="@{/images/brands/1.png}" alt="Brand Name">
-                                                            </a>
-                                                        </div><!-- End .col-lg-2 -->
-
-                                                        <div class="col-lg-2">
-                                                            <a href="#" class="brand">
-                                                                <img th:src="@{/images/brands/2.png}" alt="Brand Name">
-                                                            </a>
-                                                        </div><!-- End .col-lg-2 -->
-
-                                                        <div class="col-lg-2">
-                                                            <a href="#" class="brand">
-                                                                <img th:src="@{/images/brands/3.png}" alt="Brand Name">
-                                                            </a>
-                                                        </div><!-- End .col-lg-2 -->
-
-                                                        <div class="col-lg-2">
-                                                            <a href="#" class="brand">
-                                                                <img th:src="@{/images/brands/4.png}" alt="Brand Name">
-                                                            </a>
-                                                        </div><!-- End .col-lg-2 -->
-
-                                                        <div class="col-lg-2">
-                                                            <a href="#" class="brand">
-                                                                <img th:src="@{/images/brands/5.png}" alt="Brand Name">
-                                                            </a>
-                                                        </div><!-- End .col-lg-2 -->
-
-                                                        <div class="col-lg-2">
-                                                            <a href="#" class="brand">
-                                                                <img th:src="@{/images/brands/6.png}" alt="Brand Name">
-                                                            </a>
-                                                        </div><!-- End .col-lg-2 -->
-                                                    </div><!-- End .row -->
-                                                </div><!-- End .menu-brands -->
-                                            </div><!-- End .megamenu -->
-                                        </li>
-                                        <li><a href="#">Home Appliances</a></li>
-                                        <li><a href="#">Healthy & Beauty</a></li>
-                                        <li><a href="#">Shoes & Boots</a></li>
-                                        <li><a href="#">Travel & Outdoor</a></li>
-                                        <li><a href="#">Smart Phones</a></li>
-                                        <li><a href="#">TV & Audio</a></li>
-                                        <li><a href="#">Gift Ideas</a></li>
-                                    </ul><!-- End .menu-vertical -->
-                                </nav><!-- End .side-nav -->
-                            </div><!-- End .dropdown-menu -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </th:block>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div><!-- End .category-dropdown -->
                     </div><!-- End .col-lg-3 -->
 
@@ -487,7 +322,7 @@
                         <nav class="main-nav">
                             <ul class="menu sf-arrows">
                                 <li class="megamenu-container active">
-                                    <a href="index.html" class="sf-with-ul">Home</a>
+                                    <a href="../index.html" class="sf-with-ul">Home</a>
 
                                     <div class="megamenu demo">
                                         <div class="menu-col">
@@ -903,21 +738,8 @@
         </div><!-- End .header-bottom -->
     </header><!-- End .header -->
 
-    <main class="main" th:if="${listCategoryParents != null}">
-        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
-            <div class="container">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a th:href="@{/}">Trang chủ</a>
-                    </li>
-                    <th:block th:each="parent : ${listCategoryParents}">
-                        <li class="breadcrumb-item">
-                            <a th:href="@{'/c/' + ${parent.alias}}">[[${parent.name}]]</a>
-                        </li>
-                    </th:block>
-                </ol>
-            </div>
-        </nav>
+    <main class="main">
+        <div th:replace="fragments :: breadcrumb"></div>
 
         <div class="page-content">
             <div class="container">
@@ -1024,15 +846,14 @@
                         <div class="cat-blocks-container">
                             <div class="row">
                                 <th:block th:each="cat : ${category.children}">
-                                    <div class="col-6 col-md-4 col-lg-3" th:if="${cat.enabled == true}">
+                                    <div class="col-6 col-md-4 col-lg-3"
+                                         th:if="${cat.enabled == true && cat.imagePath != null}">
                                         <a th:href="@{'/c/' + ${cat.alias}}" class="cat-block">
                                             <figure>
                                                 <span>
-                                                    <img th:src="@{/images/demos/demo-13/cats/cat-page/3.jpg}"
-                                                         alt="Category image">
+                                                    <img th:src="@{${cat.photosImagePath}}" th:alt="${cat.name}">
                                                 </span>
                                             </figure>
-
                                             <h3 class="cat-block-title">[[${cat.name}]]</h3>
                                         </a>
                                     </div>
@@ -1069,7 +890,7 @@
                                     <div class="col-6 col-md-4 col-xl-3">
                                         <div class="product">
                                             <figure class="product-media">
-                                                <a href="product.html">
+                                                <a th:href="@{'/p/' + ${product.alias}}">
                                                     <img th:src="@{${product.mainImagePath}}" alt="Product image"
                                                          class="product-image">
                                                 </a>
@@ -1091,9 +912,10 @@
 
                                             <div class="product-body">
                                                 <div class="product-cat">
-                                                    <a href="#">Sofas</a>
+                                                    <a href="#">[[${product.brand.name}]]</a>
                                                 </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="product.html">[[${product.name}]]</a>
+                                                <h3 class="product-title">
+                                                    <a th:href="@{'/p/' + ${product.alias}}">[[${product.shortName}]]</a>
                                                 </h3>
 
                                                 <div class="product-price font-weight-bold text-black-50"
@@ -1483,7 +1305,7 @@
                 <nav class="mobile-nav">
                     <ul class="mobile-menu">
                         <li class="active">
-                            <a href="index.html">Home</a>
+                            <a href="../index.html">Home</a>
 
                             <ul>
                                 <li><a href="index-1.html">01 - furniture store</a></li>
