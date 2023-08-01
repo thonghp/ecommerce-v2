@@ -23,23 +23,7 @@
                 </div><!-- End .header-left -->
 
                 <div class="header-right">
-                    <div class="header-search header-search-extended header-search-visible header-search-no-radius d-none d-lg-block">
-                        <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                        <form action="#" method="get">
-                            <div class="header-search-wrapper search-wrapper-wide">
-                                <div class="select-custom">
-                                    <select id="cat" name="cat">
-                                        <option value="">All Departments</option>
-                                        <option value="1">Fashion</option>
-                                    </select>
-                                </div><!-- End .select-custom -->
-                                <label for="q" class="sr-only">Search</label>
-                                <input type="search" class="form-control" name="q" id="q"
-                                       placeholder="Nhập từ khoá cần tìm" required>
-                                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                            </div><!-- End .header-search-wrapper -->
-                        </form>
-                    </div><!-- End .header-search -->
+                    <div th:replace="fragments :: search"></div>
 
                     <div class="dropdown compare-dropdown">
                         <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -741,7 +725,7 @@
     <main class="main">
         <div th:replace="fragments :: breadcrumb"></div>
 
-        <div class="page-content">
+        <div th:class="${keyword != null ? 'page-content mt-5' : 'page-content'}">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9 col-xl-4-5col">
@@ -844,7 +828,7 @@
                         <div class="mb-3 mb-lg-5"></div><!-- End .mb-3 mb-lg-5 -->
 
                         <div class="cat-blocks-container">
-                            <div class="row">
+                            <div class="row" th:if="${category != null}">
                                 <th:block th:each="cat : ${category.children}">
                                     <div class="col-6 col-md-4 col-lg-3"
                                          th:if="${cat.enabled == true && cat.imagePath != null}">
@@ -918,16 +902,7 @@
                                                     <a th:href="@{'/p/' + ${product.alias}}">[[${product.shortName}]]</a>
                                                 </h3>
 
-                                                <div class="product-price font-weight-bold text-black-50"
-                                                     th:if="${product.discountPercent <= 0}">
-                                                    $[[${product.price}]]
-                                                </div>
-                                                <div class="product-price" th:if="${product.discountPercent > 0}">
-                                                    <span class="new-price">$[[${product.discountPrice}]]</span>
-                                                    <del>
-                                                        <span class="old-price">$[[${product.price}]]</span>
-                                                    </del>
-                                                </div>
+                                                <div th:replace="fragments :: product_price('all')"></div>
 
                                                 <div class="ratings-container">
                                                     <div class="ratings">
@@ -941,7 +916,13 @@
                                 </th:block>
                             </div>
                         </div>
-                        <div th:replace="fragments :: pagination('/c/' + ${category.alias}, 'sản phẩm')"></div>
+                        <th:block th:if="${category != null}">
+                            <div th:replace="fragments :: pagination('/c/' + ${category.alias}, 'sản phẩm')"></div>
+                        </th:block>
+                        <th:block th:unless="${category != null}">
+                            <div th:replace="fragments :: pagination('/search', 'sản phẩm')"></div>
+                        </th:block>
+
                     </div>
 
                     <aside class="col-lg-3 col-xl-5col order-lg-first">

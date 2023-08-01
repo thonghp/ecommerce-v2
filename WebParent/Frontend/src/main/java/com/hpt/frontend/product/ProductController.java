@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class ProductController {
                                      @PathVariable(name = "pageNum") int pageNum, Model model) {
         try {
             Category category = categoryService.getCategory(alias);
-            List<Category> listCategoryParents = categoryService.getCategoryParents(category);
+            List<Category> listBreadcumbCategories = categoryService.getCategoryParents(category);
 
             PageInfo pageInfo = new PageInfo();
             List<Product> products = productService.listByCategory(pageInfo, pageNum, category.getId());
@@ -44,7 +45,7 @@ public class ProductController {
             List<Category> listCategories = categoryService.listRootCategories();
 
             model.addAttribute("category", category);
-            model.addAttribute("listCategoryParents", listCategoryParents);
+            model.addAttribute("listCategoryParents", listBreadcumbCategories);
             model.addAttribute("listCategories", listCategories);
             model.addAttribute("pageTitle", category.getName());
             model.addAttribute("currentPage", pageNum);
@@ -76,5 +77,34 @@ public class ProductController {
         } catch (ProductNotFoundException ex) {
             return "error/404";
         }
+    }
+
+    @GetMapping("/search")
+    public String searchFirstPage(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
+        return searchByPage(keyword, 1, model);
+    }
+
+    @GetMapping("/search/page/{pageNum}")
+    public String searchByPage(@RequestParam(name = "keyword", required = false) String keyword,
+                               @PathVariable("pageNum") int pageNum, Model model) {
+        PageInfo pageInfo = new PageInfo();
+        List<Product> products = productService.search(pageInfo, keyword, pageNum);
+
+        long startCount = pageInfo.getStartCount(pageNum, ProductService.PRODUCTS_PER_PAGE);
+        long endCount = pageInfo.getEndCount(pageNum, ProductService.PRODUCTS_PER_PAGE);
+        List<Category> listCategories = categoryService.listRootCategories();
+
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("totalPages", pageInfo.getTotalPages());
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("totalItems", pageInfo.getTotalElements());
+        model.addAttribute("pageTitle", "Shop");
+        model.addAttribute("listCategories", listCategories);
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("products", products);
+
+        return "product/products_by_category";
     }
 }

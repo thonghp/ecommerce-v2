@@ -16,6 +16,28 @@
 
 <body>
 
+<div th:fragment="search" th:remove="tag">
+    <div class="header-search header-search-extended header-search-visible header-search-no-radius d-none d-lg-block">
+        <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+        <form th:action="@{/search}" method="get">
+            <div class="header-search-wrapper search-wrapper-wide">
+                <div class="select-custom">
+                    <select id="cat" name="cat">
+                        <option value="">Tất cả thể loại</option>
+                        <th:block th:each="root : ${listCategories}">
+                            <option th:value="${root.id}">[[${root.name}]]</option>
+                        </th:block>
+                    </select>
+                </div>
+                <label for="q" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="keyword" id="q" required
+                       th:placeholder="${keyword != null ? keyword : 'Nhập từ khoá cần tìm'}">
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div th:fragment="breadcrumb" th:remove="tag">
     <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-3" th:if="${listCategoryParents != null}">
         <div class="container d-flex align-items-center">
@@ -37,9 +59,22 @@
     </nav>
 </div>
 
+<div th:fragment="product_price(remove)" th:remove="tag">
+    <div class="product-price font-weight-bold text-black-50"
+         th:if="${product.discountPercent <= 0}">
+        $[[${product.price}]]
+    </div>
+    <div class="product-price" th:if="${product.discountPercent > 0}">
+        <span class="new-price">$[[${product.discountPrice}]]</span>
+        <del>
+            <span class="old-price">$[[${product.price}]]</span>
+        </del>
+        <small class="ml-4" th:remove="${remove}">(-[[${product.discountPercent}]]%)</small>
+    </div>
+</div>
+
 <a th:fragment="page_link(moduleURL, pageNum, label)" class="page-link"
-   th:href="@{${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortType=' + ${sortType} +
-   ${keyword != null ? '&keyword=' + keyword : ''}}">
+   th:href="@{${moduleURL} + '/page/' + ${pageNum} + ${keyword != null ? '?keyword=' + keyword : ''}}">
     [[${label}]]
 </a>
 
@@ -47,8 +82,8 @@
     <nav aria-label="Page navigation" th:if="${totalPages > 1}">
         <ul class="pagination">
             <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                <a class="page-link page-link-prev" th:href="@{${moduleURL} + '/page/1' + '?sortField=' + ${sortField}
-                + '&sortType=' + ${sortType} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                <a class="page-link page-link-prev"
+                   th:href="@{${moduleURL} + '/page/1' + ${keyword != null ? '?keyword=' + keyword : ''}}">
                     <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>
                     Đầu
                 </a>
@@ -67,8 +102,8 @@
                 <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage + 1}, 'Sau')"></a>
             </li>
             <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
-                <a class="page-link page-link-next" th:href="@{${moduleURL} + '/page/' + ${totalPages} +
-                '?sortField=' + ${sortField} + '&sortType=' + ${sortType} + ${keyword != null ? '&keyword=' + keyword : ''}}">
+                <a class="page-link page-link-next"
+                   th:href="@{${moduleURL} + '/page/' + ${totalPages} + ${keyword != null ? '?keyword=' + keyword : ''}}">
                     Cuối
                     <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
                 </a>
