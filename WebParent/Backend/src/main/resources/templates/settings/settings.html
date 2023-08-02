@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <head th:replace="fragments :: page_head('Admin - Cài đặt', 'none')"></head>
+    <link rel="stylesheet" th:href="@{/richtext/richtext.min.css}"/>
+    <script th:src="@{/richtext/jquery.richtext.min.js}"></script>
+</head>
+<body>
+<div class="container-fluid">
+
+    <div th:replace="fragments :: navigation"></div>
+
+    <div>
+        <h2>Cài Đặt Trang Web</h2>
+    </div>
+
+    <div th:if="${message != null}" class="alert alert-success text-center" id="hideMessage">
+        [[${message}]]
+    </div>
+
+    <div class="mt-3">
+        <ul class="nav nav-tabs" id="settingTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#general" role="tab">Chung</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#countries" role="tab">Countries</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#states" role="tab">States</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#mailServer" role="tab">Mail Server</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#mailTemplate" role="tab">Mail Templates</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active p-3" id="general" role="tabpanel">
+                <div th:replace="settings/general :: content"></div>
+            </div>
+            <div class="tab-pane" id="countries" role="tabpanel">
+                <h2>Countries</h2>
+            </div>
+            <div class="tab-pane" id="states" role="tabpanel">
+                <h2>States</h2>
+            </div>
+            <div class="tab-pane p-3" id="mailServer" role="tabpanel">
+                <h2>Mail Server</h2>
+            </div>
+            <div class="tab-pane p-3" id="mailTemplates" role="tabpanel">
+                <h2>Mail Templates</h2>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments :: footer"></div>
+
+</div>
+<script th:src="@{/js/common_photo.js}"></script>
+<script th:src="@{/js/common_list.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        hideMessageInListView();
+    });
+</script>
+</body>
+</html>
