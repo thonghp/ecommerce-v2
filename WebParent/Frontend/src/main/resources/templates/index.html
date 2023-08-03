@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-    <head th:replace="fragments :: page_head('Shop', 'tag')"></head>
+    <head th:replace="fragments :: page_head('Linh kiện, phụ kiện giá rẻ','tag')"></head>
     <link rel="stylesheet" th:href="@{/css/line-awesome.min.css}">
     <link rel="stylesheet" th:href="@{/css/jquery.countdown.css}">
     <style>
@@ -24,7 +24,7 @@
                     </button>
 
                     <a th:href="@{/}" class="logo">
-                        <img th:src="@{/images/demos/demo-13/logo.png}" alt="Molla Logo" width="105" height="25">
+                        <img th:src="@{${SITE_LOGO}}" alt="Molla Logo" width="105" height="25">
                     </a>
                 </div>
 

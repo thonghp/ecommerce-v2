@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head th:fragment="page_head(content, remove)" th:remove="${remove}">
+<head th:fragment="page_head(title, remove)" th:remove="${remove}">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0">
-    <title>[[${content}]]</title>
+    <title>[[${SITE_NAME}]] - [[${title}]]</title>
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/owl.carousel.css}">
@@ -59,15 +59,30 @@
     </nav>
 </div>
 
+<div th:fragment="price(productPrice)" th:remove="tag">
+    <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}" th:remove="tag">
+        [[${CURRENCY_SYMBOL}]]
+    </span>
+    [[${#numbers.formatDecimal(productPrice, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+    <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}" th:remove="tag">
+        [[${CURRENCY_SYMBOL}]]
+    </span>
+</div>
+
 <div th:fragment="product_price(remove)" th:remove="tag">
     <div class="product-price font-weight-bold text-black-50"
          th:if="${product.discountPercent <= 0}">
-        $[[${product.price}]]
+        <div th:replace="fragments :: price(${product.price})"></div>
     </div>
+
     <div class="product-price" th:if="${product.discountPercent > 0}">
-        <span class="new-price">$[[${product.discountPrice}]]</span>
+        <span class="new-price">
+            <div th:replace="fragments :: price(${product.discountPrice})"></div>
+        </span>
         <del>
-            <span class="old-price">$[[${product.price}]]</span>
+            <span class="old-price">
+                <div th:replace="fragments :: price(${product.price})"></div>
+            </span>
         </del>
         <small class="ml-4" th:remove="${remove}">(-[[${product.discountPercent}]]%)</small>
     </div>
@@ -203,11 +218,11 @@
                         <h4 class="widget-title">Information</h4><!-- End .widget-title -->
 
                         <ul class="widget-list">
-                            <li><a href="about.html">About Molla</a></li>
-                            <li><a href="#">How to shop on Molla</a></li>
-                            <li><a href="faq.html">FAQ</a></li>
-                            <li><a href="contact.html">Contact us</a></li>
-                            <li><a href="login.html">Log in</a></li>
+                            <li><a href="">About Molla</a></li>
+                            <li><a href="">How to shop on Molla</a></li>
+                            <li><a href="">FAQ</a></li>
+                            <li><a href="">Contact us</a></li>
+                            <li><a href="">Log in</a></li>
                         </ul>
                     </div>
                 </div>
@@ -233,7 +248,7 @@
 
                         <ul class="widget-list">
                             <li><a href="#">Sign In</a></li>
-                            <li><a href="cart.html">View Cart</a></li>
+                            <li><a href="#">View Cart</a></li>
                             <li><a href="#">My Wishlist</a></li>
                             <li><a href="#">Track My Order</a></li>
                             <li><a href="#">Help</a></li>
@@ -246,7 +261,7 @@
 
     <div class="footer-bottom">
         <div class="container">
-            <p class="footer-copyright">Copyright © 2023 Molla Store. All Rights Reserved.</p>
+            <p class="footer-copyright">[[${COPYRIGHT}]]</p>
             <ul class="footer-menu">
                 <li><a href="#">Điều Khoản Sử Dụng</a></li>
                 <li><a href="#">Chính sách bảo mật</a></li>
