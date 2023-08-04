@@ -1,4 +1,4 @@
-package com.hpt.backend.setting;
+package com.hpt.backend.setting.currency;
 
 import com.hpt.common.entity.Currency;
 import org.springframework.data.repository.CrudRepository;

@@ -1,5 +1,6 @@
 package com.hpt.backend.setting;
 
+import com.hpt.backend.setting.currency.CurrencyRepository;
 import com.hpt.common.entity.Currency;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
