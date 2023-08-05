@@ -24,7 +24,7 @@
                 <a class="nav-link active" data-toggle="tab" href="#general" role="tab">Chung</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#countries" role="tab">Countries</a>
+                <a class="nav-link" data-toggle="tab" href="#countries" role="tab">Quốc gia</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#states" role="tab">States</a>
@@ -41,10 +41,10 @@
             <div class="tab-pane active p-3" id="general" role="tabpanel">
                 <div th:replace="settings/general :: content"></div>
             </div>
-            <div class="tab-pane" id="countries" role="tabpanel">
-                <h2>Countries</h2>
+            <div class="tab-pane p-3" id="countries" role="tabpanel">
+                <div th:replace="settings/countries :: content"></div>
             </div>
-            <div class="tab-pane" id="states" role="tabpanel">
+            <div class="tab-pane p-3" id="states" role="tabpanel">
                 <h2>States</h2>
             </div>
             <div class="tab-pane p-3" id="mailServer" role="tabpanel">
@@ -55,15 +55,30 @@
             </div>
         </div>
     </div>
+
+    <div class="toast justify-content-center d-flex" role="alert" aria-live="polite" aria-atomic="true"
+         data-delay="3000">
+        <div role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body">
+                <span id="toastMessage"></span>
+            </div>
+        </div>
+    </div>
+
     <div th:replace="fragments :: footer"></div>
 
 </div>
 <script th:src="@{/js/common_photo.js}"></script>
 <script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
+    contextPath = "[[@{/}]]";
+    let csrfHeaderName = "[[${_csrf.headerName}]]";
+    let csrfValue = "[[${_csrf.token}]]";
+
     $(document).ready(function () {
         hideMessageInListView();
     });
 </script>
+<script th:src="@{/js/countries_setting.js}"></script>
 </body>
 </html>
