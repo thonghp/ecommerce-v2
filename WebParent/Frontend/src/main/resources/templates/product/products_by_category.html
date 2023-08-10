@@ -52,9 +52,7 @@
                         </div><!-- End .dropdown-menu -->
                     </div><!-- End .compare-dropdown -->
 
-                    <a href="#signin-modal" data-toggle="modal" class="wishlist-link">
-                        <i class="icon-user"></i>
-                    </a>
+                    <div th:replace="fragments :: signin('all')"></div>
 
                     <a href="wishlist.html" class="wishlist-link">
                         <i class="icon-heart-o"></i>
