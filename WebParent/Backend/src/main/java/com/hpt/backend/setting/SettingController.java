@@ -90,4 +90,24 @@ public class SettingController {
 
         service.saveAll(listSettings);
     }
+
+    @PostMapping("/settings/save_mail_server")
+    public String saveMailServerSetttings(HttpServletRequest request, RedirectAttributes ra) {
+        List<Setting> mailServerSettings = service.getMailServerSettings();
+        updateSettingValuesFromForm(request, mailServerSettings);
+
+        ra.addFlashAttribute("message", "Thiết lập Mail server đã được lưu.");
+
+        return "redirect:/settings#mailServer";
+    }
+
+    @PostMapping("/settings/save_mail_templates")
+    public String saveMailTemplateSetttings(HttpServletRequest request, RedirectAttributes ra) {
+        List<Setting> mailTemplateSettings = service.getMailTemplateSettings();
+        updateSettingValuesFromForm(request, mailTemplateSettings);
+
+        ra.addFlashAttribute("message", "Thiết lập Mail template đã được lưu.");
+
+        return "redirect:/settings#mailTemplates";
+    }
 }

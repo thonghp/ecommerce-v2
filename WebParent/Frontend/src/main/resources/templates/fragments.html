@@ -38,6 +38,13 @@
     </div>
 </div>
 
+<div th:fragment="signin(remove)" th:remove="tag">
+    <a th:href="@{/register}" class="wishlist-link">
+        <i class="icon-user"></i>
+        <span class="wishlist-txt" th:remove="${remove}">Đăng Nhập</span>
+    </a>
+</div>
+
 <div th:fragment="breadcrumb" th:remove="tag">
     <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-3" th:if="${listCategoryParents != null}">
         <div class="container d-flex align-items-center">
