@@ -1,9 +1,7 @@
 package com.hpt.common.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -12,8 +10,6 @@ import java.util.Set;
 @Table(name = "countries")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +23,30 @@ public class Country {
 
     @OneToMany(mappedBy = "country")
     private Set<State> states;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     @Override
     public String toString() {
