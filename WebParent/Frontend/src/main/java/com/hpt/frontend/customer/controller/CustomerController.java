@@ -42,7 +42,7 @@ public class CustomerController {
 
     @PostMapping("/create_customer")
     public String createCustomer(Customer customer, Model model, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
-//        service.registerCustomer(customer);
+        service.registerCustomer(customer);
         sendVerificationEmail(request, customer);
 
         model.addAttribute("pageTitle", "Đăng Ký Thành Công!");
