@@ -63,6 +63,7 @@ public class UserController {
         model.addAttribute("reverseSortType", reverseSortType);
         model.addAttribute("keyword", keyword);
         model.addAttribute("users", users);
+        model.addAttribute("moduleURL", "/users");
 
         return "users/users";
     }

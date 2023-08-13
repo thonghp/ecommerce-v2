@@ -10,7 +10,7 @@
         <h2>Quản lý khách hàng</h2>
     </div>
 
-    <div th:replace="fragments :: search_form_and_message('/customers/page/1')"></div>
+    <div th:replace="fragments :: search_form_and_message"></div>
 
     <div class="full-details">
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
@@ -18,7 +18,7 @@
             <tr>
                 <th>ID</th>
                 <th>Họ</th>
-                <th th:replace="fragments :: sort_column('/customers', 'firstName', 'Tên', 'none')"></th>
+                <th th:replace="fragments :: sort_column('firstName', 'Tên', 'none')"></th>
                 <th class="hideable-column">Email</th>
                 <th class="hideable-column">Quận / Huyện</th>
                 <th class="hideable-column">Tỉnh / Thành phố</th>
@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments :: pagination('/customers', 'khách hàng')"></div>
+    <div th:replace="fragments :: pagination('khách hàng')"></div>
 
     <div th:replace="fragments :: confirm_modal('khách hàng')"></div>
 

@@ -61,6 +61,7 @@ public class BrandController {
         model.addAttribute("reverseSortType", reverseSortType);
         model.addAttribute("keyword", keyword);
         model.addAttribute("brands", brands);
+        model.addAttribute("moduleURL", "/brands");
 
         return "brands/brands";
     }

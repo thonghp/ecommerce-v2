@@ -14,14 +14,14 @@
         <a th:href="@{/brands/new}" class="fas fa-folder-plus fa-2x icon-gray mr-2"></a>
     </div>
 
-    <div th:replace="fragments :: search_form_and_message('/brands/page/1')"></div>
+    <div th:replace="fragments :: search_form_and_message"></div>
 
     <div class="full-details">
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
                 <th class="hideable-column">
-                    <div th:replace="fragments :: sort_column('/brands', 'id', 'ID', 'tag')"></div>
+                    <div th:replace="fragments :: sort_column('id', 'ID', 'tag')"></div>
                 </th>
                 <th>Ảnh</th>
                 <th>Tên thương hiệu</th>
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments :: pagination('/brands', 'thương hiệu')"></div>
+    <div th:replace="fragments :: pagination('thương hiệu')"></div>
 
     <div th:replace="fragments :: confirm_modal('thương hiệu')"></div>
 

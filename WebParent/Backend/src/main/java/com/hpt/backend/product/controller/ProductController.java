@@ -75,6 +75,7 @@ public class ProductController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("products", products);
         model.addAttribute("listCategories", listCategories);
+        model.addAttribute("moduleURL", "/products");
 
         return "products/products";
     }
@@ -129,7 +130,7 @@ public class ProductController {
 
     @GetMapping("/products/{id}/enabled/{status}")
     public String updateProductEnabledStatus(@PathVariable("id") Integer id,
-                                              @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
+                                             @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
         service.updateProductEnabledStatus(id, enabled);
         String status = enabled ? " được kích hoạt" : " bị vô hiệu hoá";
         String message = "Sản phẩm có id là " + id + status;
