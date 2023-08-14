@@ -1,6 +1,8 @@
 package com.hpt.backend.user.controller;
 
 import com.hpt.backend.FileUploadUtils;
+import com.hpt.backend.paging.PagingAndSortingHelper;
+import com.hpt.backend.paging.PagingAndSortingParam;
 import com.hpt.backend.user.UserService;
 import com.hpt.backend.user.export.UserCsvExporter;
 import com.hpt.backend.user.export.UserExcelExporter;
@@ -8,7 +10,6 @@ import com.hpt.backend.user.export.UserPdfExporter;
 import com.hpt.common.entity.Role;
 import com.hpt.common.entity.User;
 import com.hpt.common.exception.UserNotFoundException;
-import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +26,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.hpt.common.utils.CommonUtils.*;
-
 
 @Controller
 public class UserController {
@@ -34,35 +33,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private final static String SORT_FIELD_NAME = "id";
+    private String defaultRedirectURL = "redirect:/users/page/1?sortField=id&sortType=asc";
 
     @GetMapping("/users")
-    public String listFirstPage(Model model) {
-        return listByPage(1, model, SORT_FIELD_NAME, ASCENDING, null);
+    public String listFirstPage() {
+        return defaultRedirectURL;
     }
 
     @GetMapping("/users/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") Integer pageNum, Model model,
-                             @RequestParam(name = "sortField") String sortField,
-                             @RequestParam(name = "sortType") String sortType,
-                             @RequestParam(name = "keyword", required = false) String keyword) {
-        PageInfo pageInfo = new PageInfo();
-        List<User> users = userService.listByPage(pageInfo, pageNum, sortField, sortType, keyword);
-        String reverseSortType = sortType.equals(ASCENDING) ? DESCENDING : ASCENDING;
-
-        long startCount = pageInfo.getStartCount(pageNum, UserService.USERS_PER_PAGE);
-        long endCount = pageInfo.getEndCount(pageNum, UserService.USERS_PER_PAGE);
-
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalItems", pageInfo.getTotalElements());
-        model.addAttribute("totalPages", pageInfo.getTotalPages());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortType", sortType);
-        model.addAttribute("reverseSortType", reverseSortType);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("users", users);
+    public String listByPage(@PathVariable(name = "pageNum") Integer pageNum,
+                             @PagingAndSortingParam(listName = "users", moduleURL = "/users") PagingAndSortingHelper helper) {
+        userService.listByPage(pageNum, helper);
 
         return "users/users";
     }
@@ -122,7 +103,7 @@ public class UserController {
         } catch (UserNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
 
-            return "redirect:/users";
+            return defaultRedirectURL;
         }
     }
 
@@ -138,7 +119,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
         }
 
-        return "redirect:/users";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/users/{id}/enabled/{status}")
@@ -148,7 +129,7 @@ public class UserController {
         String message = "Nhân viên có id là " + id + status;
         redirectAttributes.addFlashAttribute("message", message);
 
-        return "redirect:/users";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/users/export/csv")

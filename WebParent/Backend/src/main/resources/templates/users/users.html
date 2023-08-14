@@ -17,14 +17,14 @@
         <a th:href="@{/users/export/pdf}" class="fas fa-file-pdf fa-2x icon-gray"></a>
     </div>
 
-    <div th:replace="fragments :: search_form_and_message('/users/page/1')"></div>
+    <div th:replace="fragments :: search_form_and_message"></div>
 
     <div class="full-details">
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
                 <th class="hideable-column">
-                    <div th:replace="fragments :: sort_column('/users', 'id', 'ID', 'tag')"></div>
+                    <div th:replace="fragments :: sort_column('id', 'ID', 'tag')"></div>
                 </th>
                 <th>Ảnh</th>
                 <th class="hideable-column">E-mail</th>
@@ -99,7 +99,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments :: pagination('/users', 'nhân viên')"></div>
+    <div th:replace="fragments :: pagination('nhân viên')"></div>
 
     <div th:replace="fragments :: confirm_modal('nhân viên')"></div>
 
