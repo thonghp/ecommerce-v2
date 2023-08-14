@@ -1,59 +1,37 @@
 package com.hpt.backend.customer.controller;
 
 import com.hpt.backend.customer.CustomerService;
+import com.hpt.backend.paging.PagingAndSortingHelper;
+import com.hpt.backend.paging.PagingAndSortingParam;
 import com.hpt.common.entity.Country;
 import com.hpt.common.entity.Customer;
 import com.hpt.common.exception.CustomerNotFoundException;
-import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-
-import static com.hpt.common.utils.CommonUtils.ASCENDING;
-import static com.hpt.common.utils.CommonUtils.DESCENDING;
 
 @Controller
 public class CustomerController {
     @Autowired
     private CustomerService service;
 
-    private final static String SORT_FIELD_NAME = "firstName";
+    private String defaultRedirectURL = "redirect:/customers/page/1?sortField=firstName&sortType=asc";
 
     @GetMapping("/customers")
-    public String listFirstPage(Model model) {
-        return listByPage(model, 1, SORT_FIELD_NAME, ASCENDING, null);
+    public String listFirstPage() {
+        return defaultRedirectURL;
     }
 
     @GetMapping("/customers/page/{pageNum}")
-    public String listByPage(Model model, @PathVariable(name = "pageNum") int pageNum,
-                             @RequestParam(name = "sortField") String sortField,
-                             @RequestParam(name = "sortType") String sortType,
-                             @RequestParam(name = "keyword", required = false) String keyword) {
-        PageInfo pageInfo = new PageInfo();
-        List<Customer> listCustomers = service.listByPage(pageInfo, pageNum, sortField, sortType, keyword);
-        String reverseSortType = sortType.equals(ASCENDING) ? DESCENDING : ASCENDING;
-
-        long startCount = pageInfo.getStartCount(pageNum, CustomerService.CUSTOMERS_PER_PAGE);
-        long endCount = pageInfo.getEndCount(pageNum, CustomerService.CUSTOMERS_PER_PAGE);
-
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalItems", pageInfo.getTotalElements());
-        model.addAttribute("totalPages", pageInfo.getTotalPages());
-        model.addAttribute("listCustomers", listCustomers);
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortType", sortType);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("reverseSortType", reverseSortType);
-        model.addAttribute("moduleURL", "/customers");
+    public String listByPage(@PathVariable(name = "pageNum") int pageNum,
+                             @PagingAndSortingParam(listName = "listCustomers", moduleURL = "/customers") PagingAndSortingHelper helper) {
+        service.listByPage(pageNum, helper);
 
         return "customers/customers";
     }
@@ -66,7 +44,7 @@ public class CustomerController {
         String message = "Khách hàng có id là " + id + status;
         redirectAttributes.addFlashAttribute("message", message);
 
-        return "redirect:/customers";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/customers/detail/{id}")
@@ -78,7 +56,7 @@ public class CustomerController {
             return "customers/customer_detail_modal";
         } catch (CustomerNotFoundException ex) {
             ra.addFlashAttribute("message", ex.getMessage());
-            return "redirect:/customers";
+            return defaultRedirectURL;
         }
     }
 
@@ -97,7 +75,7 @@ public class CustomerController {
         } catch (CustomerNotFoundException ex) {
             ra.addFlashAttribute("message", ex.getMessage());
 
-            return "redirect:/customers";
+            return defaultRedirectURL;
         }
     }
 
@@ -107,7 +85,7 @@ public class CustomerController {
         String fullName = customer.getLastName() + " " + customer.getFirstName();
         ra.addFlashAttribute("message", "Khách hàng " + fullName + " đã được lưu thành công");
 
-        return "redirect:/customers";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/customers/delete/{id}")
@@ -120,6 +98,6 @@ public class CustomerController {
             ra.addFlashAttribute("message", ex.getMessage());
         }
 
-        return "redirect:/customers";
+        return defaultRedirectURL;
     }
 }

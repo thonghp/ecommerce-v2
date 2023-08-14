@@ -1,15 +1,11 @@
 package com.hpt.backend.customer;
 
+import com.hpt.backend.paging.PagingAndSortingHelper;
 import com.hpt.backend.setting.country.CountryRepository;
 import com.hpt.common.entity.Country;
 import com.hpt.common.entity.Customer;
 import com.hpt.common.exception.CustomerNotFoundException;
-import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,24 +29,12 @@ public class CustomerService {
     /**
      * Returns a paginated list of default or search customers and sorted ascending or descending by the specified column.
      *
-     * @param pageInfo  object containing pagination information
-     * @param pageNum   The page requests to return data
-     * @param sortField The field to sort
-     * @param sortType  The type of sort
-     * @param keyword   The keyword to search
+     * @param pageNum The page requests to return data
+     * @param helper  The helper to get the list of customers
      * @return a list of customers
      */
-    public List<Customer> listByPage(PageInfo pageInfo, int pageNum, String sortField, String sortType, String keyword) {
-        Sort sort = Sort.by(sortField);
-        sort = sortType.equals("asc") ? sort.ascending() : sort.descending();
-
-        Pageable pageable = PageRequest.of(pageNum - 1, CUSTOMERS_PER_PAGE, sort);
-        Page<Customer> page = (keyword != null) ? customerRepo.findAll(keyword, pageable) : customerRepo.findAll(pageable);
-
-        pageInfo.setTotalPages(page.getTotalPages());
-        pageInfo.setTotalElements(page.getTotalElements());
-
-        return page.getContent();
+    public List<Customer> listByPage(int pageNum, PagingAndSortingHelper helper) {
+        return (List<Customer>) helper.listByPage(pageNum, CUSTOMERS_PER_PAGE, customerRepo);
     }
 
     /**
