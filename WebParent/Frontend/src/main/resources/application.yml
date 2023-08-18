@@ -4,6 +4,8 @@ server:
     context-path: /ShopAdmin
 
 spring:
+  main:
+    allow-circular-references: true
   datasource:
     url: jdbc:mysql://localhost:3306/ecommercedb
     username: root
@@ -16,6 +18,16 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
-    mvc:
-      pathmatch:
-        matching-strategy: ant_path_matcher
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1025753763541-49rlisqbfajqelagk3qql4ba5p6duogg.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile

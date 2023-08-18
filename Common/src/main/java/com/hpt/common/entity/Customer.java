@@ -61,6 +61,10 @@ public class Customer {
     @JoinColumn(name = "country_id")
     private Country country;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "authentication_type", length = 10)
+    private AuthenticationType authenticationType;
+
     @Override
     public String toString() {
         return "Customer [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + "]";

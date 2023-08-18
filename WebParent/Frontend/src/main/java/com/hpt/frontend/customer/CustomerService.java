@@ -1,5 +1,6 @@
 package com.hpt.frontend.customer;
 
+import com.hpt.common.entity.AuthenticationType;
 import com.hpt.common.entity.Country;
 import com.hpt.common.entity.Customer;
 import com.hpt.frontend.setting.repository.CountryRepository;
@@ -52,6 +53,7 @@ public class CustomerService {
         encodePassword(customer);
         customer.setEnabled(false);
         customer.setCreatedTime(new Date());
+        customer.setAuthenticationType(AuthenticationType.DATABASE);
 
         String randomCode = RandomString.make(64);
         customer.setVerificationCode(randomCode);
@@ -83,6 +85,74 @@ public class CustomerService {
         } else {
             customerRepo.enable(customer.getId());
             return true;
+        }
+    }
+
+    /**
+     * Get customer by email
+     *
+     * @param email customer email
+     * @return customer
+     */
+    public Customer getCustomerByEmail(String email) {
+        return customerRepo.findByEmail(email);
+    }
+
+    /**
+     * Update customer authentication type
+     *
+     * @param customer customer to be updated
+     * @param type     authentication type
+     */
+    public void updateAuthenticationType(Customer customer, AuthenticationType type) {
+        if (!customer.getAuthenticationType().equals(type)) {
+            customerRepo.updateAuthenticationType(customer.getId(), type);
+        }
+    }
+
+    /**
+     * Add a new customer upon OAuth login
+     *
+     * @param name        customer name
+     * @param email       customer email
+     * @param countryCode customer country code
+     */
+    public void addNewCustomerUponOAuthLogin(String name, String email, String countryCode) {
+        Customer customer = new Customer();
+        customer.setEmail(email);
+        setName(name, customer);
+
+        customer.setEnabled(true);
+        customer.setCreatedTime(new Date());
+        customer.setAuthenticationType(AuthenticationType.GOOGLE);
+        customer.setPassword("");
+        customer.setAddressLine1("");
+        customer.setCity("");
+        customer.setState("");
+        customer.setPhoneNumber("");
+        customer.setPostalCode("");
+        customer.setCountry(countryRepo.findByCode(countryCode));
+
+        customerRepo.save(customer);
+    }
+
+    /**
+     * Set customer first name and last name
+     *
+     * @param name     customer name
+     * @param customer customer to be set
+     */
+    private void setName(String name, Customer customer) {
+        String[] nameArray = name.split(" ");
+        if (nameArray.length < 2) {
+            customer.setFirstName(name);
+            customer.setLastName("");
+        } else {
+            String firstName = nameArray[0];
+            customer.setFirstName(firstName);
+
+            String lastName = name.replaceFirst(firstName, "");
+            customer.setLastName(lastName);
         }
     }
 }
