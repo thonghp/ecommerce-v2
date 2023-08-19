@@ -2,6 +2,17 @@ server:
   port: 88
   servlet:
     context-path: /ShopAdmin
+#server:
+#  port: 8443
+#  servlet:
+#    context-path: /ShopAdmin
+#  ssl:
+#    enabled: true
+#    key-alias: local_ssl
+#    key-store: local-ssl.p12
+#    key-store-type: PKCS12
+#    key-password: 123456
+#    key-store-password: 123456
 
 spring:
   main:
@@ -29,5 +40,11 @@ spring:
             client-id: 1025753763541-49rlisqbfajqelagk3qql4ba5p6duogg.apps.googleusercontent.com
             client-secret: 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
             scope:
-              - email
-              - profile
+            - email
+            - profile
+          facebook:
+            client-id: 221539123850960
+            client-secret: 87f5c82dfcbb8d52f682a262bbe34076
+            scope:
+            - email
+            - public_profile
