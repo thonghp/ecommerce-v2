@@ -113,9 +113,10 @@ public class CustomerService {
     /**
      * Add a new customer upon OAuth login
      *
-     * @param name        customer name
-     * @param email       customer email
-     * @param countryCode customer country code
+     * @param name               customer name
+     * @param email              customer email
+     * @param countryCode        customer country code
+     * @param authenticationType authentication type
      */
     public void addNewCustomerUponOAuthLogin(String name, String email, String countryCode, AuthenticationType authenticationType) {
         Customer customer = new Customer();
@@ -154,5 +155,32 @@ public class CustomerService {
             String lastName = name.replaceFirst(firstName + " ", "");
             customer.setLastName(lastName);
         }
+    }
+
+    /**
+     * Update customer profile
+     *
+     * @param customerInForm customer to be updated
+     */
+    public void update(Customer customerInForm) {
+        Customer customerInDB = customerRepo.findById(customerInForm.getId()).get();
+
+        if (customerInDB.getAuthenticationType().equals(AuthenticationType.DATABASE)) {
+            if (!customerInForm.getPassword().isEmpty()) {
+                String encodedPassword = passwordEncoder.encode(customerInForm.getPassword());
+                customerInForm.setPassword(encodedPassword);
+            } else {
+                customerInForm.setPassword(customerInDB.getPassword());
+            }
+        } else {
+            customerInForm.setPassword(customerInDB.getPassword());
+        }
+
+        customerInForm.setEnabled(customerInDB.isEnabled());
+        customerInForm.setCreatedTime(customerInDB.getCreatedTime());
+        customerInForm.setVerificationCode(customerInDB.getVerificationCode());
+        customerInForm.setAuthenticationType(customerInDB.getAuthenticationType());
+
+        customerRepo.save(customerInForm);
     }
 }
