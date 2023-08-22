@@ -3,6 +3,7 @@ package com.hpt.frontend.customer;
 import com.hpt.common.entity.AuthenticationType;
 import com.hpt.common.entity.Country;
 import com.hpt.common.entity.Customer;
+import com.hpt.common.exception.CustomerNotFoundException;
 import com.hpt.frontend.setting.repository.CountryRepository;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,7 +181,58 @@ public class CustomerService {
         customerInForm.setCreatedTime(customerInDB.getCreatedTime());
         customerInForm.setVerificationCode(customerInDB.getVerificationCode());
         customerInForm.setAuthenticationType(customerInDB.getAuthenticationType());
+        customerInForm.setResetPasswordToken(customerInDB.getResetPasswordToken());
 
         customerRepo.save(customerInForm);
+    }
+
+    /**
+     * Add a reset password token to the customer to use to reset password
+     *
+     * @param email customer email
+     * @return reset password token
+     * @throws CustomerNotFoundException if customer is not found
+     */
+    public String updateResetPasswordToken(String email) throws CustomerNotFoundException {
+        Customer customer = customerRepo.findByEmail(email);
+        if (customer != null && customer.getAuthenticationType().equals(AuthenticationType.DATABASE)) {
+            String token = RandomString.make(30);
+            customer.setResetPasswordToken(token);
+            customerRepo.save(customer);
+
+            return token;
+        } else {
+            throw new CustomerNotFoundException("Email " + email + " không tồn tại!");
+        }
+    }
+
+    /**
+     * Get customer by reset password token
+     *
+     * @param token reset password token
+     * @return customer
+     */
+    public Customer getCustomerByResetPasswordToken(String token) {
+        return customerRepo.findByResetPasswordToken(token);
+    }
+
+    /**
+     * Update customer password
+     *
+     * @param token       reset password token
+     * @param newPassword new password
+     * @throws CustomerNotFoundException if customer is not found
+     */
+    public void updatePassword(String token, String newPassword) throws CustomerNotFoundException {
+        Customer customer = customerRepo.findByResetPasswordToken(token);
+        if (customer == null) {
+            throw new CustomerNotFoundException("No customer found: invalid token");
+        }
+
+        customer.setPassword(newPassword);
+        customer.setResetPasswordToken(null);
+        encodePassword(customer);
+
+        customerRepo.save(customer);
     }
 }
