@@ -7,6 +7,8 @@ import com.hpt.common.exception.ShoppingCartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ShoppingCartService {
     @Autowired
@@ -47,5 +49,15 @@ public class ShoppingCartService {
         cartRepo.save(cartItem);
 
         return updatedQuantity;
+    }
+
+    /**
+     * Return a list of items in the customer's cart.
+     *
+     * @param customer The customer who owns the cart.
+     * @return a list of items
+     */
+    public List<CartItem> listCartItems(Customer customer) {
+        return cartRepo.findByCustomer(customer);
     }
 }

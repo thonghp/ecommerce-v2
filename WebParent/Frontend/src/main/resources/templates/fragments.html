@@ -76,6 +76,17 @@
     </div>
 </div>
 
+<div th:fragment="cart(remove)">
+    <div class="dropdown cart-dropdown">
+        <a th:href="@{/cart}" class="dropdown-toggle" role="button"
+           aria-haspopup="true" aria-expanded="false" data-display="static">
+            <i class="icon-shopping-cart"></i>
+            <span class="cart-count">2</span>
+            <span class="cart-txt" th:remove="${remove}">Giỏ hàng</span>
+        </a>
+    </div>
+</div>
+
 <div th:fragment="breadcrumb" th:remove="tag">
     <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-3" th:if="${listCategoryParents != null}">
         <div class="container d-flex align-items-center">
