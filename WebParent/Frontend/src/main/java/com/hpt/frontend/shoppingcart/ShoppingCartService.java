@@ -4,15 +4,20 @@ import com.hpt.common.entity.CartItem;
 import com.hpt.common.entity.Customer;
 import com.hpt.common.entity.Product;
 import com.hpt.common.exception.ShoppingCartException;
+import com.hpt.frontend.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class ShoppingCartService {
     @Autowired
     private CartItemRepository cartRepo;
+    @Autowired
+    private ProductRepository productRepo;
 
     /**
      * Add a product to the shopping cart.
@@ -59,5 +64,20 @@ public class ShoppingCartService {
      */
     public List<CartItem> listCartItems(Customer customer) {
         return cartRepo.findByCustomer(customer);
+    }
+
+    /**
+     * Update the quantity of a product and subtotal in the shopping cart.
+     *
+     * @param productId The ID of the product to update.
+     * @param quantity  The new quantity of the product.
+     * @param customer  The customer who owns the cart.
+     * @return The new subtotal of the product.
+     */
+    public float updateQuantity(Integer productId, Integer quantity, Customer customer) {
+        cartRepo.updateQuantity(quantity, customer.getId(), productId);
+        Product product = productRepo.findById(productId).get();
+
+        return product.getDiscountPrice() * quantity;
     }
 }

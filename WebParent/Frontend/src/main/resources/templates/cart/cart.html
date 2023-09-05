@@ -704,14 +704,19 @@
                                         <div th:replace="fragments :: price(${item.product.price})"></div>
                                     </td>
                                     <td class="quantity-col">
-                                        <div class="cart-product-quantity">
-                                            <input type="number" class="form-control" th:value="${item.quantity}"
-                                                   min="1" max="5"
-                                                   step="1" data-decimals="0" required>
-                                        </div>
+                                        <div th:replace="cart/quantity_cart :: quantity_control(${item.quantity}, ${item.product.id})"></div>
                                     </td>
-                                    <td class="total-col" style="width: 95px;">
-                                        <div th:replace="fragments :: price(${item.subtotal})"></div>
+                                    <td class="total-col" style="width: 110px;">
+                                        <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}" th:remove="tag">
+                                            [[${CURRENCY_SYMBOL}]]
+                                        </span>
+                                        <span th:id="'subtotal' + ${item.product.id}" class="subtotal">
+                                        [[${#numbers.formatDecimal(item.subtotal, 1, THOUSANDS_POINT_TYPE,
+                                        DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+                                        </span>
+                                        <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}" th:remove="tag">
+                                            [[${CURRENCY_SYMBOL}]]
+                                        </span>
                                     </td>
                                     <td class="remove-col">
                                         <button class="btn-remove"><i class="icon-close"></i></button>
@@ -745,8 +750,17 @@
                                     <tbody>
                                     <tr class="summary-subtotal">
                                         <td>Tổng tạm tính:</td>
-                                        <td style="width: 95px">
-                                            <div th:replace="fragments :: price(${estimatedTotal})"></div>
+                                        <td style="width: 110px">
+                                            <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}" th:remove="tag">
+                                            [[${CURRENCY_SYMBOL}]]
+                                        </span>
+                                            <span id="total">
+                                        [[${#numbers.formatDecimal(estimatedTotal, 1, THOUSANDS_POINT_TYPE,
+                                        DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+                                            </span>
+                                            <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}" th:remove="tag">
+                                            [[${CURRENCY_SYMBOL}]]
+                                        </span>
                                         </td>
                                     </tr><!-- End .summary-subtotal -->
                                     <tr class="summary-shipping">
@@ -798,7 +812,9 @@
 
                                     <tr class="summary-total">
                                         <td>Thành tiền:</td>
-                                        <td><div th:replace="fragments :: price(${estimatedTotal})"></div></td>
+                                        <td>
+                                            <div th:replace="fragments :: price(${estimatedTotal})"></div>
+                                        </td>
                                     </tr><!-- End .summary-total -->
                                     </tbody>
                                 </table><!-- End .table table-summary -->
@@ -1119,6 +1135,13 @@
 </div><!-- End .modal -->
 
 <div th:replace="fragments :: script_js"></div>
+<script th:src="@{/js/shopping_cart.js}"></script>
+<script th:src="@{/js/jquery.number.min.js}"></script>
+<script type="text/javascript">
+    contextPath = "[[@{/}]]";
+    var csrfHeaderName = "[[${_csrf.headerName}]]";
+    var csrfValue = "[[${_csrf.token}]]";
+</script>
 </body>
 
 </html>
