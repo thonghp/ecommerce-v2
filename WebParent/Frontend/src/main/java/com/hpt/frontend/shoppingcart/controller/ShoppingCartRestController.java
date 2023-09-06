@@ -7,6 +7,7 @@ import com.hpt.frontend.customer.CustomerService;
 import com.hpt.frontend.setting.email.MailUtils;
 import com.hpt.frontend.shoppingcart.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,6 +56,18 @@ public class ShoppingCartRestController {
 
             return String.valueOf(subtotal);
         } catch (CustomerNotFoundException ex) {
+            return "Bạn phải đăng nhập để thay đổi số lượng sản phẩm này.";
+        }
+    }
+
+    @DeleteMapping("/cart/remove/{productId}")
+    public String removeProduct(@PathVariable("productId") Integer productId, HttpServletRequest request) {
+        try {
+            Customer customer = getAuthenticatedCustomer(request);
+            cartService.removeProduct(productId, customer);
+
+            return "Sản phẩm đã được xoá khỏi giỏ hàng.";
+        } catch (CustomerNotFoundException e) {
             return "Bạn phải đăng nhập để thay đổi số lượng sản phẩm này.";
         }
     }

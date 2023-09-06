@@ -80,4 +80,14 @@ public class ShoppingCartService {
 
         return product.getDiscountPrice() * quantity;
     }
+
+    /**
+     * Remove a product from the shopping cart.
+     *
+     * @param productId The ID of the product to remove.
+     * @param customer  The customer who owns the cart.
+     */
+    public void removeProduct(Integer productId, Customer customer) {
+        cartRepo.deleteByCustomerAndProduct(customer.getId(), productId);
+    }
 }
