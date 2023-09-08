@@ -1,0 +1,50 @@
+server:
+  port: 88
+  servlet:
+    context-path: /ShopAdmin
+#server:
+#  port: 8443
+#  servlet:
+#    context-path: /ShopAdmin
+#  ssl:
+#    enabled: true
+#    key-alias: local_ssl
+#    key-store: local-ssl.p12
+#    key-store-type: PKCS12
+#    key-password: 123456
+#    key-store-password: 123456
+
+spring:
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommercedb
+    username: root
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1025753763541-49rlisqbfajqelagk3qql4ba5p6duogg.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+            - email
+            - profile
+          facebook:
+            client-id: 221539123850960
+            client-secret: 87f5c82dfcbb8d52f682a262bbe34076
+            scope:
+            - email
+            - public_profile

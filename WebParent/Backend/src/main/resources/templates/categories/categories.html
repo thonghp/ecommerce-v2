@@ -14,7 +14,7 @@
         <a th:href="@{/categories/new}" class="fas fa-folder-plus fa-2x icon-gray mr-2"></a>
     </div>
 
-    <div th:replace="fragments :: search_form_and_message('/categories/page/1')"></div>
+    <div th:replace="fragments :: search_form_and_message"></div>
 
     <div class="full-details">
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
@@ -23,7 +23,7 @@
                 <th class="hideable-column">ID</th>
                 <th>Ảnh</th>
                 <th>
-                    <div th:replace="fragments :: sort_column('/categories', ${sortField}, 'Tên', 'tag')"></div>
+                    <div th:replace="fragments :: sort_column(${sortField}, 'Tên', 'tag')"></div>
                 </th>
                 <th>Alias</th>
                 <th>Trạng thái</th>
@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments :: pagination('/categories', 'thể loại')"></div>
+    <div th:replace="fragments :: pagination('thể loại')"></div>
 
     <div th:replace="fragments :: confirm_modal('thể loại')"></div>
 
@@ -85,7 +85,6 @@
 </div>
 </body>
 
-<script th:src="@{/js/common.js}"></script>
 <script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
     moduleURL = "[[@{/categories}]]";

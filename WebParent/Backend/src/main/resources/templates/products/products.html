@@ -43,7 +43,7 @@
             </button>
         </form>
 
-        <div th:if="${message != null}" class="alert alert-success text-center">
+        <div th:if="${message != null}" class="alert alert-success text-center" id="hideMessage">
             [[${message}]]
         </div>
     </div>
@@ -53,7 +53,7 @@
             <thead class="thead-dark">
             <tr>
                 <th class="hideable-column">
-                    <div th:replace="fragments :: sort_column('/products', 'id', 'ID', 'tag')"></div>
+                    <div th:replace="fragments :: sort_column('id', 'ID', 'tag')"></div>
                 </th>
                 <th>Ảnh</th>
                 <th>Tên sản phẩm</th>
@@ -124,7 +124,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments :: pagination('/products', 'sản phẩm')"></div>
+    <div th:replace="fragments :: pagination('sản phẩm')"></div>
 
     <div th:replace="fragments :: confirm_modal('sản phẩm')"></div>
 
@@ -139,7 +139,6 @@
 
 </div>
 </body>
-<script th:src="@{/js/common.js}"></script>
 <script th:src="@{/js/common_list.js}"></script>
 
 <script type="text/javascript">

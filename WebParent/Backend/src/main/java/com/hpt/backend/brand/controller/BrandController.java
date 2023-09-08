@@ -3,10 +3,11 @@ package com.hpt.backend.brand.controller;
 import com.hpt.backend.FileUploadUtils;
 import com.hpt.backend.brand.BrandService;
 import com.hpt.backend.category.CategoryService;
+import com.hpt.backend.paging.PagingAndSortingHelper;
+import com.hpt.backend.paging.PagingAndSortingParam;
 import com.hpt.common.entity.Brand;
 import com.hpt.common.entity.Category;
 import com.hpt.common.exception.BrandNotFoundException;
-import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +23,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.hpt.common.utils.CommonUtils.ASCENDING;
-import static com.hpt.common.utils.CommonUtils.DESCENDING;
-
 @Controller
 public class BrandController {
     @Autowired
@@ -32,35 +30,17 @@ public class BrandController {
     @Autowired
     private CategoryService categoryService;
 
-    private final static String SORT_FIELD_NAME = "id";
+    private String defaultRedirectURL = "redirect:/brands/page/1?sortField=id&sortType=asc";
 
     @GetMapping("/brands")
-    public String listFirstPage(Model model) {
-        return listByPage(1, model, SORT_FIELD_NAME, ASCENDING, null);
+    public String listFirstPage() {
+        return defaultRedirectURL;
     }
 
     @GetMapping("/brands/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") Integer pageNum, Model model,
-                             @RequestParam(name = "sortField") String sortField,
-                             @RequestParam(name = "sortType") String sortType,
-                             @RequestParam(name = "keyword", required = false) String keyword) {
-        PageInfo pageInfo = new PageInfo();
-        List<Brand> brands = service.listByPage(pageInfo, pageNum, sortField, sortType, keyword);
-        String reverseSortType = sortType.equals(ASCENDING) ? DESCENDING : ASCENDING;
-
-        long startCount = pageInfo.getStartCount(pageNum, BrandService.BRANDS_PER_PAGE);
-        long endCount = pageInfo.getEndCount(pageNum, BrandService.BRANDS_PER_PAGE);
-
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalItems", pageInfo.getTotalElements());
-        model.addAttribute("totalPages", pageInfo.getTotalPages());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortType", sortType);
-        model.addAttribute("reverseSortType", reverseSortType);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("brands", brands);
+    public String listByPage(@PathVariable(name = "pageNum") Integer pageNum,
+                             @PagingAndSortingParam(listName = "brands", moduleURL = "/brands") PagingAndSortingHelper helper) {
+        service.listByPage(pageNum, helper);
 
         return "brands/brands";
     }
@@ -115,7 +95,7 @@ public class BrandController {
         } catch (BrandNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
 
-            return "redirect:/brands";
+            return defaultRedirectURL;
         }
     }
 
@@ -127,7 +107,7 @@ public class BrandController {
         String message = "Thương hiệu có id là " + id + status;
         redirectAttributes.addFlashAttribute("message", message);
 
-        return "redirect:/brands";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/brands/delete/{id}")
@@ -142,6 +122,6 @@ public class BrandController {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
         }
 
-        return "redirect:/brands";
+        return defaultRedirectURL;
     }
 }
