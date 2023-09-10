@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments :: page_head('Admin - Quản lý phí ship', 'none')"></head>
+
+<body>
+<div class="container-fluid">
+
+    <div th:replace="fragments :: navigation"></div>
+
+    <div>
+        <h2>Quản lý phí ship</h2>
+        <a th:href="@{/shipping_rates/new}" class="fas fa-folder-plus fa-2x icon-gray mr-2"></a>
+    </div>
+
+    <div th:replace="fragments :: search_form_and_message"></div>
+
+    <div class="full-details">
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th class="hideable-column">
+                    <div th:replace="fragments :: sort_column('id', 'ID', 'tag')"></div>
+                </th>
+                <th>Quốc gia</th>
+                <th>Tỉnh thành</th>
+                <th>Phí</th>
+                <th>Ngày</th>
+                <th>COD</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="rate : ${shippingRates}">
+                <td>[[${rate.id}]]</td>
+                <td>[[${rate.country.name}]]</td>
+                <td>[[${rate.state}]]</td>
+                <td>[[${rate.rate}]]</td>
+                <td>[[${rate.days}]]</td>
+                <td>
+                    <div th:replace="shipping_rates/shipping_rates_fragment :: cod_support"></div>
+                </td>
+                <td>
+                    <div th:replace="fragments :: edit('/shipping_rates/edit/' + ${rate.id}, 'Giá vận chuyển')"></div>
+                    &nbsp;
+                    <div th:replace="fragments :: delete('/shipping_rates/delete/' + ${rate.id}, 'Xoá giá vận chuyển', ${rate.id})"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="less-details">
+        <div th:each="rate : ${shippingRates}" class="row m-1">
+            <div class="col-4">
+                <span><b>[[${rate.country.name}]]</b></span>
+                <br/>
+                <span>[[${rate.state}]]</span>
+            </div>
+            <div class="col-8">
+                <div>
+                    <div th:replace="shipping_rates/shipping_rates_fragment :: cod_support"></div>
+                    &nbsp;
+                    <div th:replace="fragments :: edit('/shipping_rates/edit/' + ${rate.id}, 'Giá vận chuyển')"></div>
+                    &nbsp;
+                    <div th:replace="fragments :: delete('/shipping_rates/delete/' + ${rate.id}, 'Xoá giá vận chuyển', ${rate.id})"></div>
+                </div>
+            </div>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+
+    <div th:replace="fragments :: pagination('shipping rates')"></div>
+
+    <div th:replace="fragments :: confirm_modal('phí ship')"></div>
+
+    <div th:replace="fragments :: footer"></div>
+
+</div>
+
+<script th:src="@{/js/common_list.js}"></script>
+<script type="text/javascript">
+    moduleURL = "[[@{/shipping_rates}]]";
+
+    $(document).ready(function () {
+        hideMessageInListView();
+
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            let link = $(this);
+            showDeleteConfirmModal(link, 'phí giao hàng');
+        });
+    });
+</script>
+</body>
+</html>
