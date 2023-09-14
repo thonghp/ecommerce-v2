@@ -68,6 +68,11 @@
                 </li>
                 <li class="compare-product">
                     <h4 class="compare-product-title">
+                        <a th:href="@{/address_book}">Địa chỉ</a>
+                    </h4>
+                </li>
+                <li class="compare-product">
+                    <h4 class="compare-product-title">
                         <a id="logoutLink" href="javascript: document.logoutForm.submit()">Đăng xuất</a>
                     </h4>
                 </li>
@@ -347,6 +352,26 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="delete_modal" class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalHeader">Delete Confirmation</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <span id="confirmText"></span>
+            </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-success" href="" id="yesButton">Yes</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
             </div>
         </div>
     </div>
