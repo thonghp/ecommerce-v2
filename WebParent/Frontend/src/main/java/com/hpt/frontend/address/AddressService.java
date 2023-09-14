@@ -58,4 +58,18 @@ public class AddressService {
     public void delete(Integer addressId, Integer customerId) {
         repo.deleteByIdAndCustomer(addressId, customerId);
     }
+
+    /**
+     * Set an address as default address of the customer.
+     *
+     * @param defaultAddressId the id of the address
+     * @param customerId       the id of the customer
+     */
+    public void setDefaultAddress(Integer defaultAddressId, Integer customerId) {
+        if (defaultAddressId > 0) {
+            repo.setDefaultAddress(defaultAddressId);
+        }
+
+        repo.setNonDefaultForOthers(defaultAddressId, customerId);
+    }
 }

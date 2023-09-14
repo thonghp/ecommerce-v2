@@ -748,6 +748,12 @@
                     <div class="row">
                         <div class="col ml-5">
                             <b>Địa chỉ chính</b>
+                            <th:block th:if="${usePrimaryAddressAsDefault}">
+                                <span class="text-danger">[Mặc định]</span>
+                            </th:block>
+                            <th:block th:unless="${usePrimaryAddressAsDefault}">
+                                <a th:href="@{'/address_book/default/0'}">[Đặt làm mặc định]</a>
+                            </th:block>
                         </div>
                         <div class="col">
                             <div class="float-right">
@@ -771,6 +777,12 @@
                         <div class="row">
                             <div class="col ml-5">
                                 <b>Địa chỉ #[[${status.count + 1}]]</b>
+                                <th:block th:if="${address.defaultForShipping}">
+                                    <span class="text-danger">[Mặc định]</span>
+                                </th:block>
+                                <th:block th:unless="${address.defaultForShipping}">
+                                    <a th:href="@{'/address_book/default/' + ${address.id}}">[Đặt làm mặc định]</a>
+                                </th:block>
                             </div>
                             <div class="col">
                                 <div class="float-right">
