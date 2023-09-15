@@ -76,4 +76,23 @@ public class Customer {
     public String getFullName() {
         return lastName + " " + firstName;
     }
+
+    @Transient
+    public String getAddress() {
+        StringBuilder address = new StringBuilder();
+
+        if (!addressLine1.isEmpty()) address.append(addressLine1);
+
+        if (addressLine2 != null && !addressLine2.isEmpty()) address.append(", ").append(addressLine2);
+
+        if (!city.isEmpty()) address.append(", ").append(city);
+
+        if (state != null && !state.isEmpty()) address.append(", ").append(state);
+
+        address.append(", ").append(country.getName());
+
+        if (!postalCode.isEmpty()) address.append(". Mã bưu điện: ").append(postalCode);
+
+        return address.toString();
+    }
 }
