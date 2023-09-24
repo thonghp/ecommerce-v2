@@ -1,8 +1,9 @@
 package com.hpt.common.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,7 +12,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "orders")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
@@ -79,5 +81,24 @@ public class Order {
         setCountry(customer.getCountry().getName());
         setPostalCode(customer.getPostalCode());
         setState(customer.getState());
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' + ", addressLine1='" + addressLine1 + '\'' +
+                ", addressLine2='" + addressLine2 + '\'' + ", city='" + city + '\'' + ", state='" + state + '\'' +
+                ", postalCode='" + postalCode + '\'' + ", country='" + country + '\'' + ", orderTime=" + orderTime +
+                ", shippingCost=" + shippingCost + ", productCost=" + productCost + ", subtotal=" + subtotal +
+                ", tax=" + tax + ", total=" + total + ", deliverDays=" + deliverDays + ", deliverDate=" + deliverDate + '}';
+    }
+
+    @Transient
+    public String getDestination() {
+        String destination = city + ", ";
+        if (state != null && !state.isEmpty()) destination += state + ", ";
+        destination += country;
+
+        return destination;
     }
 }

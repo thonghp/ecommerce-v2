@@ -63,4 +63,16 @@ public class PagingAndSortingHelper {
         model.addAttribute("endCount", endCount);
         model.addAttribute(listName, page);
     }
+
+    public String getSortField() {
+        return sortField;
+    }
+
+    public String getSortType() {
+        return sortType;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
 }
