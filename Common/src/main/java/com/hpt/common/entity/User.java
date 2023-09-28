@@ -16,10 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class User extends IdBasedEntity {
     @Column(name = "first_name", length = 45, nullable = false)
     private String firstName;
     @Column(name = "last_name", length = 100, nullable = false)

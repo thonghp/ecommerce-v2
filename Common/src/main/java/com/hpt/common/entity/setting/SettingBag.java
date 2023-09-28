@@ -1,6 +1,4 @@
-package com.hpt.common.utils;
-
-import com.hpt.common.entity.Setting;
+package com.hpt.common.entity.setting;
 
 import java.util.List;
 

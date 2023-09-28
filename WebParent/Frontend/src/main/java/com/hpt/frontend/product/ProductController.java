@@ -1,7 +1,7 @@
 package com.hpt.frontend.product;
 
 import com.hpt.common.entity.Category;
-import com.hpt.common.entity.Product;
+import com.hpt.common.entity.product.Product;
 import com.hpt.common.exception.CategoryNotFoundException;
 import com.hpt.common.exception.ProductNotFoundException;
 import com.hpt.common.utils.PageInfo;

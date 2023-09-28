@@ -2,7 +2,7 @@ package com.hpt.frontend.shoppingcart;
 
 import com.hpt.common.entity.CartItem;
 import com.hpt.common.entity.Customer;
-import com.hpt.common.entity.Product;
+import com.hpt.common.entity.product.Product;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

@@ -1,8 +1,8 @@
 package com.hpt.backend.product;
 
 import com.hpt.backend.FileUploadUtils;
-import com.hpt.common.entity.Product;
-import com.hpt.common.entity.ProductImage;
+import com.hpt.common.entity.product.Product;
+import com.hpt.common.entity.product.ProductImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;

@@ -1,6 +1,6 @@
 package com.hpt.frontend.product;
 
-import com.hpt.common.entity.Product;
+import com.hpt.common.entity.product.Product;
 import com.hpt.common.exception.ProductNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;

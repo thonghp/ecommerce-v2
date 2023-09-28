@@ -1,7 +1,7 @@
 package com.hpt.frontend.setting;
 
-import com.hpt.common.entity.Setting;
-import com.hpt.common.entity.SettingCategory;
+import com.hpt.common.entity.setting.Setting;
+import com.hpt.common.entity.setting.SettingCategory;
 import com.hpt.frontend.setting.email.EmailSettingBag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

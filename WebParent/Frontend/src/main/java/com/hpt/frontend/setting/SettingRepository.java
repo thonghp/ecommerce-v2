@@ -1,7 +1,7 @@
 package com.hpt.frontend.setting;
 
-import com.hpt.common.entity.Setting;
-import com.hpt.common.entity.SettingCategory;
+import com.hpt.common.entity.setting.Setting;
+import com.hpt.common.entity.setting.SettingCategory;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

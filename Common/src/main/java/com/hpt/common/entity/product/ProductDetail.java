@@ -1,20 +1,17 @@
-package com.hpt.common.entity;
+package com.hpt.common.entity.product;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.hpt.common.entity.IdBasedEntity;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "product_details")
-public class ProductDetail {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class ProductDetail extends IdBasedEntity {
     @Column(nullable = false, length = 255)
     private String name;
     @Column(nullable = false, length = 255)

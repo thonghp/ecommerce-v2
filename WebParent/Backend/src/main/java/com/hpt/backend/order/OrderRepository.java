@@ -1,7 +1,7 @@
 package com.hpt.backend.order;
 
 import com.hpt.backend.paging.SearchRepository;
-import com.hpt.common.entity.Order;
+import com.hpt.common.entity.order.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

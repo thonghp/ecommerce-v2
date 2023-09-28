@@ -1,6 +1,7 @@
 package com.hpt.common.utils;
 
-import com.hpt.common.entity.Setting;
+import com.hpt.common.entity.setting.Setting;
+import com.hpt.common.entity.setting.SettingBag;
 
 import java.util.List;
 

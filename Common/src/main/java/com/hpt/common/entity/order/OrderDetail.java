@@ -1,5 +1,7 @@
-package com.hpt.common.entity;
+package com.hpt.common.entity.order;
 
+import com.hpt.common.entity.IdBasedEntity;
+import com.hpt.common.entity.product.Product;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,11 +12,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDetail {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class OrderDetail extends IdBasedEntity {
     private int quantity;
     private float productCost;
     private float shippingCost;

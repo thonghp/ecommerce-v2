@@ -1,7 +1,7 @@
 package com.hpt.frontend.setting.email;
 
-import com.hpt.common.entity.Setting;
-import com.hpt.common.utils.SettingBag;
+import com.hpt.common.entity.setting.Setting;
+import com.hpt.common.entity.setting.SettingBag;
 
 import java.util.List;
 

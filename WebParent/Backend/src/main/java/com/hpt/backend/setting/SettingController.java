@@ -3,7 +3,7 @@ package com.hpt.backend.setting;
 import com.hpt.backend.FileUploadUtils;
 import com.hpt.backend.setting.currency.CurrencyRepository;
 import com.hpt.common.entity.Currency;
-import com.hpt.common.entity.Setting;
+import com.hpt.common.entity.setting.Setting;
 import com.hpt.common.utils.GeneralSettingBag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

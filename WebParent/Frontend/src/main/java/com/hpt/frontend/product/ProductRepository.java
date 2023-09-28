@@ -1,6 +1,6 @@
 package com.hpt.frontend.product;
 
-import com.hpt.common.entity.Product;
+import com.hpt.common.entity.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

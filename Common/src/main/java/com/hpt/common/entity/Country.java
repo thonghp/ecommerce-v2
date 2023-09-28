@@ -10,11 +10,7 @@ import java.util.Set;
 @Table(name = "countries")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Country {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class Country extends IdBasedEntity {
     @Column(nullable = false, length = 45)
     private String name;
 
@@ -23,14 +19,6 @@ public class Country {
 
     @OneToMany(mappedBy = "country")
     private Set<State> states;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

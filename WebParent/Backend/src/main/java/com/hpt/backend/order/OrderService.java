@@ -1,7 +1,7 @@
 package com.hpt.backend.order;
 
 import com.hpt.backend.paging.PagingAndSortingHelper;
-import com.hpt.common.entity.Order;
+import com.hpt.common.entity.order.Order;
 import com.hpt.common.exception.OrderNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;

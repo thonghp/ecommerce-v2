@@ -1,19 +1,17 @@
 package com.hpt.common.entity;
 
+import com.hpt.common.entity.product.Product;
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "cart_items")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class CartItem extends IdBasedEntity {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
