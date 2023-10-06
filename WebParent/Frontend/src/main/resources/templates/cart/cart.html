@@ -778,46 +778,25 @@
                                             </span>
                                         </td>
                                     </tr><!-- End .summary-subtotal -->
-                                    <tr class="summary-shipping">
+
+                                    <tr class="summary-subtotal">
                                         <td>Shipping:</td>
-                                        <td>&nbsp;</td>
+                                        <td th:if="${shippingSupported}">
+                                            12.000 vnđ
+                                        </td>
+                                        <td th:unless="${shippingSupported}">
+                                            Không hỗ trợ
+                                        </td>
                                     </tr>
 
-                                    <tr class="summary-shipping-row">
-                                        <td>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="free-shipping" name="shipping"
-                                                       class="custom-control-input">
-                                                <label class="custom-control-label" for="free-shipping">Free
-                                                    Shipping</label>
-                                            </div><!-- End .custom-control -->
+                                    <tr class="summary-subtotal" th:unless="${shippingSupported}">
+                                        <td th:if="${usePrimaryAddressAsDefault}">
+                                            <a th:href="@{/account_details(redirect=cart)}" class="h6">Cập nhật địa chỉ</a>
                                         </td>
-                                        <td>$0.00</td>
-                                    </tr><!-- End .summary-shipping-row -->
-
-                                    <tr class="summary-shipping-row">
-                                        <td>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="standart-shipping" name="shipping"
-                                                       class="custom-control-input">
-                                                <label class="custom-control-label"
-                                                       for="standart-shipping">Standart:</label>
-                                            </div><!-- End .custom-control -->
+                                        <td th:unless="${usePrimaryAddressAsDefault}">
+                                            <a th:href="@{/address_book(redirect=cart)}" class="h6">Sử dụng địa chỉ khác</a>
                                         </td>
-                                        <td>$10.00</td>
-                                    </tr><!-- End .summary-shipping-row -->
-
-                                    <tr class="summary-shipping-row">
-                                        <td>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="express-shipping" name="shipping"
-                                                       class="custom-control-input">
-                                                <label class="custom-control-label"
-                                                       for="express-shipping">Express:</label>
-                                            </div><!-- End .custom-control -->
-                                        </td>
-                                        <td>$20.00</td>
-                                    </tr><!-- End .summary-shipping-row -->
+                                    </tr>
 
                                     <tr class="summary-shipping-estimate">
                                         <td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a>
@@ -834,8 +813,9 @@
                                     </tbody>
                                 </table><!-- End .table table-summary -->
 
-                                <a href="checkout.html" class="btn btn-outline-primary-2 btn-order btn-block">
-                                    TIẾP TỤC
+                                <a th:if="${shippingSupported}" href="checkout.html"
+                                   class="btn btn-outline-primary-2 btn-order btn-block">
+                                    Thanh toán
                                 </a>
                             </div><!-- End .summary -->
                         </aside><!-- End .col-lg-3 -->
