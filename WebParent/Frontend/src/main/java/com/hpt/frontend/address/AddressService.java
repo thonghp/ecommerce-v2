@@ -72,4 +72,14 @@ public class AddressService {
 
         repo.setNonDefaultForOthers(defaultAddressId, customerId);
     }
+
+    /**
+     * Get the default address chosen by the customer to replace the original address when creating an account
+     *
+     * @param customer the customer to get default address
+     * @return the default address of the customer chosen to replace the original address when creating an account
+     */
+    public Address getDefaultAddress(Customer customer) {
+        return repo.findDefaultByCustomer(customer.getId());
+    }
 }

@@ -738,6 +738,7 @@
         <form th:action="@{/update_account_details}" method="post" th:object="${customer}"
               style="max-width: 600px; margin: 0 auto">
             <input type="hidden" th:field="*{id}"/>
+            <input type="hidden" name="redirect" th:value="${param.redirect}">
 
             <div class="border border-secondary rounded p-3">
                 <input type="hidden" th:field="*{authenticationType}">

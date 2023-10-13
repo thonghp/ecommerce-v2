@@ -1,4 +1,4 @@
-package com.hpt.common.entity;
+package com.hpt.common.entity.setting;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

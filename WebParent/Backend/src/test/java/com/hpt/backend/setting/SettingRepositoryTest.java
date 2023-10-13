@@ -1,7 +1,7 @@
 package com.hpt.backend.setting;
 
-import com.hpt.common.entity.Setting;
-import com.hpt.common.entity.SettingCategory;
+import com.hpt.common.entity.setting.Setting;
+import com.hpt.common.entity.setting.SettingCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

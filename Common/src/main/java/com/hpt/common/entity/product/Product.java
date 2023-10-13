@@ -1,5 +1,8 @@
-package com.hpt.common.entity;
+package com.hpt.common.entity.product;
 
+import com.hpt.common.entity.Brand;
+import com.hpt.common.entity.Category;
+import com.hpt.common.entity.IdBasedEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "products")
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Product extends IdBasedEntity {
     @Column(unique = true, length = 256, nullable = false)
     private String name;
     @Column(unique = true, length = 256, nullable = false)

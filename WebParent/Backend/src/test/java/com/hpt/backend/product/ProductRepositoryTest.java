@@ -2,7 +2,7 @@ package com.hpt.backend.product;
 
 import com.hpt.common.entity.Brand;
 import com.hpt.common.entity.Category;
-import com.hpt.common.entity.Product;
+import com.hpt.common.entity.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

@@ -7,7 +7,7 @@ import com.hpt.backend.product.ProductService;
 import com.hpt.backend.security.WebUserDetails;
 import com.hpt.common.entity.Brand;
 import com.hpt.common.entity.Category;
-import com.hpt.common.entity.Product;
+import com.hpt.common.entity.product.Product;
 import com.hpt.common.exception.ProductNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.slf4j.Logger;

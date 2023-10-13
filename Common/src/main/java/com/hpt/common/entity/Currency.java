@@ -1,21 +1,15 @@
 package com.hpt.common.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "currencies")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class Currency {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class Currency extends IdBasedEntity {
     @Column(nullable = false, length = 64)
     private String name;
 
@@ -24,6 +18,13 @@ public class Currency {
 
     @Column(nullable = false, length = 4)
     private String code;
+
+    public Currency(Integer id, String name, String symbol, String code) {
+        this.id = id;
+        this.name = name;
+        this.symbol = symbol;
+        this.code = code;
+    }
 
     public Currency(String name, String symbol, String code) {
         this.name = name;

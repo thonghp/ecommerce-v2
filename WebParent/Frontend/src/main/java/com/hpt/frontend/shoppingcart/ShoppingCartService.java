@@ -2,7 +2,7 @@ package com.hpt.frontend.shoppingcart;
 
 import com.hpt.common.entity.CartItem;
 import com.hpt.common.entity.Customer;
-import com.hpt.common.entity.Product;
+import com.hpt.common.entity.product.Product;
 import com.hpt.common.exception.ShoppingCartException;
 import com.hpt.frontend.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;

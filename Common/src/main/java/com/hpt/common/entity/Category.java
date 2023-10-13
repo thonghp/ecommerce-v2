@@ -15,10 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "categories")
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Category extends IdBasedEntity {
     @Column(length = 128, nullable = false, unique = true)
     private String name;
     @Column(length = 64, nullable = false, unique = true)
