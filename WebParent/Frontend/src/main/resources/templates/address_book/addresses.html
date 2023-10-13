@@ -731,9 +731,15 @@
     </header>
 
     <div class="text-center mt-5">
-        <h2>Địa Chỉ Của Bạn</h2>
         <div>
-            <a th:href="@{/address_book/new}" class="h4">Thêm mới</a>
+            <h2 th:text="${param.redirect != null && param.redirect[0] == 'checkout'} ? 'Chọn Địa Chỉ Khác' : 'Địa Chỉ Của Bạn'"></h2>
+        </div>
+        <div>
+            <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}"
+               th:href="@{/address_book/new(redirect=checkout)}" class="h4">
+                Thêm Mới
+            </a>
+            <a th:unless="${param.redirect}" th:href="@{/address_book/new}" class="h4">Thêm Mới</a>
         </div>
     </div>
     <div th:if="${message != null}" class="alert alert-success text-center" id="hideMessage">
@@ -749,16 +755,32 @@
                         <div class="col ml-5">
                             <b>Địa chỉ chính</b>
                             <th:block th:if="${usePrimaryAddressAsDefault}">
-                                <span class="text-danger">[Mặc định]</span>
+                                <span class="text-danger"
+                                      th:text="${param.redirect != null && param.redirect[0] == 'checkout' ?
+                                      '[Hiện Đang Chọn]' : '[Mặc Định]'}">
+                                </span>
                             </th:block>
                             <th:block th:unless="${usePrimaryAddressAsDefault}">
-                                <a th:href="@{'/address_book/default/0'}">[Đặt làm mặc định]</a>
+                                <a th:unless="${param.redirect}" th:href="@{'/address_book/default/0'}">
+                                    [Đặt làm mặc định]
+                                </a>
+                                <a th:if="${param.redirect != null && param.redirect[0] == 'cart'}"
+                                   th:href="@{'/address_book/default/0?redirect=cart'}">[Đặt làm mặc định]
+                                </a>
+                                <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}"
+                                   th:href="@{'/address_book/default/0?redirect=checkout'}">
+                                    [Chọn]
+                                </a>
                             </th:block>
                         </div>
                         <div class="col">
                             <div class="float-right">
-                                <a class="fas fa-edit" title="Edit your primary address"
-                                   th:href="@{/account_details}"></a>
+                                <a th:unless="${param.redirect}" class="fas fa-edit" title="Edit your primary address"
+                                   th:href="@{/account_details(redirect=address_book)}"></a>
+                                <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}"
+                                   class="fas fa-edit"
+                                   title="Edit your primary address"
+                                   th:href="@{/account_details(redirect=checkout)}"></a>
                             </div>
                         </div>
                     </div>
@@ -778,16 +800,31 @@
                             <div class="col ml-5">
                                 <b>Địa chỉ #[[${status.count + 1}]]</b>
                                 <th:block th:if="${address.defaultForShipping}">
-                                    <span class="text-danger">[Mặc định]</span>
+                                    <span class="text-danger"
+                                          th:text="${param.redirect != null && param.redirect[0] == 'checkout' ?
+                                          '[Đang được chọn]' : '[Mặc định]'}"></span>
                                 </th:block>
                                 <th:block th:unless="${address.defaultForShipping}">
-                                    <a th:href="@{'/address_book/default/' + ${address.id}}">[Đặt làm mặc định]</a>
+                                    <a th:unless="${param.redirect}" th:href="@{'/address_book/default/' + ${address.id}}">
+                                        [Đặt làm mặc định]
+                                    </a>
+                                    <a th:if="${param.redirect != null && param.redirect[0] == 'cart'}"
+                                       th:href="@{'/address_book/default/' + ${address.id} + '?redirect=cart'}">
+                                        [Đặt làm mặc định]
+                                    </a>
+                                    <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}"
+                                       th:href="@{'/address_book/default/' + ${address.id} + '?redirect=checkout'}">
+                                        [Chọn]
+                                    </a>
                                 </th:block>
                             </div>
                             <div class="col">
                                 <div class="float-right">
-                                    <a class="fas fa-edit" title="Edit this address"
+                                    <a class="fas fa-edit" title="Edit this address" th:unless="${param.redirect}"
                                        th:href="@{'/address_book/edit/' + ${address.id}}"></a>
+                                    <a th:if="${param.redirect != null && param.redirect[0] == 'checkout'}"
+                                       class="fas fa-edit" title="Edit this address"
+                                       th:href="@{'/address_book/edit/' + ${address.id} + '?redirect=checkout'}"></a>
                                     &nbsp;
                                     <a class="fas fa-trash linkDelete" title="Delete this address"
                                        th:objectId="${address.id}"

@@ -741,7 +741,7 @@
                 <div class="card-body">
                     <p>
                         <b>Địa chỉ đến:</b>&nbsp; [[${shippingAddress}]]
-                        <a th:href="@{/address_book}">[Ship đến địa chỉ khác]</a>
+                        <a th:href="@{/address_book(redirect=checkout)}">[Ship đến địa chỉ khác]</a>
                     </p>
                     <p>
                         <b>Số ngày giao hàng: </b>[[${checkoutInfo.deliverDays}]] ngày
