@@ -110,4 +110,14 @@ public class SettingController {
 
         return "redirect:/settings#mailTemplates";
     }
+
+    @PostMapping("/settings/save_payment")
+    public String savePaymentSetttings(HttpServletRequest request, RedirectAttributes ra) {
+        List<Setting> paymentSettings = service.getPaymentSettings();
+        updateSettingValuesFromForm(request, paymentSettings);
+
+        ra.addFlashAttribute("message", "Thiết lập Payment đã được lưu.");
+
+        return "redirect:/settings#payment";
+    }
 }

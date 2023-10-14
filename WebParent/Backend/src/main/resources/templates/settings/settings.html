@@ -35,6 +35,9 @@
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#mailTemplates" role="tab">Mail Templates</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#payment" role="tab">Payment</a>
+            </li>
         </ul>
 
         <div class="tab-content">
@@ -52,6 +55,9 @@
             </div>
             <div class="tab-pane p-3" id="mailTemplates" role="tabpanel">
                 <div th:replace="settings/mail_templates/mail_templates :: content"></div>
+            </div>
+            <div class="tab-pane p-3" id="payment" role="tabpanel">
+                <div th:replace="settings/payment :: content"></div>
             </div>
         </div>
     </div>
@@ -78,6 +84,7 @@
     $(document).ready(function () {
         hideMessageInListView();
         $("#customerVerificationContent").richText();
+        $("#orderConfirmationContent").richText();
     });
 </script>
 <script th:src="@{/js/countries_setting.js}"></script>
