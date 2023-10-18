@@ -702,7 +702,7 @@
                                             </div>
                                         </td>
                                         <td class="price-col">
-                                            <div th:replace="fragments :: price(${product.price})"></div>
+                                            <div th:replace="fragments :: price(${product.discountPrice})"></div>
                                         </td>
                                         <td class="quantity-col">
                                             <div th:replace="cart/quantity_cart :: quantity_control(${item.quantity}, ${product.id})"></div>
@@ -782,7 +782,7 @@
                                     <tr class="summary-subtotal">
                                         <td>Shipping:</td>
                                         <td th:if="${shippingSupported}">
-                                            12.000 vnđ
+                                            Có phí ship
                                         </td>
                                         <td th:unless="${shippingSupported}">
                                             Không hỗ trợ
@@ -800,16 +800,21 @@
                                         </td>
                                     </tr>
 
-                                    <tr class="summary-shipping-estimate">
-                                        <td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a>
-                                        </td>
-                                        <td>&nbsp;</td>
-                                    </tr><!-- End .summary-shipping-estimate -->
-
                                     <tr class="summary-total">
                                         <td>Thành tiền:</td>
                                         <td>
-                                            <div th:replace="fragments :: price(${estimatedTotal})"></div>
+                                            <span th:if="${CURRENCY_SYMBOL_POSITION == 'Before price'}" th:remove="tag">
+                                                [[${CURRENCY_SYMBOL}]]
+                                            </span>
+
+                                            <span id="estimated">
+                                                [[${#numbers.formatDecimal(estimatedTotal, 1, THOUSANDS_POINT_TYPE,
+                                                    DECIMAL_DIGITS, DECIMAL_POINT_TYPE)}]]
+                                            </span>
+
+                                            <span th:if="${CURRENCY_SYMBOL_POSITION == 'After price'}" th:remove="tag">
+                                                [[${CURRENCY_SYMBOL}]]
+                                            </span>
                                         </td>
                                     </tr><!-- End .summary-total -->
                                     </tbody>
