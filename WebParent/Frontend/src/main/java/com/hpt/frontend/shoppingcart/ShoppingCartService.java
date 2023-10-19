@@ -90,4 +90,13 @@ public class ShoppingCartService {
     public void removeProduct(Integer productId, Customer customer) {
         cartRepo.deleteByCustomerAndProduct(customer.getId(), productId);
     }
+
+    /**
+     * Remove all products in the shopping cart after the customer has placed an order.
+     *
+     * @param customer The customer who owns the cart.
+     */
+    public void deleteByCustomer(Customer customer) {
+        cartRepo.deleteByCustomer(customer.getId());
+    }
 }
