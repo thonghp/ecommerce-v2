@@ -73,12 +73,8 @@ public class Order extends AbstractAddress {
 
     @Override
     public String toString() {
-        return "Order{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' + ", addressLine1='" + addressLine1 + '\'' +
-                ", addressLine2='" + addressLine2 + '\'' + ", city='" + city + '\'' + ", state='" + state + '\'' +
-                ", postalCode='" + postalCode + '\'' + ", country='" + country + '\'' + ", orderTime=" + orderTime +
-                ", shippingCost=" + shippingCost + ", productCost=" + productCost + ", subtotal=" + subtotal +
-                ", tax=" + tax + ", total=" + total + ", deliverDays=" + deliverDays + ", deliverDate=" + deliverDate + '}';
+        return "Order [id=" + id + ", subtotal=" + subtotal + ", paymentMethod=" + paymentMethod + ", status=" + status
+                + ", customer=" + customer.getFullName() + "]";
     }
 
     @Transient
@@ -88,5 +84,26 @@ public class Order extends AbstractAddress {
         destination += country;
 
         return destination;
+    }
+
+    @Transient
+    public String getShippingAddress() {
+        String address = firstName;
+
+        if (lastName != null && !lastName.isEmpty()) address += " " + lastName;
+
+        if (!addressLine1.isEmpty()) address += ", " + addressLine1;
+
+        if (addressLine2 != null && !addressLine2.isEmpty()) address += ", " + addressLine2;
+
+        if (!city.isEmpty()) address += ", " + city;
+
+        if (state != null && !state.isEmpty()) address += ", " + state;
+
+        address += ", " + country;
+
+        if (!phoneNumber.isEmpty()) address += ". SĐT: " + phoneNumber;
+
+        return address;
     }
 }
