@@ -2,6 +2,7 @@ package com.hpt.frontend.setting;
 
 import com.hpt.common.entity.setting.Setting;
 import com.hpt.common.entity.setting.SettingCategory;
+import com.hpt.frontend.setting.currency.CurrencySettingBag;
 import com.hpt.frontend.setting.email.EmailSettingBag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,15 @@ public class SettingService {
         settings.addAll(repo.findByCategory(SettingCategory.MAIL_TEMPLATES));
 
         return new EmailSettingBag(settings);
+    }
+
+    /**
+     * Get currency settings
+     *
+     * @return a list of currency settings
+     */
+    public CurrencySettingBag getCurrencySettings() {
+        List<Setting> settings = repo.findByCategory(SettingCategory.CURRENCY);
+        return new CurrencySettingBag(settings);
     }
 }

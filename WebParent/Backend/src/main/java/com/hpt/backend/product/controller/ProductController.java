@@ -5,9 +5,11 @@ import com.hpt.backend.brand.BrandService;
 import com.hpt.backend.category.CategoryService;
 import com.hpt.backend.product.ProductService;
 import com.hpt.backend.security.WebUserDetails;
+import com.hpt.backend.setting.SettingService;
 import com.hpt.common.entity.Brand;
 import com.hpt.common.entity.Category;
 import com.hpt.common.entity.product.Product;
+import com.hpt.common.entity.setting.Setting;
 import com.hpt.common.exception.ProductNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,6 +41,8 @@ public class ProductController {
     private BrandService brandService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private SettingService settingService;
     private final static String SORT_FIELD_NAME = "id";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
@@ -191,10 +196,11 @@ public class ProductController {
 
     @GetMapping("/products/detail/{id}")
     public String viewProductDetails(@PathVariable("id") Integer id, Model model,
-                                     RedirectAttributes ra) {
+                                     RedirectAttributes ra, HttpServletRequest request) {
         try {
             Product product = service.get(id);
             model.addAttribute("product", product);
+            loadCurrencySetting(request);
 
             return "products/product_detail_modal";
 
@@ -202,6 +208,14 @@ public class ProductController {
             ra.addFlashAttribute("message", e.getMessage());
 
             return "redirect:/products";
+        }
+    }
+
+    private void loadCurrencySetting(HttpServletRequest request) {
+        List<Setting> currencySettings = settingService.getCurrencySettings();
+
+        for (Setting setting : currencySettings) {
+            request.setAttribute(setting.getKey(), setting.getValue());
         }
     }
 }

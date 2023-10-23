@@ -72,6 +72,7 @@ function updateTotal() {
     if (productCount < 1) {
         showEmptyShoppingCart();
     } else {
+        $("#estimated").text(formatCurrency(total / 1000));
         $("#total").text(formatCurrency(total / 1000));
     }
 }

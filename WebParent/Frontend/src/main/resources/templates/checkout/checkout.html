@@ -9,7 +9,6 @@
         .header-intro-clearance .header-bottom .container::after {
             background: #333 !important;
         }
-
     </style>
 </head>
 
@@ -760,11 +759,15 @@
                 </div>
                 <div class="card-body">
                     <div th:if="${checkoutInfo.codSupported}">
-                        <p>
-                            <input type="radio" class="mt-1"/> Thanh toán khi giao hàng (COD)
-                            &nbsp;
-                            <button class="btn btn-primary">Place Order with COD</button>
-                        </p>
+                        <form th:action="@{/place_order}" method="post">
+                            <p>
+                                <input type="radio" name="paymentMethod" id="radioCOD" value="COD" /> Thanh toán khi giao hàng (COD)
+                                &nbsp;
+                                <button class="btn btn-primary d-none" type="submit" id="buttonSubmit">
+                                    Đặt hàng
+                                </button>
+                            </p>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -842,6 +845,8 @@
     var dropDownCountry;
     var dataListState;
     var fieldState;
+    var csrfHeaderName = "[[${_csrf.headerName}]]";
+    var csrfValue = "[[${_csrf.token}]]";
 
     $(document).ready(function () {
         dropDownCountry = $("#country");
@@ -852,6 +857,10 @@
             console.log("Country changed");
             loadStatesForCountry();
             fieldState.val("").focus();
+        });
+
+        $("#radioCOD").on("click", function() {
+            $("#buttonSubmit").removeClass("d-none");
         });
     });
 </script>
