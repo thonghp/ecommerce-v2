@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Entity
 @Table(name = "orders")
@@ -46,6 +46,10 @@ public class Order extends AbstractAddress {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderDetail> orderDetails = new HashSet<>();
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OrderBy("updatedTime ASC")
+    private List<OrderTrack> orderTracks = new ArrayList<>();
 
     public void copyAddressFromCustomer() {
         setFirstName(customer.getFirstName());
@@ -105,5 +109,11 @@ public class Order extends AbstractAddress {
         if (!phoneNumber.isEmpty()) address += ". SĐT: " + phoneNumber;
 
         return address;
+    }
+
+    @Transient
+    public String getDeliverDateOnForm() {
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormatter.format(this.deliverDate);
     }
 }
