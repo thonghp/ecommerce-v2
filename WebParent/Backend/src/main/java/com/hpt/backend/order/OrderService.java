@@ -1,6 +1,8 @@
 package com.hpt.backend.order;
 
 import com.hpt.backend.paging.PagingAndSortingHelper;
+import com.hpt.backend.setting.country.CountryRepository;
+import com.hpt.common.entity.Country;
 import com.hpt.common.entity.order.Order;
 import com.hpt.common.exception.OrderNotFoundException;
 import com.hpt.common.utils.PageInfo;
@@ -23,6 +25,8 @@ public class OrderService {
     private static final int ORDERS_PER_PAGE = 10;
     @Autowired
     private OrderRepository repo;
+    @Autowired
+    private CountryRepository countryRepo;
 
     /**
      * Returns a list of orders by page number and sorted ascending or descending by the specified column.
@@ -59,7 +63,7 @@ public class OrderService {
     }
 
     /**
-     * Returns a order by ID
+     * Returns an order by ID
      *
      * @param id The ID of the order to return
      * @return a order
@@ -86,5 +90,14 @@ public class OrderService {
         }
 
         repo.deleteById(id);
+    }
+
+    /**
+     * Returns a list of countries sorted by name in ascending order
+     *
+     * @return a list of countries
+     */
+    public List<Country> listAllCountries() {
+        return countryRepo.findAllByOrderByNameAsc();
     }
 }

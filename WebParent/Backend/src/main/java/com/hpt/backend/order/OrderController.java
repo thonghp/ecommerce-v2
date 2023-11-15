@@ -3,6 +3,7 @@ package com.hpt.backend.order;
 import com.hpt.backend.paging.PagingAndSortingHelper;
 import com.hpt.backend.paging.PagingAndSortingParam;
 import com.hpt.backend.setting.SettingService;
+import com.hpt.common.entity.Country;
 import com.hpt.common.entity.order.Order;
 import com.hpt.common.entity.setting.Setting;
 import com.hpt.common.exception.OrderNotFoundException;
@@ -74,5 +75,22 @@ public class OrderController {
         }
 
         return defaultRedirectURL;
+    }
+
+    @GetMapping("/orders/edit/{id}")
+    public String editOrder(@PathVariable("id") Integer id, Model model, RedirectAttributes ra,
+                            HttpServletRequest request) {
+        try {
+            Order order = orderService.get(id);
+            List<Country> listCountries = orderService.listAllCountries();
+            model.addAttribute("order", order);
+            model.addAttribute("listCountries", listCountries);
+
+            return "orders/order_form";
+        } catch (OrderNotFoundException ex) {
+            ra.addFlashAttribute("message", ex.getMessage());
+
+            return defaultRedirectURL;
+        }
     }
 }
