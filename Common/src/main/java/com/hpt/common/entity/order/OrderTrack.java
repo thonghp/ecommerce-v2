@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
@@ -25,4 +27,19 @@ public class OrderTrack extends IdBasedEntity {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @Transient
+    public String getUpdatedTimeOnForm() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        return dateFormat.format(this.updatedTime);
+    }
+
+    public void setUpdatedTimeOnForm(String updatedTime) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        try {
+            this.updatedTime = dateFormat.parse(updatedTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
