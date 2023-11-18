@@ -28,6 +28,11 @@ public class OrderTrack extends IdBasedEntity {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @Override
+    public String toString() {
+        return "OrderTrack{" + "notes='" + notes + '\'' + ", updatedTime=" + updatedTime + ", status=" + status +
+                ", order=" + order + '}';
+    }
     @Transient
     public String getUpdatedTimeOnForm() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");

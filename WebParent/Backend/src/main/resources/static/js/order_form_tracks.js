@@ -1,4 +1,6 @@
+var trackRecordCount;
 $(document).ready(function() {
+    trackRecordCount = $(".hiddenTrackId").length; // xử lý hiển thị ghi chú mỗi khi thêm track mới
     $("#trackList").on("click", ".linkRemoveTrack", function(e) {
         e.preventDefault();
         deleteTrack($(this));
@@ -38,7 +40,10 @@ function addNewTrackRecord() {
 }
 
 function generateTrackCode() {
-    nextCount = $(".hiddenTrackId").length + 1;
+    // xử lý hiển thị ghi chú mỗi khi thêm track mới đúng thứ tự
+    nextCount = trackRecordCount + 1;
+    trackRecordCount++;
+
     rowId = "rowTrack" + nextCount;
     emptyLineId = "emptyLine" + nextCount;
     trackNoteId = "trackNote" + nextCount;

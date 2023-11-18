@@ -10,7 +10,7 @@
         <h2>Chỉnh Sửa Đơn Hàng</h2>
     </div>
 
-    <form th:action="@{/order/save}" th:object="${order}" method="post">
+    <form th:action="@{/order/save}" th:object="${order}" method="post" onsubmit="return processFormBeforeSubmit();">
         <input type="hidden" th:field="*{id}"/>
         <div>
             <ul class="nav nav-tabs" id="myTab" role="tablist">

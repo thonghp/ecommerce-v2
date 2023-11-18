@@ -131,3 +131,42 @@ function formatOrderAmounts() {
 function formatNumberForField(fieldRef) {
     fieldRef.val($.number(fieldRef.val(), 3));
 }
+
+// Xử lý xoá dấu , của giá tiền trước khi submit form
+function processFormBeforeSubmit() {
+    setCountryName();
+
+    removeThousandSeparatorForField(fieldProductCost);
+    removeThousandSeparatorForField(fieldSubtotal);
+    removeThousandSeparatorForField(fieldShippingCost);
+    removeThousandSeparatorForField(fieldTax);
+    removeThousandSeparatorForField(fieldTotal);
+
+    $(".cost-input").each(function(e) {
+        removeThousandSeparatorForField($(this));
+    });
+
+    $(".price-input").each(function(e) {
+        removeThousandSeparatorForField($(this));
+    });
+
+    $(".subtotal-output").each(function(e) {
+        removeThousandSeparatorForField($(this));
+    });
+
+    $(".ship-input").each(function(e) {
+        removeThousandSeparatorForField($(this));
+    });
+
+    return true;
+}
+
+function removeThousandSeparatorForField(fieldRef) {
+    fieldRef.val(fieldRef.val().replace(",", ""));
+}
+
+function setCountryName() {
+    selectedCountry = $("#country option:selected");
+    countryName = selectedCountry.text();
+    $("#countryName").val(countryName);
+}
