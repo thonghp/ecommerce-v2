@@ -27,48 +27,52 @@
                         <input type="text" readonly class="form-control" th:value="${order.id}">
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Khách hàng:</label>
-                    <div class="col-sm-9">
-                        <input type="text" readonly class="form-control" th:value="${order.customer.fullName}">
+                <th:block th:if="${isVisibleForAdminOrSalesperson}">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Khách hàng:</label>
+                        <div class="col-sm-9">
+                            <input type="text" readonly class="form-control" th:value="${order.customer.fullName}">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Giá gốc sản phẩm:</label>
-                    <div class="col-sm-9">
-                        <div th:replace="fragments :: currency_input(${order.productCost})">Cost</div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Giá gốc sản phẩm:</label>
+                        <div class="col-sm-9">
+                            <div th:replace="fragments :: currency_input(${order.productCost})">Cost</div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Tổng tạm tính:</label>
-                    <div class="col-sm-9">
-                        <div th:replace="fragments :: currency_input(${order.subtotal})">Subtotal</div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Tổng tạm tính:</label>
+                        <div class="col-sm-9">
+                            <div th:replace="fragments :: currency_input(${order.subtotal})">Subtotal</div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Phí ship:</label>
-                    <div class="col-sm-9">
-                        <div th:replace="fragments :: currency_input(${order.shippingCost})">Shipping cost</div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Phí ship:</label>
+                        <div class="col-sm-9">
+                            <div th:replace="fragments :: currency_input(${order.shippingCost})">Shipping cost</div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Thuế:</label>
-                    <div class="col-sm-9">
-                        <div th:replace="fragments :: currency_input(${order.tax})">Tax</div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Thuế:</label>
+                        <div class="col-sm-9">
+                            <div th:replace="fragments :: currency_input(${order.tax})">Tax</div>
+                        </div>
                     </div>
-                </div>
+                </th:block>
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Tổng cộng:</label>
                     <div class="col-sm-9">
                         <div th:replace="fragments :: currency_input(${order.total})">Total</div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label"></label>
-                    <div class="col-sm-9">
-                        Tổng cộng = Tổng tạm tính + Phí ship + Thuế
+                <th:block th:if="${isVisibleForAdminOrSalesperson}">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            Tổng cộng = Tổng tạm tính + Phí ship + Thuế
+                        </div>
                     </div>
-                </div>
+                </th:block>
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Phương thức thanh toán:</label>
                     <div class="col-sm-9 mt-2">
@@ -100,22 +104,24 @@
                         <div class="text-wrap">
                             <b>[[${product.name}]]</b>
                         </div>
-                        <div>
-                            Giá gốc: [[${detail.quantity}]] X
-                            <div th:replace="fragments :: format_currency(${detail.productCost / detail.quantity})"></div>
-                            =
-                            <div th:replace="fragments :: format_currency(${detail.productCost})"></div>
-                        </div>
-                        <div>
-                            Giá bán: [[${detail.quantity}]] X
-                            <div th:replace="fragments :: format_currency(${detail.unitPrice})"></div>
-                            =
-                            <div th:replace="fragments :: format_currency(${detail.subtotal})"></div>
-                        </div>
-                        <div>
-                            Giá ship:
-                            <div th:replace="fragments :: format_currency(${detail.shippingCost})"></div>
-                        </div>
+                        <th:block th:if="${isVisibleForAdminOrSalesperson}">
+                            <div>
+                                Giá gốc: [[${detail.quantity}]] X
+                                <div th:replace="fragments :: format_currency(${detail.productCost / detail.quantity})"></div>
+                                =
+                                <div th:replace="fragments :: format_currency(${detail.productCost})"></div>
+                            </div>
+                            <div>
+                                Giá bán: [[${detail.quantity}]] X
+                                <div th:replace="fragments :: format_currency(${detail.unitPrice})"></div>
+                                =
+                                <div th:replace="fragments :: format_currency(${detail.subtotal})"></div>
+                            </div>
+                            <div>
+                                Giá ship:
+                                <div th:replace="fragments :: format_currency(${detail.shippingCost})"></div>
+                            </div>
+                        </th:block>
                     </div>
                 </div>
             </th:block>
