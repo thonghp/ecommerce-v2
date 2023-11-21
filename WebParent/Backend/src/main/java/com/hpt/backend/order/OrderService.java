@@ -4,6 +4,8 @@ import com.hpt.backend.paging.PagingAndSortingHelper;
 import com.hpt.backend.setting.country.CountryRepository;
 import com.hpt.common.entity.Country;
 import com.hpt.common.entity.order.Order;
+import com.hpt.common.entity.order.OrderStatus;
+import com.hpt.common.entity.order.OrderTrack;
 import com.hpt.common.exception.OrderNotFoundException;
 import com.hpt.common.utils.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -101,11 +104,43 @@ public class OrderService {
         return countryRepo.findAllByOrderByNameAsc();
     }
 
+    /**
+     * Saves an order to the database
+     *
+     * @param orderInForm The order to be saved
+     */
     public void save(Order orderInForm) {
         Order orderInDB = repo.findById(orderInForm.getId()).get();
         orderInForm.setOrderTime(orderInDB.getOrderTime());
         orderInForm.setCustomer(orderInDB.getCustomer());
 
         repo.save(orderInForm);
+    }
+
+    /**
+     * Updates the status of the order specified by ID
+     *
+     * @param orderId The ID of the order to be updated
+     * @param status  The new status of the order
+     */
+    public void updateStatus(Integer orderId, String status) {
+        Order orderInDB = repo.findById(orderId).get();
+        OrderStatus statusToUpdate = OrderStatus.valueOf(status);
+
+        if (!orderInDB.hasStatus(statusToUpdate)) {
+            List<OrderTrack> orderTracks = orderInDB.getOrderTracks();
+
+            OrderTrack track = new OrderTrack();
+            track.setOrder(orderInDB);
+            track.setStatus(statusToUpdate);
+            track.setUpdatedTime(new Date());
+            track.setNotes(statusToUpdate.defaultDescription());
+
+            orderTracks.add(track);
+
+            orderInDB.setStatus(statusToUpdate);
+
+            repo.save(orderInDB);
+        }
     }
 }
