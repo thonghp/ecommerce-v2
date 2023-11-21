@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="fragments :: page_head('Tìm kiếm sản phẩm', 'none')"></head>
+
+<body>
+<div class="container-fluid">
+    <div>
+        <form th:action="@{/orders/search_product}" method="post"
+              class="form-inline my-2">
+            <input type="search" required class="form-control mr-sm-2" name="keyword"
+                   th:value="${keyword}"
+                   placeholder="tên sản phẩm"
+            />
+            <input type="submit" class="btn btn-outline-success" value="Tìm kiếm"/>
+        </form>
+    </div>
+
+    <div class="row">
+        <th:block th:each="product : ${listProducts}">
+            <div class="col">
+                <div>
+                    <a href="" class="linkProduct" th:pid="${product.id}">
+                        <img th:src="@{${product.mainImagePath}}" height="150">
+                        <br/>
+                        <b th:id="'pname' + ${product.id}">[[${product.shortName}]]</b>
+                    </a>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+    <div th:replace="fragments :: custom_modal"></div>
+    <div th:replace="fragments :: pagination('Sản Phẩm')"></div>
+</div>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/common_modal.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        handleLinkProduct();
+    });
+
+    function handleLinkProduct() {
+        $(".linkProduct").on("click", function (e) {
+            e.preventDefault();
+            productId = $(this).attr("pid");
+            productName = $("#pname" + productId).text();
+
+            if (window.parent.isProductAlreadyAdded(productId)) {
+                showWarningModal("Sản phẩm '" + productName + "' đã tồn tại.");
+            } else {
+                window.parent.addProduct(productId, productName);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

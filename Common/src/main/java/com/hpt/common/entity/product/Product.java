@@ -61,6 +61,10 @@ public class Product extends IdBasedEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductDetail> details = new HashSet<>();
 
+    public Product(Integer id) {
+        this.id = id;
+    }
+
     public void addExtraImage(String imageName) {
         ProductImage images = new ProductImage();
         images.setName(imageName);
