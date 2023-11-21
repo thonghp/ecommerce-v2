@@ -1,5 +1,6 @@
 package com.hpt.backend.product;
 
+import com.hpt.backend.paging.PagingAndSortingHelper;
 import com.hpt.common.entity.product.Product;
 import com.hpt.common.exception.ProductNotFoundException;
 import com.hpt.common.utils.PageInfo;
@@ -156,5 +157,20 @@ public class ProductService {
         } catch (Exception ex) {
             throw new ProductNotFoundException("Could not find any product with ID " + id);
         }
+    }
+
+    public List<Product> searchProducts(int pageNum, PagingAndSortingHelper helper) {
+        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE);
+        String keyword = helper.getKeyword();
+        Page<Product> page = repo.searchProductsByName(keyword, pageable);
+        PageInfo pageInfo = new PageInfo();
+
+        pageInfo.setTotalPages(page.getTotalPages());
+        pageInfo.setTotalElements(page.getTotalElements());
+
+        List<Product> results = page.getContent();
+
+        helper.passPaginationAttribute(pageNum, results, pageInfo, PRODUCTS_PER_PAGE);
+        return page.getContent();
     }
 }
