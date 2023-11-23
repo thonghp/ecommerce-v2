@@ -1,0 +1,84 @@
+.icon-white {
+    color: white;
+}
+
+.icon-silver {
+    color: silver;
+}
+
+.icon-green {
+    color: green;
+}
+
+.icon-gray {
+    color: gray;
+}
+
+@media screen and (max-width: 768px) {
+    /* small screen */
+    div.full-details {
+        display: none
+    }
+
+    div.less-details {
+        display: block;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    /* medium screen */
+    div.full-details {
+        display: block;
+    }
+
+    div.less-details {
+        display: none;
+    }
+
+    .hideable-column {
+        display: none
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    /* small screen */
+    div.less-details {
+        display: none;
+    }
+
+    .hideable-column {
+        display: table-cell;
+    }
+}
+
+.btn-mw {
+    min-width: 0;
+}
+
+.btn-secondary-gray {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.th-custom {
+    font-weight: bold !important;
+}
+
+.table td, .table th {
+    padding: 0.75rem;
+    vertical-align: top;
+}
+
+.table-bordered thead th {
+    border-bottom-width: 2px;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid #dee2e6;
+}
