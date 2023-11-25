@@ -722,7 +722,8 @@
                         <span>[[${order.status}]]</span>
                     </td>
                     <td>
-                        <a class="fa-2x icon-green" href="" title="Xem chi tiết đơn hàng">
+                        <a class="fa-2x icon-green linkDetail" th:href="@{'/orders/detail/' + ${order.id}}"
+                           title="Xem chi tiết đơn hàng">
                             <i class="fa fa-file-alt"></i>
                         </a>
 
@@ -750,7 +751,7 @@
                             </div>
                             <div class="col">
                                 <div class="float-right">
-                                    <a class="fa-2x icon-green" href="">
+                                    <a class="fa-2x icon-green linkDetail" th:href="@{'/orders/detail/' + ${order.id}}">
                                         <i class="fa fa-file-alt"></i>
                                     </a>
 
@@ -789,6 +790,13 @@
 
     <div th:replace="fragments:: pagination('/orders', 'đơn hàng')"></div>
 
+    <div class="modal fade" id="orderDetailsModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
     <div>&nbsp;</div>
 
     <footer th:replace="fragments :: footer"></footer>
@@ -806,6 +814,17 @@
 
     function clearFilter() {
         window.location = moduleURL;
+    }
+
+    $(document).ready(function () {
+        handleDetailLink();
+    });
+
+    function handleDetailLink() {
+        $(".linkDetail").on("click", function (e) {
+            e.preventDefault();
+            $('#orderDetailsModal').modal('show').find('.modal-content').load($(this).attr('href'));
+        });
     }
 </script>
 

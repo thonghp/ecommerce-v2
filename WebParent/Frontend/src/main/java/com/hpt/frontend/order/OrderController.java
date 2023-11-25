@@ -34,10 +34,6 @@ public class OrderController {
         Page<Order> page = orderService.listForCustomerByPage(customer, pageNum, sortField, sortDir, orderKeyword);
         List<Order> listOrders = page.getContent();
 
-        System.out.println(page.getTotalPages());
-        System.out.println("current page: " + pageNum);
-
-
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("currentPage", pageNum);
@@ -59,6 +55,16 @@ public class OrderController {
         model.addAttribute("endCount", endCount);
 
         return "orders/orders_customer";
+    }
+
+    @GetMapping("/orders/detail/{id}")
+    public String viewOrderDetails(Model model, @PathVariable Integer id, HttpServletRequest request) {
+        Customer customer = getAuthenticatedCustomer(request);
+
+        Order order = orderService.getOrder(id, customer);
+        model.addAttribute("order", order);
+
+        return "orders/order_details_modal";
     }
 
     private Customer getAuthenticatedCustomer(HttpServletRequest request) {

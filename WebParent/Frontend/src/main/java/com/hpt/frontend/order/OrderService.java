@@ -26,6 +26,16 @@ public class OrderService {
     @Autowired
     private OrderRepository repo;
 
+    /**
+     * Save information of order to database
+     *
+     * @param customer      customer who ordered
+     * @param address       shipping address
+     * @param cartItems     list of cart items
+     * @param paymentMethod payment method
+     * @param checkoutInfo  checkout information
+     * @return order saved to database
+     */
     public Order createOrder(Customer customer, Address address, List<CartItem> cartItems,
                              PaymentMethod paymentMethod, CheckoutInfo checkoutInfo) {
         Order newOrder = new Order();
@@ -63,7 +73,6 @@ public class OrderService {
 
             orderDetails.add(orderDetail);
         }
-
         return repo.save(newOrder);
     }
 
@@ -78,5 +87,16 @@ public class OrderService {
         }
 
         return repo.findAll(customer.getId(), pageable);
+    }
+
+    /**
+     * Get order by id and customer
+     *
+     * @param id       order id
+     * @param customer customer who owns the order
+     * @return order or null if not found
+     */
+    public Order getOrder(Integer id, Customer customer) {
+        return repo.findByIdAndCustomer(id, customer);
     }
 }

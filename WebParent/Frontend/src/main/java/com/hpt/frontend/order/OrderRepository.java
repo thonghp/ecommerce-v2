@@ -1,5 +1,6 @@
 package com.hpt.frontend.order;
 
+import com.hpt.common.entity.Customer;
 import com.hpt.common.entity.order.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,6 @@ public interface OrderRepository extends CrudRepository<Order, Integer> {
 
     @Query("SELECT o FROM Order o WHERE o.customer.id = ?1")
     Page<Order> findAll(Integer customerId, Pageable pageable);
+
+    Order findByIdAndCustomer(Integer id, Customer customer);
 }
