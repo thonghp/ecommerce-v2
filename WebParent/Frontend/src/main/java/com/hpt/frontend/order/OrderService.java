@@ -3,13 +3,15 @@ package com.hpt.frontend.order;
 import com.hpt.common.entity.Address;
 import com.hpt.common.entity.CartItem;
 import com.hpt.common.entity.Customer;
-import com.hpt.common.entity.order.Order;
-import com.hpt.common.entity.order.OrderDetail;
-import com.hpt.common.entity.order.OrderStatus;
-import com.hpt.common.entity.order.PaymentMethod;
+import com.hpt.common.entity.order.*;
 import com.hpt.common.entity.product.Product;
+import com.hpt.common.exception.OrderNotFoundException;
 import com.hpt.frontend.checkout.CheckoutInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,9 +20,20 @@ import java.util.Set;
 
 @Service
 public class OrderService {
+    public static final int ORDERS_PER_PAGE = 5;
     @Autowired
     private OrderRepository repo;
 
+    /**
+     * Save information of order to database
+     *
+     * @param customer      customer who ordered
+     * @param address       shipping address
+     * @param cartItems     list of cart items
+     * @param paymentMethod payment method
+     * @param checkoutInfo  checkout information
+     * @return order saved to database
+     */
     public Order createOrder(Customer customer, Address address, List<CartItem> cartItems,
                              PaymentMethod paymentMethod, CheckoutInfo checkoutInfo) {
         Order newOrder = new Order();
@@ -59,7 +72,65 @@ public class OrderService {
             orderDetails.add(orderDetail);
         }
 
+        OrderTrack track = new OrderTrack();
+        track.setOrder(newOrder);
+        track.setStatus(OrderStatus.NEW);
+        track.setNotes(OrderStatus.NEW.defaultDescription());
+        track.setUpdatedTime(new Date());
+
+        newOrder.getOrderTracks().add(track);
 
         return repo.save(newOrder);
+    }
+
+    public Page<Order> listForCustomerByPage(Customer customer, int pageNum, String sortField, String sortDir, String keyword) {
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+
+        Pageable pageable = PageRequest.of(pageNum - 1, ORDERS_PER_PAGE, sort);
+
+        if (keyword != null) {
+            return repo.findAll(keyword, customer.getId(), pageable);
+        }
+
+        return repo.findAll(customer.getId(), pageable);
+    }
+
+    /**
+     * Get order by id and customer
+     *
+     * @param id       order id
+     * @param customer customer who owns the order
+     * @return order or null if not found
+     */
+    public Order getOrder(Integer id, Customer customer) {
+        return repo.findByIdAndCustomer(id, customer);
+    }
+
+    public void setOrderReturnRequested(OrderReturnRequest request, Customer customer)
+            throws OrderNotFoundException {
+        Order order = repo.findByIdAndCustomer(request.getOrderId(), customer);
+        if (order == null) {
+            throw new OrderNotFoundException("Order ID " + request.getOrderId() + " not found");
+        }
+
+        if (order.isReturnRequested()) return;
+
+        OrderTrack track = new OrderTrack();
+        track.setOrder(order);
+        track.setUpdatedTime(new Date());
+        track.setStatus(OrderStatus.RETURN_REQUESTED);
+
+        String notes = "Reason: " + request.getReason();
+        if (!"".equals(request.getNote())) {
+            notes += ". " + request.getNote();
+        }
+
+        track.setNotes(notes);
+
+        order.getOrderTracks().add(track);
+        order.setStatus(OrderStatus.RETURN_REQUESTED);
+
+        repo.save(order);
     }
 }
