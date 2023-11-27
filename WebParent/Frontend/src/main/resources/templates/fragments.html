@@ -73,6 +73,11 @@
                 </li>
                 <li class="compare-product">
                     <h4 class="compare-product-title">
+                        <a th:href="@{/orders}">Đơn hàng</a>
+                    </h4>
+                </li>
+                <li class="compare-product">
+                    <h4 class="compare-product-title">
                         <a id="logoutLink" href="javascript: document.logoutForm.submit()">Đăng xuất</a>
                     </h4>
                 </li>
@@ -123,6 +128,13 @@
     </span>
 </div>
 
+<div th:fragment="currency_input(amount)" th:remove="tag">
+    <input type="text" readonly class="form-control"
+           th:value="${(CURRENCY_SYMBOL_POSITION == 'Before price' ? CURRENCY_SYMBOL : '') +
+           #numbers.formatDecimal(amount, 1, THOUSANDS_POINT_TYPE, DECIMAL_DIGITS, DECIMAL_POINT_TYPE) +
+           (CURRENCY_SYMBOL_POSITION == 'After price' ? CURRENCY_SYMBOL : '')}">
+</div>
+
 <div th:fragment="product_price(remove)" th:remove="tag">
     <div class="product-price font-weight-bold text-black-50"
          th:if="${product.discountPercent <= 0}">
@@ -141,6 +153,19 @@
         <small class="ml-4" th:remove="${remove}">(-[[${product.discountPercent}]]%)</small>
     </div>
 </div>
+
+<div th:fragment="format_time(dateTime)" th:remove="tag">
+    <span th:text="${#dates.format(dateTime, 'dd-MM-yyyy HH:mm:ss')}"></span>
+</div>
+
+<th th:fragment="column_link(fieldName, columnLabel, removeTag)" th:remove="${removeTag}">
+    <a class="text-white"
+       th:href="@{${moduleURL} + '/page/' + ${currentPage} + '?sortField=' + ${fieldName}  +'&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${categoryId != null ? '&categoryId=' + categoryId : ''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldName}"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
 
 <a th:fragment="page_link(moduleURL, pageNum, label)" class="page-link"
    th:href="@{${moduleURL} + '/page/' + ${pageNum} + ${keyword != null ? '?keyword=' + keyword : ''}}">
