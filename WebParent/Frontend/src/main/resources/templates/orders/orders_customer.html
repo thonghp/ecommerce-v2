@@ -6,9 +6,6 @@
     <link rel="stylesheet" th:href="@{/css/line-awesome.min.css}">
     <link rel="stylesheet" th:href="@{/css/jquery.countdown.css}">
     <link rel="stylesheet" th:href="@{/css/custom.css}">
-    <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"-->
-    <!--          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="-->
-    <!--          crossorigin="anonymous" referrerpolicy="no-referrer"/>-->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -700,10 +697,10 @@
                 <thead class="thead-dark">
                 <tr>
                     <th class="th-custom" th:replace="fragments :: column_link('id', 'ID', 'none')"></th>
-                    <th class="th-custom">Order Time</th>
-                    <th class="th-custom">Products</th>
-                    <th class="th-custom">Total</th>
-                    <th class="th-custom">Status</th>
+                    <th class="th-custom">Thơi gian</th>
+                    <th class="th-custom">Sản phẩm</th>
+                    <th class="th-custom">Tổng cộng</th>
+                    <th class="th-custom">Trạng thái</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -719,7 +716,7 @@
                         <div th:replace="fragments :: price(${order.total})">Tổng cộng</div>
                     </td>
                     <td>
-                        <span>[[${order.status}]]</span>
+                        <span th:class="'textOrderStatus' + ${order.id}">[[${order.status}]]</span>
                     </td>
                     <td>
                         <a class="fa-2x icon-green linkDetail" th:href="@{'/orders/detail/' + ${order.id}}"
@@ -727,9 +724,11 @@
                             <i class="fa fa-file-alt"></i>
                         </a>
 
-                        <th:block th:unless="${order.returnRequested}">
+                        <th:block
+                                th:if="${order.returnRequested == false && order.delivered == true && order.returned == false}">
                             &nbsp;&nbsp;&nbsp;
-                            <a class="fa-2x icon-gray" href="" title="Trả lại đơn hàng">
+                            <a class="fa-2x icon-gray linkReturnOrder" href="" title="Trả lại đơn hàng"
+                               th:orderId="${order.id}" th:classappend="'linkReturn' + ${order.id}">
                                 <i class="fa fa-undo"></i>
                             </a>
                         </th:block>
@@ -755,9 +754,11 @@
                                         <i class="fa fa-file-alt"></i>
                                     </a>
 
-                                    <th:block th:unless="${order.returnRequested}">
+                                    <th:block
+                                            th:if="${order.returnRequested == false && order.delivered == true && order.returned == false}">
                                         &nbsp;
-                                        <a class="fa-2x icon-gray" href="" title="Trả lại đơn hàng">
+                                        <a class="fa-2x icon-gray linkReturnOrder" href="" title="Trả lại đơn hàng"
+                                           th:orderId="${order.id}" th:classappend="'linkReturn' + ${order.id}">
                                             <i class="fa fa-undo"></i>
                                         </a>
                                     </th:block>
@@ -774,7 +775,7 @@
                                 <div th:replace="fragments :: price(${order.total})">Tổng cộng</div>
                             </div>
                             <div class="col">
-                                <span>[[${order.status}]]</span>
+                                <span th:class="'textOrderStatus' + ${order.id}">[[${order.status}]]</span>
                             </div>
                         </div>
                         <div>
@@ -789,6 +790,8 @@
     </div>
 
     <div th:replace="fragments:: pagination('/orders', 'đơn hàng')"></div>
+
+    <div th:replace="orders/return_order_modal :: content"></div>
 
     <div class="modal fade" id="orderDetailsModal">
         <div class="modal-dialog modal-xl">
@@ -808,9 +811,13 @@
 <script th:src="@{/js/jquery.plugin.min.js}"></script>
 <script th:src="@{/js/jquery.countdown.min.js}"></script>
 <script th:src="@{/js/demo-13.js}"></script>
+<script type="text/javascript" th:src="@{/js/return_order.js}"></script>
 
 <script type="text/javascript">
     moduleURL = "[[@{/orders}]]";
+    contextPath = "[[@{/}]]";
+    var csrfHeaderName = "[[${_csrf.headerName}]]";
+    var csrfValue = "[[${_csrf.token}]]";
 
     function clearFilter() {
         window.location = moduleURL;
