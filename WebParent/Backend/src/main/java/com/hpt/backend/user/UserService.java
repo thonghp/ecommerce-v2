@@ -59,9 +59,9 @@ public class UserService {
      * @return saved user object
      */
     public User save(User user) {
-        boolean isExistingId = (user.getId() != null);
+        boolean isUpdatingUser = (user.getId() != null);
 
-        if (isExistingId) {
+        if (isUpdatingUser) {
             User existingUser = userRepo.findById(user.getId()).get();
             if (user.getPassword().isEmpty()) {
                 user.setPassword(existingUser.getPassword());
@@ -86,9 +86,9 @@ public class UserService {
     public boolean isEmailUnique(Integer id, String email) {
         User userByEmail = userRepo.findByEmail(email);
 
-        boolean isExistedId = (id != null);
+        boolean isUpdatingId = (id != null);
 
-        if (isExistedId) {
+        if (isUpdatingId) {
             return userByEmail.getId().equals(id);
         } else {
             return userByEmail == null;
