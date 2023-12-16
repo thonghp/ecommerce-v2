@@ -26,7 +26,7 @@ import java.util.Objects;
 @Controller
 public class BrandController {
     @Autowired
-    private BrandService service;
+    private BrandService brandService;
     @Autowired
     private CategoryService categoryService;
 
@@ -40,7 +40,7 @@ public class BrandController {
     @GetMapping("/brands/page/{pageNum}")
     public String listByPage(@PathVariable(name = "pageNum") Integer pageNum,
                              @PagingAndSortingParam(listName = "brands", moduleURL = "/brands") PagingAndSortingHelper helper) {
-        service.listByPage(pageNum, helper);
+        brandService.listByPage(pageNum, helper);
 
         return "brands/brands";
     }
@@ -49,7 +49,7 @@ public class BrandController {
     public String newBrand(Model model) {
         Brand brand = new Brand();
         brand.setEnabled(true);
-        List<Category> listCategories = categoryService.listHierarchicalCategoriesInform();
+        List<Category> listCategories = categoryService.listCategoriesUsedInForm();
 
         model.addAttribute("brand", brand);
         model.addAttribute("listCategories", listCategories);
@@ -64,7 +64,7 @@ public class BrandController {
         if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             brand.setImagePath(fileName);
-            Brand savedBrand = service.save(brand);
+            Brand savedBrand = brandService.save(brand);
 
             String uploadDir = "brand-photos/" + savedBrand.getId();
 
@@ -72,7 +72,7 @@ public class BrandController {
             FileUploadUtils.saveFile(uploadDir, fileName, multipartFile);
         } else {
             if (brand.getImagePath().isEmpty()) brand.setImagePath(null);
-            service.save(brand);
+            brandService.save(brand);
         }
 
         String name = brand.getName();
@@ -84,8 +84,8 @@ public class BrandController {
     @GetMapping("/brands/edit/{id}")
     public String editBrand(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
         try {
-            Brand brand = service.get(id);
-            List<Category> listCategories = categoryService.listHierarchicalCategoriesInform();
+            Brand brand = brandService.get(id);
+            List<Category> listCategories = categoryService.listCategoriesUsedInForm();
 
             model.addAttribute("brand", brand);
             model.addAttribute("listCategories", listCategories);
@@ -102,7 +102,7 @@ public class BrandController {
     @GetMapping("/brands/{id}/enabled/{status}")
     public String updateBrandEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled,
                                            RedirectAttributes redirectAttributes) {
-        service.updateBrandEnabledStatus(id, enabled);
+        brandService.updateBrandEnabledStatus(id, enabled);
         String status = enabled ? " được kích hoạt" : " bị vô hiệu hoá";
         String message = "Thương hiệu có id là " + id + status;
         redirectAttributes.addFlashAttribute("message", message);
@@ -113,7 +113,7 @@ public class BrandController {
     @GetMapping("/brands/delete/{id}")
     public String deleteBrand(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
         try {
-            service.delete(id);
+            brandService.delete(id);
             String categoryDir = "brand-photos/" + id;
             FileUploadUtils.removeDir(categoryDir);
 

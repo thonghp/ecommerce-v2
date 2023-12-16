@@ -39,7 +39,7 @@ public class CategoryController {
                              @RequestParam(name = "sortType") String sortType,
                              @RequestParam(name = "keyword", required = false) String keyword) {
         PageInfo pageInfo = new PageInfo();
-        List<Category> categories = service.listByPage(pageInfo, pageNum, sortType, keyword);
+        List<Category> listCategories = service.listByPage(pageInfo, pageNum, sortType, keyword);
         String reverseSortType = sortType.equals(ASCENDING) ? DESCENDING : ASCENDING;
         long startCount = pageInfo.getStartCount(pageNum, CategoryService.ROOT_CATEGORIES_PER_PAGE);
         long endCount = pageInfo.getEndCount(pageNum, CategoryService.ROOT_CATEGORIES_PER_PAGE);
@@ -51,7 +51,7 @@ public class CategoryController {
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("sortField", CategoryService.SORT_FIELD_NAME);
         model.addAttribute("sortType", sortType);
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", listCategories);
         model.addAttribute("reverseSortType", reverseSortType);
         model.addAttribute("keyword", keyword);
         model.addAttribute("moduleURL", "/categories");
@@ -63,9 +63,9 @@ public class CategoryController {
     public String newCategory(Model model) {
         Category category = new Category();
         category.setEnabled(true);
-        List<Category> categories = service.listHierarchicalCategoriesInform();
+        List<Category> listCategories = service.listCategoriesUsedInForm();
 
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", listCategories);
         model.addAttribute("category", category);
         model.addAttribute("pageTitle", "Thêm thể loại");
 
@@ -100,10 +100,10 @@ public class CategoryController {
     public String editCategory(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
         try {
             Category category = service.get(id);
-            List<Category> categories = service.listHierarchicalCategoriesInform();
+            List<Category> listCategories = service.listCategoriesUsedInForm();
 
             model.addAttribute("category", category);
-            model.addAttribute("categories", categories);
+            model.addAttribute("categories", listCategories);
             model.addAttribute("pageTitle", "Chỉnh sửa thể loại");
 
             return "categories/category_form";
