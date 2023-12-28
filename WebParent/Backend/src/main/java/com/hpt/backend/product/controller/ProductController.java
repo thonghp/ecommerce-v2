@@ -60,7 +60,7 @@ public class ProductController {
                              @RequestParam(name = "categoryId") Integer categoryId) {
         PageInfo pageInfo = new PageInfo();
         List<Product> products = service.listByPage(pageInfo, pageNum, sortField, sortType, keyword, categoryId);
-        List<Category> listCategories = categoryService.listHierarchicalCategoriesInform();
+        List<Category> listCategories = categoryService.listCategoriesUsedInForm();
         String reverseSortType = sortType.equals(ASCENDING) ? DESCENDING : ASCENDING;
 
         long startCount = pageInfo.getStartCount(pageNum, ProductService.PRODUCTS_PER_PAGE);
