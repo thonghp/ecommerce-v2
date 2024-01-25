@@ -32,7 +32,7 @@ public class ShoppingCartController {
     public String viewCart(Model model, HttpServletRequest request) {
         Customer customer = getAuthenticatedCustomer(request);
         List<CartItem> cartItems = cartService.listCartItems(customer);
-        List<Category> listCategories = categoryService.listRootCategories();
+        List<Category> listCategories = categoryService.listNotChildrenCategories();
 
         float estimatedTotal = 0.0F;
 

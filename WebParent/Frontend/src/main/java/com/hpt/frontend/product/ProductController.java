@@ -35,17 +35,17 @@ public class ProductController {
                                      @PathVariable(name = "pageNum") int pageNum, Model model) {
         try {
             Category category = categoryService.getCategory(alias);
-            List<Category> listBreadcumbCategories = categoryService.getCategoryParents(category);
+            List<Category> listCategoryParents = categoryService.getCategoryParents(category);
 
             PageInfo pageInfo = new PageInfo();
-            List<Product> products = productService.listByCategory(pageInfo, pageNum, category.getId());
+            List<Product> listProducts = productService.listByCategory(pageInfo, pageNum, category.getId());
             long startCount = pageInfo.getStartCount(pageNum, ProductService.PRODUCTS_PER_PAGE);
             long endCount = pageInfo.getEndCount(pageNum, ProductService.PRODUCTS_PER_PAGE);
 
-            List<Category> listCategories = categoryService.listRootCategories();
+            List<Category> listCategories = categoryService.listNotChildrenCategories();
 
             model.addAttribute("category", category);
-            model.addAttribute("listCategoryParents", listBreadcumbCategories);
+            model.addAttribute("listCategoryParents", listCategoryParents);
             model.addAttribute("listCategories", listCategories);
             model.addAttribute("pageTitle", category.getName());
             model.addAttribute("currentPage", pageNum);
@@ -53,7 +53,7 @@ public class ProductController {
             model.addAttribute("totalItems", pageInfo.getTotalElements());
             model.addAttribute("startCount", startCount);
             model.addAttribute("endCount", endCount);
-            model.addAttribute("products", products);
+            model.addAttribute("products", listProducts);
 
             return "product/products_by_category";
         } catch (CategoryNotFoundException ex) {
@@ -66,7 +66,7 @@ public class ProductController {
         try {
             Product product = productService.getProduct(alias);
             List<Category> listCategoryParents = categoryService.getCategoryParents(product.getCategory());
-            List<Category> listCategories = categoryService.listRootCategories();
+            List<Category> listCategories = categoryService.listNotChildrenCategories();
 
             model.addAttribute("listCategories", listCategories);
             model.addAttribute("listCategoryParents", listCategoryParents);
@@ -92,7 +92,7 @@ public class ProductController {
 
         long startCount = pageInfo.getStartCount(pageNum, ProductService.PRODUCTS_PER_PAGE);
         long endCount = pageInfo.getEndCount(pageNum, ProductService.PRODUCTS_PER_PAGE);
-        List<Category> listCategories = categoryService.listRootCategories();
+        List<Category> listCategories = categoryService.listNotChildrenCategories();
 
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPages", pageInfo.getTotalPages());

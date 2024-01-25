@@ -35,7 +35,6 @@ public class CustomerController {
     private CustomerService service;
     @Autowired
     private CategoryService categoryService;
-
     @Autowired
     private SettingService settingService;
 
@@ -44,7 +43,7 @@ public class CustomerController {
         List<Country> listCountries = service.listAllCountries();
 
         model.addAttribute("listCountries", listCountries);
-        model.addAttribute("pageTitle", "Customer Registration");
+        model.addAttribute("pageTitle", "Đăng Ký Tài Khoản");
         model.addAttribute("customer", new Customer());
 
         return "register/register_form";
@@ -99,7 +98,7 @@ public class CustomerController {
         String email = MailUtils.getEmailOfAuthenticatedCustomer(request);
         Customer customer = service.getCustomerByEmail(email);
         List<Country> listCountries = service.listAllCountries();
-        List<Category> listCategories = categoryService.listRootCategories();
+        List<Category> listCategories = categoryService.listNotChildrenCategories();
 
         model.addAttribute("customer", customer);
         model.addAttribute("listCountries", listCountries);

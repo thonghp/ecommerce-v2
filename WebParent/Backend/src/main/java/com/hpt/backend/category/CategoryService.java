@@ -55,7 +55,7 @@ public class CategoryService {
                 String name = "--" + subCategory.getName();
                 hierarchicalCategories.add(Category.copyFull(subCategory, name));
 
-                listSubCategories(hierarchicalCategories, subCategory, 1, sortType);
+                listSubHierarchicalCategories(hierarchicalCategories, subCategory, 1, sortType);
             }
         }
 
@@ -66,11 +66,11 @@ public class CategoryService {
     /**
      * Returns a list of children categories in hierarchical order and sorted ascending or descending
      *
-     * @param categories List of categories
-     * @param parent     Parent category
-     * @param subLevel   Sub level
+     * @param hierachicalCategories List of categories
+     * @param parent                Parent category
+     * @param subLevel              Sub level
      */
-    public void listSubCategories(List<Category> categories, Category parent, int subLevel, String sortType) {
+    public void listSubHierarchicalCategories(List<Category> hierachicalCategories, Category parent, int subLevel, String sortType) {
         Set<Category> children = sortSubCategories(parent.getChildren(), sortType);
         int newSubLevel = subLevel + 1;
 
@@ -81,9 +81,9 @@ public class CategoryService {
                 name += "--";
             }
 
-            categories.add(Category.copyFull(subCategory, name + subCategory.getName()));
+            hierachicalCategories.add(Category.copyFull(subCategory, name + subCategory.getName()));
 
-            listSubCategories(categories, subCategory, newSubLevel, sortType);
+            listSubHierarchicalCategories(hierachicalCategories, subCategory, newSubLevel, sortType);
         }
     }
 
@@ -93,24 +93,24 @@ public class CategoryService {
      *
      * @return List of hierarchical categories with only id and name are sorted ascending by name field
      */
-    public List<Category> listHierarchicalCategoriesInform() {
-        List<Category> hierarchicalCategories = new ArrayList<>();
+    public List<Category> listCategoriesUsedInForm() {
+        List<Category> categoriesUsedInForm = new ArrayList<>();
         List<Category> rootCategories = repo.findByParentIsNull(Sort.by(SORT_FIELD_NAME).ascending());
 
         for (Category rootCategory : rootCategories) {
-            hierarchicalCategories.add(Category.copyIdAndName(rootCategory));
+            categoriesUsedInForm.add(Category.copyIdAndName(rootCategory));
             Set<Category> children = sortSubCategories(rootCategory.getChildren());
 
             for (Category subCategory : children) {
                 Integer id = subCategory.getId();
                 String name = "--" + subCategory.getName();
-                hierarchicalCategories.add(Category.copyIdAndName(id, name));
+                categoriesUsedInForm.add(Category.copyIdAndName(id, name));
 
-                listSubCategoriesInform(hierarchicalCategories, subCategory, 1);
+                listSubCategoriesInform(categoriesUsedInForm, subCategory, 1);
             }
         }
 
-        return hierarchicalCategories;
+        return categoriesUsedInForm;
     }
 
     /**
@@ -290,14 +290,13 @@ public class CategoryService {
         pageInfo.setTotalElements(pageCategories.getTotalElements());
 
         if (keyword != null && !keyword.isEmpty()) {
-            List<Category> searchResult = pageCategories.getContent();
-            for (Category category : searchResult) {
+            List<Category> searchResults = pageCategories.getContent();
+            for (Category category : searchResults) {
 // Nếu không set thì category cha cũng hiển thị nút xoá khi category con còn tồn tại trong danh sách trả về khi tìm kiếm
                 category.setHasChildren(category.getChildren().size() > 0);
             }
 
-            return searchResult;
-
+            return searchResults;
         } else {
             return listHierarchicalCategories(rootCategories, sortType);
         }

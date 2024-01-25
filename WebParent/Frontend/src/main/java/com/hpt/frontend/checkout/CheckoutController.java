@@ -53,7 +53,7 @@ public class CheckoutController {
         Customer customer = getAuthenticatedCustomer(request);
 
         Address defaultReplaceAddress = addressService.getDefaultAddress(customer);
-        List<Category> listCategories = categoryService.listRootCategories();
+        List<Category> listCategories = categoryService.listNotChildrenCategories();
         ShippingRate shippingRate = null;
 
         if (defaultReplaceAddress != null) {
@@ -101,7 +101,7 @@ public class CheckoutController {
 
         List<CartItem> cartItems = cartService.listCartItems(customer);
         CheckoutInfo checkoutInfo = checkoutService.prepareCheckout(cartItems, shippingRate);
-        List<Category> listCategories = categoryService.listRootCategories();
+        List<Category> listCategories = categoryService.listNotChildrenCategories();
 
         Order createdOrder = orderService.createOrder(customer, defaultAddress, cartItems, paymentMethod, checkoutInfo);
         cartService.deleteByCustomer(customer);

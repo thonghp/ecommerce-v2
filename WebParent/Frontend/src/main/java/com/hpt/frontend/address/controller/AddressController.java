@@ -33,7 +33,7 @@ public class AddressController {
     public String showAddressBook(Model model, HttpServletRequest request) {
         Customer customer = getAuthenticatedCustomer(request);
         List<Address> listAddresses = addressService.listAddressBook(customer);
-        List<Category> listCategories = categoryService.listRootCategories();
+        List<Category> listCategories = categoryService.listNotChildrenCategories();
 
         // Nếu không có địa chỉ nào được đánh dấu là mặc định thì đánh dấu địa chỉ khi tạo là mặc định
         boolean usePrimaryAddressAsDefault = true;
@@ -59,7 +59,7 @@ public class AddressController {
 
     @GetMapping("/address_book/new")
     public String newAddress(Model model) {
-        List<Category> listCategories = categoryService.listRootCategories();
+        List<Category> listCategories = categoryService.listNotChildrenCategories();
         List<Country> listCountries = customerService.listAllCountries();
 
         model.addAttribute("listCategories", listCategories);
