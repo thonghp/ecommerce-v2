@@ -16,22 +16,22 @@ public class CategoryService {
     public static final String SORT_FIELD_NAME = "name";
 
     /**
-     * Get all root categories with enabled as true and sort by name ascending
+     * Get all categories that not children categories enabled and sort by name ascending
      *
-     * @return a list of root categories
+     * @return a list of categories that not children categories
      */
-    public List<Category> listRootCategories() {
-        List<Category> rootCategories = new ArrayList<>();
+    public List<Category> listNotChildrenCategories() {
+        List<Category> listNotChildrenCategories = new ArrayList<>();
 
         List<Category> listEnabledCategories = repo.findAllByEnabledTrueOrderByNameAsc();
 
         listEnabledCategories.forEach(category -> {
             if (category.getParent() == null) {
-                rootCategories.add(category);
+                listNotChildrenCategories.add(category);
             }
         });
 
-        return rootCategories;
+        return listNotChildrenCategories;
     }
 
 
